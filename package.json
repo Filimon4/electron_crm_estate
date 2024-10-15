@@ -9,7 +9,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
+    "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init"
   },
   "type": "commonjs",
   "devDependencies": {
@@ -35,7 +38,7 @@
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.2",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "~4.5.4"
   },
   "keywords": [],
@@ -48,6 +51,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "pg": "^8.13.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "typeorm": "^0.3.20"
   }
 }
