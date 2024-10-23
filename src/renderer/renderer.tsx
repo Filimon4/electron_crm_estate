@@ -1,8 +1,18 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client'
-import './index.css';
-import App from './App';
+import { ChakraProvider } from '@chakra-ui/react';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './shared/route';
+
+import './index.scss';
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)
-root.render(<App />)
+root.render(
+  <>
+    <ChakraProvider>
+      <RouterProvider router={router} />
+    </ChakraProvider>
+  </>
+)
+

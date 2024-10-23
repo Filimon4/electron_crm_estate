@@ -11,7 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
+    "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
     "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init"
   },
   "type": "commonjs",
@@ -48,10 +48,22 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@chakra-ui/react": "^2.10.2",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "class-validator": "^0.14.1",
+    "classnames": "^2.5.1",
     "electron-squirrel-startup": "^1.0.1",
+    "framer-motion": "^11.11.9",
+    "jotai": "^2.10.1",
     "pg": "^8.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "sass": "^1.80.3",
+    "sass-loader": "^16.0.2",
     "typeorm": "^0.3.20"
   }
 }

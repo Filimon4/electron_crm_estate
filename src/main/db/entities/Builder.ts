@@ -1,8 +1,9 @@
-import { IsEmail, Length } from "class-validator";
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Developer } from "./Developer";
+import { Length } from "class-validator";
 
 @Entity()
-export class Client {
+export class Builder {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,11 +12,9 @@ export class Client {
   @Length(11, 11)
   phone: string;
 
-  @Column({type: "varchar", unique: true, nullable: false})
-  @Index()
-  @Length(5, 40)
-  @IsEmail()
-  email: string
+  @ManyToOne(() => Developer, (developer) => developer.id)
+  @JoinColumn({name: 'developer', referencedColumnName: 'id'})
+  developer: number;
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 30)
@@ -28,4 +27,5 @@ export class Client {
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
   lastName: string;
+
 }

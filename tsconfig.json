@@ -13,9 +13,8 @@
     "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "composite": true,
     "jsx": "react",
-    "paths": {
-    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "src/renderer/**/*", "src/preload/**/*"]
 }

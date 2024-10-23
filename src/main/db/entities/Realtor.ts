@@ -1,8 +1,9 @@
 import { IsEmail, Length } from "class-validator";
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
+
 @Entity()
-export class Client {
+export class Realtor {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,4 +29,5 @@ export class Client {
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
   lastName: string;
+
 }
