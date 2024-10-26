@@ -16,5 +16,5 @@
     "composite": true,
     "jsx": "react",
   },
-  "include": ["src/**/*", "src/renderer/**/*", "src/preload/**/*"]
+  "include": ["src/**/*", "src/renderer/**/*.{tsx,ts}", "src/preload/**/*.{tsx,ts}", "src/renderer/pages/**/*", "src/main/**/*", "src/main/auth/**/*", "src/main/db/**/*"]
 }

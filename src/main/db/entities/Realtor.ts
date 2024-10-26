@@ -1,7 +1,6 @@
 import { IsEmail, Length } from "class-validator";
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-
 @Entity()
 export class Realtor {
   @PrimaryGeneratedColumn()
@@ -18,16 +17,19 @@ export class Realtor {
   @IsEmail()
   email: string
 
+  @Column({type: 'varchar', nullable: false})
+  password: string
+
   @Column({type: "varchar", nullable: false})
   @Length(2, 30)
-  firstName: string;
+  first_name: string;
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
-  sureName: string;
+  sure_name: string;
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
-  lastName: string;
+  last_Name: string;
 
 }

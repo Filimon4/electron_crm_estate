@@ -36,8 +36,8 @@ const createWindow = (): void => {
   
 };
 
-const appReady = () => {
-  DB.initialize()
+const appReady = async () => {
+  await DB.initialize()
 
   new AuthController()
   

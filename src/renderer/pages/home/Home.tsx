@@ -1,13 +1,18 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import TaskBar from '../../components/TaskBar/TaskBar'
+import TaskBar from '../../components/menu/TaskBar/TaskBar'
+import { Outlet } from 'react-router-dom'
+import { Flex } from '@chakra-ui/react'
+import Menu from '../../components/menu/Menu'
 
 const Home = () => {
-  const navigator = useNavigate()
   return (
-    <>
-      <TaskBar />
-    </>
+    <Flex
+      width={'100vw'}
+      height={'100vh'}
+    >
+      <Menu />
+      <Outlet />
+    </Flex>
   )
 }
 

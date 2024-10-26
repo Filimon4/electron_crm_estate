@@ -2,17 +2,34 @@ import { Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, 
 import React from 'react'
 
 import styles from './Signup.module.scss'
-import FormInput from '../../../components/forms/FormInput'
+import FormInput from '../../../components/forms/FormInput/FormInput'
 import LinkHash from '../../../components/routes/LinkHash'
 
 const Signup = () => {
 
-  
+  const onSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    //@ts-ignore
+    //TODO: добавить проверки
+    const {firstName, secondName, lastName, phone, email, password} = e.target
+    //@ts-ignore
+    const user = await window.context.signup({
+      firstName: firstName.value,
+      secondName: secondName.value,
+      lastName: lastName.value,
+      phone: phone.value,
+      email: email.value,
+      password: password.value
+    })
+    if (user) {
+      console.log(user)
+    }
+  }
 
   return (
     <Flex direction={'column'}>
       <Heading mb="6" textAlign="center">Регистрация</Heading>
-      <form onSubmit={e => console.log("submit")}>
+      <form onSubmit={(e) => onSignup(e)}>
         <Grid
           templateAreas={`
             "first phone"

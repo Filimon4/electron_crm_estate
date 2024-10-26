@@ -21,5 +21,13 @@ export const rendererConfig: Configuration = {
   resolve: {
     alias: {},
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
+    fallback: {
+      "crypto": false,
+      "stream": false,
+      "os": false,
+      "path": false,
+      "fs": false,
+      "vm": false
+    },
   },
 };

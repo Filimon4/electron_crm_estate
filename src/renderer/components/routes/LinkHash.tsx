@@ -1,10 +1,10 @@
 import React from 'react'
-import { route_pages } from '../../shared/route'
+import { route_pages, TRoutesPages, updatePage } from '../../shared/route'
 
-const LinkHash = ({to, children}: {to: keyof typeof route_pages, children: React.ReactNode}) => {
+const LinkHash = ({to, children}: {to: TRoutesPages, children: React.ReactNode}) => {
 
   const onChange = () => {
-    document.defaultView.location.hash = route_pages[to]
+    updatePage(`${route_pages[to]}`)
   }
 
   return (

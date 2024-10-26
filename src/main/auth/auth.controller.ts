@@ -10,19 +10,17 @@ export class AuthController {
     ipcMain.handle('signup', this.signup.bind(this))
   }
 
-  private async login(...args: any) {
-    console.log('login')
-    AuthService.login()
+  private async login(event: any, data: any) {
+    return AuthService.login(data.email, data.phone, data.password)
   }
 
-  private async logout(...args: any) {
+  private async logout(event: any, data: any) {
     console.log('logout')
     AuthService.logout()
   }
 
-  private async signup(...args: any) {
-    console.log('signup')
-    AuthService.signup()
+  private async signup(event: any, data: any) {
+    return AuthService.signup(data)
   }
 
 }

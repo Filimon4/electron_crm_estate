@@ -12,7 +12,8 @@
     "lint": "eslint --ext .ts,.tsx .",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
-    "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init"
+    "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init",
+    "migration:auto": "rimraf ./migrations && npm run migration:generate && npm run migration:run"
   },
   "type": "commonjs",
   "devDependencies": {
@@ -31,7 +32,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "css-loader": "^6.0.0",
-    "electron": "32.2.0",
+    "electron": "^32.2.2",
     "eslint": "^8.0.1",
     "eslint-plugin-import": "^2.25.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
