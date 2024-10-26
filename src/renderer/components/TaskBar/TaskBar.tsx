@@ -1,7 +1,9 @@
-import { Box, Flex, Text, VStack, Icon, Image } from '@chakra-ui/react'
+import { Box, Flex, Text, VStack, Icon, Image, Center } from '@chakra-ui/react'
 import React from 'react'
 
 import house from "../../public/icons/house.png"
+import { Link } from 'react-router-dom'
+import { route_pages } from '../../shared/route'
 
 const TaskBar = () => {
   return (
@@ -17,29 +19,27 @@ const TaskBar = () => {
         <Image src={house} boxSize='50px' />
         <Text>CRM система</Text>
       </Flex>
-
-      <VStack align="start">
-        <Flex align="center" cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
-          {/* <Icon as={} boxSize={6} mr={3} /> */}
+      <VStack align="start" marginBottom={'6rem'}>
+        <Flex align="center" justify={"flex-start"} paddingLeft={'2em'} cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
           <Text>Рабочий стол</Text>
         </Flex>
-
-        <Flex align="center" cursor="pointer" _hover={{ bg: "gray.700"}} width={'100%'} height={'50px'}>
-          {/* <Icon as={} boxSize={6} mr={3} /> */}
-          <Text>База объектов</Text>
+        <Flex align="center" justify={"flex-start"} paddingLeft={'2em'} cursor="pointer" _hover={{ bg: "gray.700"}} width={'100%'} height={'50px'}>
+          <Text>Объекты</Text>
         </Flex>
-
-        <Flex align="center" cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
-          {/* <Icon as={} boxSize={6} mr={3} /> */}
+        <Flex align="center" justify={"flex-start"} paddingLeft={'2em'} cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
           <Text>Клиенты</Text>
         </Flex>
-
-        {/* Add more options as needed */}
+        <Flex align="center" justify={"flex-start"} paddingLeft={'2em'} cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
+          <Text>Отчёты</Text>
+        </Flex>
+        <Flex align="center" justify={"flex-start"} paddingLeft={'2em'} cursor="pointer" _hover={{ bg: "gray.700" }} width={'100%'} height={'50px'}>
+          <Text>Календарь</Text>
+        </Flex>
       </VStack>
 
       <Box>
         <Text>
-          Some text
+          <Link to={route_pages.singin}>Auth</Link>
         </Text>
       </Box>
     </Flex>

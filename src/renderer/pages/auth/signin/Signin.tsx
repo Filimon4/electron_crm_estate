@@ -1,31 +1,20 @@
 import React from 'react'
+import { Button, Center, Flex, Heading } from '@chakra-ui/react'
+import FormInput from '../../../components/forms/FormInput'
+import LinkHash from '../../../components/routes/LinkHash'
 
 import styles from './Singin.module.scss'
-
-import { Button, Flex, FormControl, FormLabel, Heading, Input } from '@chakra-ui/react'
 
 const Signin = () => {
   return (
     <Flex direction={'column'}>
       <Heading mb="6" textAlign="center">Авторизация</Heading>
       <form onSubmit={e => console.log('submit')}>
-        <FormControl id="email" mb="4">
-          <FormLabel>Имя</FormLabel>
-          <Input
-            type="text"
-          />
-          {/* {errors.email && <Text color="red.500">{errors.email.message}</Text>} */}
-        </FormControl>
-
-        <FormControl id="password" mb="4">
-          <FormLabel>Пароль</FormLabel>
-          <Input
-            type="password"
-          />
-          {/* {errors.password && <Text color="red.500">{errors.password.message}</Text>} */}
-        </FormControl>
+        <FormInput id='email' inputType='email' name='Почта' />
+        <FormInput id='password' inputType='password' name='Пароль' />
         <Button type="submit" colorScheme="blue" width="full" mt="4">Войти</Button>
       </form>
+      <Center paddingTop={'10px'} color={"gray.400"}>Нету аккаунта? <span className={styles.signup_span}><LinkHash to={'signup'}>Зарегестрируй</LinkHash></span></Center>
     </Flex>
   )
 }

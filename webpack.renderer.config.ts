@@ -2,6 +2,7 @@ import type { Configuration } from 'webpack';
 
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import path from 'path';
 
 rules.push({
   test: /\.s[ac]ss$/i,
@@ -15,8 +16,10 @@ export const rendererConfig: Configuration = {
   module: {
     rules,
   },
+  entry: path.resolve(__dirname, "src/renderer/renderer.tsx"),
   plugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    alias: {},
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
   },
 };
