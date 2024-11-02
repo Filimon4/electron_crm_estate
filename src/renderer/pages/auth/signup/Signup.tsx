@@ -2,11 +2,14 @@ import { Button, Center, Flex, FormControl, FormLabel, Grid, GridItem, Heading, 
 import React from 'react'
 
 import styles from './Signup.module.scss'
-import FormInput from '../../../components/forms/FormInput/FormInput'
+import FormInput from '../../../components/global/FormInput/FormInput'
 import LinkHash from '../../../components/routes/LinkHash'
+import { useAtom } from 'jotai'
+import { writeUser } from '../../../shared/store'
+import { route_pages, updatePage } from '../../../shared/route'
 
 const Signup = () => {
-
+  const [_, setUser] = useAtom(writeUser)
   const onSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //@ts-ignore
@@ -22,7 +25,14 @@ const Signup = () => {
       password: password.value
     })
     if (user) {
-      console.log(user)
+      firstName.value = ''
+      secondName.value = ''
+      lastName.value = ''
+      phone.value = ''
+      email.value = ''
+      password.value = ''
+      setUser(user)
+      // updatePage(route_pages.home)
     }
   }
 

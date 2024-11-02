@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGenerate
 import { Flat } from "./Flat";
 import { Realtor } from "./Realtor";
 import { Client } from "./Client";
+import { IsDate } from "class-validator";
 
 @Entity()
 export class Deal {
@@ -20,12 +21,11 @@ export class Deal {
   @JoinColumn({name: 'client', referencedColumnName: 'id'})
   client: number;
 
-  @Column({type: "integer", nullable: false})
-  amount: number;
-
   @CreateDateColumn()
+  @IsDate()
   created_at: Date;
 
   @UpdateDateColumn()
+  @IsDate()
   updated_at: Date;
 }

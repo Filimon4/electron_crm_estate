@@ -1,8 +1,9 @@
 import { atom, WritableAtom } from "jotai";
-import { EPageTaskBar } from "./types";
+import { EPageTaskBar, TRealtorDB } from "./types";
 import { updatePage } from "../route";
 
 const page = atom(EPageTaskBar.desk)
+const user = atom<TRealtorDB>()
 
 export const currentHomePage = atom(
   (get) => get(page),
@@ -11,3 +12,11 @@ export const currentHomePage = atom(
     updatePage(update)
   },
 )
+
+export const readUser = atom(
+  (get) => get(user), null)
+
+export const writeUser = atom(null, (get, set, update: TRealtorDB) => {
+  set(user, update)
+
+})

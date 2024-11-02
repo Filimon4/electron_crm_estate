@@ -3,7 +3,6 @@ export namespace PreloadNamespace {
 
   export interface IContextApi {
     signin: any;
-    logout: any;
     signup: any;
     createClient: any;
     updateClient: any;

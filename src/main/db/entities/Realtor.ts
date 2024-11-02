@@ -6,7 +6,7 @@ export class Realtor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: "varchar", unique: true, nullable: false})
+  @Column({type: "varchar", unique: true, nullable: false, })
   @Index()
   @Length(11, 11)
   phone: string;
@@ -30,6 +30,6 @@ export class Realtor {
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
-  last_Name: string;
+  last_name: string;
 
 }

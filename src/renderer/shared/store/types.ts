@@ -7,3 +7,12 @@ export const EPageTaskBar = {
   'reports': route_pages.reports,
   'calendar': route_pages.calendar
 }
+
+export type TRealtorDB = {
+  phone: string;
+  email: string;
+  first_name: string;
+  sure_name: string;
+  last_name: string;
+  password: string;
+}

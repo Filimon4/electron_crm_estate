@@ -7,7 +7,6 @@ if (!process.contextIsolated) {
 
 export const contextApi: PreloadNamespace.IContextApi = {
   signin: (...args: any) => ipcRenderer.invoke('login', ...args),
-  logout: (...args: any) => ipcRenderer.invoke('logout', ...args),
   signup: (...args: any) => ipcRenderer.invoke('signup', ...args),
   createClient: (...args: any) => ipcRenderer.invoke('createClient', ...args),
   updateClient: (...args: any) => ipcRenderer.invoke('updateClient', ...args),

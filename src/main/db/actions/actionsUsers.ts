@@ -7,13 +7,14 @@ export namespace UsersNamespace {
 
   export const createUser = async (data: TRealtorDTO) => {
     try {
+      console.log(data)
       const newRealtor = new _Realtor()
       newRealtor.email = data.email
       newRealtor.phone = data.phone
       newRealtor.password = HashPasswordsNamespace.hashPassword(data.password)
       newRealtor.first_name = data.firstName
       newRealtor.sure_name = data.secondName
-      newRealtor.last_Name = data.lastName
+      newRealtor.last_name = data.lastName
       return await dbConnection(_Realtor).save(newRealtor)
     } catch (error) {
       console.log(error)

@@ -9,5 +9,8 @@ export default new DataSource({
    password: 'admin',
    entities: ['src/main/db/entities/*.ts'],
    migrations: ['migrations/*.ts'],
-   migrationsTableName: 'migrations'
+   migrationsTableName: 'migrations',
+   extra: {
+    charset: 'utf8mb4',
+   }
  });
