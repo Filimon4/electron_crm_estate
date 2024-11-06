@@ -7,7 +7,6 @@ import { route_pages } from './shared/route';
 import './index.scss';
 import Home from './pages/home/Home';
 import Signin from './pages/auth/signin/Signin';
-import Signup from './pages/auth/signup/Signup';
 import Auth from './pages/auth/Auth';
 import Desk from './pages/dashboard/desk/Desk';
 import Clients from './pages/dashboard/clients/Clients';
@@ -33,7 +32,6 @@ root.render(
           } />
           <Route path={route_pages.auth}  element={<Auth />} children={
             <>
-              <Route path={route_pages.signup} element={<Signup />} />
               <Route path={route_pages.singin} element={<Signin />} />
             </>
           } />

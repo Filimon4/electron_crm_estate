@@ -5,7 +5,6 @@ import { useDisclosure } from '@chakra-ui/react';
 const WarningAlert = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // This function can be called to show the warning alert
   const showWarning = () => {
     onOpen();
   };
@@ -18,8 +17,6 @@ const WarningAlert = () => {
         <AlertDescription>This is a warning notification.</AlertDescription>
         <CloseButton onClick={onClose} position="absolute" right="8px" top="8px" />
       </Alert>
-      {/* This button is for demonstration and testing purposes */}
-      <button onClick={showWarning} style={{ display: "none" }} />
     </Box>
   );
 };

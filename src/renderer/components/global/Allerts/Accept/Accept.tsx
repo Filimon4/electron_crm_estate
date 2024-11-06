@@ -5,7 +5,6 @@ import { useDisclosure } from '@chakra-ui/react';
 const AcceptAlert = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // This function can be called to show the accept alert
   const showAccept = () => {
     onOpen();
   };
@@ -18,8 +17,6 @@ const AcceptAlert = () => {
         <AlertDescription>Your action has been accepted.</AlertDescription>
         <CloseButton onClick={onClose} position="absolute" right="8px" top="8px" />
       </Alert>
-      {/* This button is for demonstration and testing purposes */}
-      <button onClick={showAccept} style={{ display: "none" }} />
     </Box>
   );
 };

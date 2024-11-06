@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Center, Flex, Heading } from '@chakra-ui/react'
 import FormInput from '../../../components/global/FormInput/FormInput'
 import LinkHash from '../../../components/routes/LinkHash'
@@ -10,24 +10,24 @@ import { route_pages, updatePage } from '../../../shared/route'
 
 const Signin = () => {
   const [_, setUser] = useAtom(writeUser)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const validButton = useMemo(() => (!email || !password), [email, password])
+  console.log(validButton)
 
   const onSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //@ts-ignore
-    const {email, password} = e.target
-    //@ts-ignore
     const user = await window.context.signin({
-      // email: email.value,
-      email: 'f.rykov@bk.ru',
-      // password: password.value,
-      password: '123123'
+      email: email,
+      password: password
     })
-    console.log(user)
     if (user) {
-      email.value = ''
-      password.value = ''
       setUser(user)
       updatePage(route_pages.home)
+      setEmail('')
+      setPassword('')
     }
   }
 
@@ -35,11 +35,10 @@ const Signin = () => {
     <Flex direction={'column'}>
       <Heading mb="6" textAlign="center">Авторизация</Heading>
       <form onSubmit={e => onSignin(e)}>
-        <FormInput id='email' inputType='email' name='Почта' />
-        <FormInput id='password' inputType='password' name='Пароль' />
-        <Button type="submit" colorScheme="blue" width="full" mt="4">Войти</Button>
+        <FormInput value={email} setValue={setEmail} id='email' inputType='email' name='Почта' />
+        <FormInput value={password} setValue={setPassword}  id='password' inputType='password' name='Пароль' />
+        <Button type="submit" colorScheme="blue" width="full" mt="4" isDisabled={validButton ? true : false}>Войти</Button>
       </form>
-      <Center paddingTop={'10px'} color={"gray.400"}>Нету аккаунта? <span className={styles.signup_span}><LinkHash to={'signup'}>Зарегестрируй</LinkHash></span></Center>
     </Flex>
   )
 }

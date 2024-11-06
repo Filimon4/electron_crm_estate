@@ -16,7 +16,37 @@ export const currentHomePage = atom(
 export const readUser = atom(
   (get) => get(user), null)
 
-export const writeUser = atom(null, (get, set, update: TRealtorDB) => {
-  set(user, update)
+export const writeUser = atom(
+  null,
+  (get, set, update: TRealtorDB) => {
+    set(user, update)
+  }
+)
 
-})
+const estate = atom<number>()
+
+export const readEstate = atom(
+  (get) => get(estate),
+  null
+)
+
+export const writeEstate = atom(
+  null,
+  (get, set, update: number) => {
+    set(estate, update)
+  }
+)
+
+const client = atom<number>()
+
+export const readClient = atom(
+  (get) => get(client),
+  null
+)
+
+export const writeClient = atom(
+  null,
+  (get, set, update: number) => {
+    set(client, update)
+  }
+)
