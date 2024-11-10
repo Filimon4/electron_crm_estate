@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Table from '../../../components/layout/ItemTable/Table'
 import TableView from '../../../components/layout/ItemTable/TableView'
 import ItemInfo from '../../../components/layout/ItemTable/ItemInfo'
@@ -6,13 +6,23 @@ import { Box, Flex, Heading } from '@chakra-ui/react'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import { useAtom } from 'jotai'
 import { readEstate, writeEstate } from '../../../shared/store'
+import { useQuery } from '@tanstack/react-query'
 
 const Estate = () => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['getEstate'],
+    queryFn: async () => {
+      //@ts-ignore
+      return await window.context.getEstate()
+    },
+  })
+
   const [selected, __] = useAtom(readEstate)
   const [_, setSelected] = useAtom(writeEstate)
 
-  useEffect(() => {
-    console.log(selected)
+  const selectedEstate = useMemo(() => {
+    if (!data) return null
+    return data[selected]
   }, [selected])
 
   return (
@@ -25,11 +35,8 @@ const Estate = () => {
           <Flex height={'55%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
             <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
               <TableView selected={selected} setSelected={setSelected} area='col1' config={{
-                headers: ['Адресс', 'Комнаты', 'Этаж', 'Площадь', 'Спальни'],
-                body: [
-                  ['Хуювино', 'Маловато', 'Высоковато', "Узковато", "Твердовата"],
-                  ['Хуювино', 'Маловато', 'Высоковато', "Узковато", "Твердовата"],
-                ],
+                headers: ['Адресс', 'Комнаты', 'Этаж', 'Площадь'],
+                body: data ? data.map((d: any) => [d.house.street, d.room_amount, d.floor, d.size]) : [],
                 foot: []
               }} />
             </Box>
@@ -39,7 +46,7 @@ const Estate = () => {
         <ItemInfo area='col2' config={{
           title: 'Квартира 1',
           price: 1000000
-        }} />
+        }}/>
       </Table>
     </>
   )

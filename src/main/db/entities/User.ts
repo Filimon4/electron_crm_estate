@@ -1,8 +1,13 @@
 import { IsEmail, Length } from "class-validator";
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
+export enum UserRole {
+  ADMIN = "admin",
+  REALTOR = "realtor",
+}
+
 @Entity()
-export class Realtor {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -32,4 +37,6 @@ export class Realtor {
   @Length(2, 40)
   last_name: string;
 
+  @Column({type: "enum", enum: UserRole, default: UserRole.REALTOR})
+  role: UserRole
 }

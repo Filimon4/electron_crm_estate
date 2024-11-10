@@ -2,8 +2,7 @@
 declare global {
 
   interface Window {
-    // electron: ElectronAPI
-    context: {
+    frontApi: {
       signin: any;
       logout: any;
       signup: any;

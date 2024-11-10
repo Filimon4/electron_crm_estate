@@ -1,21 +1,19 @@
 import { HashPasswordsNamespace } from "../../modules/Hash"
-import { TRealtorDTO } from "../../auth/auth.dto"
-import { Realtor as _Realtor } from "../entities/Realtor"
-import { scryptSync } from "crypto"
+import { TUserDTO } from "../../auth/auth.dto"
+import { User as _User } from "../entities/User"
 
 export namespace UsersNamespace {
 
-  export const createUser = async (data: TRealtorDTO) => {
+  export const createUser = async (data: TUserDTO) => {
     try {
-      console.log(data)
-      const newRealtor = new _Realtor()
+      const newRealtor = new _User()
       newRealtor.email = data.email
       newRealtor.phone = data.phone
       newRealtor.password = HashPasswordsNamespace.hashPassword(data.password)
       newRealtor.first_name = data.firstName
       newRealtor.sure_name = data.secondName
       newRealtor.last_name = data.lastName
-      return await dbConnection(_Realtor).save(newRealtor)
+      return await dbConnection(_User).save(newRealtor)
     } catch (error) {
       console.log(error)
     }
@@ -26,7 +24,7 @@ export namespace UsersNamespace {
     try {
       let user = null;
       if (email) {
-        let user = await dbConnection(_Realtor).findOne({
+        let user = await dbConnection(_User).findOne({
           where: {
             email: email
           }
@@ -35,7 +33,7 @@ export namespace UsersNamespace {
           return user
       }
       if (phone) {
-        let user = await dbConnection(_Realtor).findOne({
+        let user = await dbConnection(_User).findOne({
           where: {
             phone: phone
           }
@@ -49,7 +47,7 @@ export namespace UsersNamespace {
     }
   }
 
-  export const changeUser = async () => {
+  export const updateUser = async () => {
 
   }
 

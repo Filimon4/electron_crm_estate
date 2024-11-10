@@ -18,14 +18,13 @@ export class Builder {
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 30)
-  firstName: string;
+  first_name: string;
 
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
-  sureName: string;
-
+  sure_name: string;
+  
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
-  lastName: string;
-
+  last_name: string;
 }

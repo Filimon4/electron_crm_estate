@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import { DataSource, ObjectType, EntitySchema, Repository } from "typeorm";
-import { Builder, Client, Complex, Deal, Developer, Flat, House, Realtor } from "./entities";
+import { Builder, Client, Complex, Deal, Developer, Flat, House, User } from "./entities";
 
 type Repo<Entity> = ObjectType<Entity> | EntitySchema<Entity> | string;
 
@@ -11,7 +11,7 @@ const DB = new DataSource({
   username: 'postgres',
   password: 'admin',
   database: 'crm_estate',
-  entities: [Realtor, Client, Builder, Complex, Deal, Developer, Flat, House, Realtor], 
+  entities: [Client, Builder, Complex, Deal, Developer, Flat, House, User], 
   migrations: [],
   logging: false,
 });

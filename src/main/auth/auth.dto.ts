@@ -1,5 +1,5 @@
 
-export type TRealtorDTO = {
+export type TUserDTO = {
   phone: string;
   email: string;
   firstName: string;

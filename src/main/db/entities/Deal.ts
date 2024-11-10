@@ -1,8 +1,8 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Flat } from "./Flat";
-import { Realtor } from "./Realtor";
 import { Client } from "./Client";
 import { IsDate } from "class-validator";
+import { User } from "./User";
 
 @Entity()
 export class Deal {
@@ -13,7 +13,7 @@ export class Deal {
   @JoinColumn({name: 'flat', referencedColumnName: 'id'})
   flat: number;
 
-  @OneToOne(() => Realtor, (realtor) => realtor.id)
+  @OneToOne(() => User, (user) => user.id)
   @JoinColumn({name: 'realtor', referencedColumnName: 'id'})
   realtor: number;
 

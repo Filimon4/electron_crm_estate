@@ -15,10 +15,6 @@ export class Complex {
   @Length(3, 40)
   distrito: string;
 
-  @Column({type: 'integer', nullable: false})
-  @Min(0)
-  objects: number;
-
   @ManyToOne(() => Builder, (builder) => builder.id)
   @JoinColumn({name: 'builder', referencedColumnName: 'id'})
   builder: number;
