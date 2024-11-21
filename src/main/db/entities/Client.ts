@@ -28,4 +28,7 @@ export class Client {
   @Column({type: "varchar", nullable: false})
   @Length(2, 40)
   last_name: string;
+
+  @Column({type: 'text', nullable: true})
+  description: string
 }

@@ -1,6 +1,6 @@
 import { HashPasswordsNamespace } from "../../modules/Hash"
 import { TUserDTO } from "../../auth/auth.dto"
-import { User as _User } from "../entities/User"
+import { User as _User, UserRole } from "../entities/User"
 
 export namespace UsersNamespace {
 
@@ -49,6 +49,19 @@ export namespace UsersNamespace {
 
   export const updateUser = async () => {
 
+  }
+
+  export const getAllRealtors = async () => {
+    const users = await dbConnection(_User).find({
+      where: {
+        role: UserRole.REALTOR
+      }
+    })
+    return users
+  }
+
+  export const getAll = async () => {
+    await dbConnection(_User).find()
   }
 
 }

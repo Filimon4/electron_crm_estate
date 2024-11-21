@@ -12,7 +12,6 @@ export class EstateController {
   }
 
   async getEstates() {
-    console.log("getAllEstate")
     const data = await EstateService.getAllEstate()
     return [...data]
   }

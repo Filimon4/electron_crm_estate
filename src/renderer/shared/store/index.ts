@@ -24,5 +24,5 @@ export const readClient = atom((get) => get(client),null)
 export const writeClient = atom(null,(get, set, update: number) => set(client, update))
 
 const realtor = atom<number>()
-export const readRealtor = atom((get) => get(client), null)
+export const readRealtor = atom((get) => get(realtor), null)
 export const writeRealtor = atom(null, (get, set, update: number) => set(realtor, update))

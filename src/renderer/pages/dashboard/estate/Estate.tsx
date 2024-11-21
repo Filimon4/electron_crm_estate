@@ -31,7 +31,7 @@ const Estate = () => {
       <Table rowArea='col1 col1 col1 col1 col1 col2'>
         <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
           <Heading fontSize={'2xl'}>
-            База объектов
+            База клиентов
           </Heading>
           <Flex height={'55%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
             <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
@@ -52,7 +52,7 @@ const Estate = () => {
             size: selectedEstate.size,
             adress: `${selectedEstate.house.street} ${selectedEstate.house.house_number}`,
             price: selectedEstate.price,
-            description: selectedEstate.description
+            description: selectedEstate.description ?? ' '
           }}/>
         </> : <>
           <EmptyItem area={'col2'} placeholder='Выберете объект' />

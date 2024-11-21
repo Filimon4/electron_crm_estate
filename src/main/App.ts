@@ -2,6 +2,7 @@ import { AuthController } from "./auth/auth.controller";
 import { ClientController } from "./clients/clients.controller";
 import DB from "./db";
 import { EstateController } from "./estates/estates.controller";
+import { RealtorController } from "./realtors/realtors.controller";
 import { createWindow } from "./utils/app";
 
 class App {
@@ -19,6 +20,7 @@ class App {
     new AuthController()
     new ClientController()
     new EstateController()
+    new RealtorController()
     createWindow()
   }
 

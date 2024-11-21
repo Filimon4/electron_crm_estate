@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import { TClientDTO } from "./clients.dto";
+import { ClientsService } from "./clients.service";
 
 export class ClientController {
 
@@ -11,15 +12,7 @@ export class ClientController {
   }
 
   async getClients() {
-    console.log('getClient backend')
-    return [
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-      ['Рыков',	'Ефим',	'Витальевич',	'+79091304497',	'f.rykov@bk.ru'],
-    ]
+    return await ClientsService.getAll()
   }
   
   async createClient(client: TClientDTO) {

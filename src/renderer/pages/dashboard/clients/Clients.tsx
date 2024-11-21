@@ -8,6 +8,7 @@ import EmptyItem from '../../../components/layout/ItemTable/EmptyItem'
 import { readClient, writeClient } from '../../../shared/store'
 import { useAtom } from 'jotai'
 import { useQuery } from '@tanstack/react-query'
+import ClientInfo from '../../../components/layout/ItemTable/ClientInfo'
 
 const Clients = () => {
   const { isLoading, error, data } = useQuery({
@@ -24,6 +25,7 @@ const Clients = () => {
     if (!data) return null
     return data[client]
   }, [client])
+  console.log(data)
   
   return (
     <>
@@ -36,7 +38,7 @@ const Clients = () => {
             <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
               <TableView selected={client} setSelected={setClient} area='col1' config={{
                 headers: ['Фамилия', 'Имя', 'Отчество', 'Телефон', 'Почта'],
-                body: data ? data : [],
+                body: data ? data.map((d: any) => [d.secondName, d.firstName, d.lastName, d.phone, d.email]) : [],
                 foot: []
               }} />
             </Box>
@@ -44,14 +46,13 @@ const Clients = () => {
           </Flex>
         </Flex>
         {clientData ?
-          <ItemInfo area='col2' config={{
-            title: 'Квартира 1',
-            adress: '123123',
-            flatsize: '123',
-            roomsAmount: '123',
-            bedroomsAmount: '123',
-            description: '123',
-            price: 1000000
+          <ClientInfo area='col2' config={{
+            sure_name: clientData.secondName,
+            first_name: clientData.firstName,
+            last_name: clientData.lastName,
+            phone: clientData.phone,
+            email: clientData.email,
+            description: clientData.description ?? '',
           }} />
         : <>
           <EmptyItem area='col2' placeholder='Выберете клиента' />

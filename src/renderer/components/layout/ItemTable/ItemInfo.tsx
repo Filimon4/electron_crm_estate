@@ -51,17 +51,17 @@ const ItemInfo = ({area, config}: {area: string, config: any}) => (
             </Text>
           </Flex>
         </Stack>
-        <Textarea mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}}>
-          {config.description}
-        </Textarea>
+        <Textarea value={config.description} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
       </Flex>
     </CardBody>
-    <Divider />
-    <CardFooter>
-      <Text color={'blackAlpha.600'} fontSize={"2xl"}>
-        {config.price} р.
-      </Text>
-    </CardFooter>
+    {config.price && <>
+      <Divider />
+      <CardFooter>
+          <Text color={'blackAlpha.600'} fontSize={"2xl"}>
+            {config.price} р.
+          </Text>
+      </CardFooter>
+    </>}
     </Card>
   </GridItem>
 )

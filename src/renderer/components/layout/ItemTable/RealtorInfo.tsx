@@ -15,48 +15,56 @@ const RealtorInfo = ({area, config}: {area: string, config: any}) => (
         <Stack divider={<StackDivider />} spacing='3'>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
-              Адресс
+              Фамилия
             </Heading>
             <Text fontSize='sm'>
-              {config.adress}
+              {config.sure_name}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
-              Площадь
+              Имя
             </Heading>
             <Text fontSize='sm'>
-              {config.flatsize}
+              {config.first_name}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
-              Количество комнат
+              Отчество
             </Heading>
             <Text fontSize='sm'>
-              {config.roomsAmount}
+              {config.last_name}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
-              Количество сплен
+              Телефон
             </Heading>
             <Text fontSize='sm'>
-              {config.bedroomsAmount}
+              {config.phone}
+            </Text>
+          </Flex>
+          <Flex justify={'space-between'} >
+            <Heading size='xs' textTransform='uppercase'>
+              Почта
+            </Heading>
+            <Text fontSize='sm'>
+              {config.email}
+            </Text>
+          </Flex>
+          <Flex justify={'space-between'} >
+            <Heading size='xs' textTransform='uppercase'>
+              Пароль
+            </Heading>
+            <Text fontSize='sm'>
+              {config.password}
             </Text>
           </Flex>
         </Stack>
-        <Textarea mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}}>
-          {config.description}
-        </Textarea>
+        <Textarea value={config.description} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
       </Flex>
     </CardBody>
-    <Divider />
-    <CardFooter>
-      <Text color={'blackAlpha.600'} fontSize={"2xl"}>
-        {config.price} р.
-      </Text>
-    </CardFooter>
     </Card>
   </GridItem>
 )

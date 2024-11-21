@@ -26,7 +26,7 @@ export const frontApi: PreloadNamespace.IFrontApi = {
   createRealtor: (...args: any) => ipcRenderer.invoke('createRealtor', ...args),
   updateRealtor: (...args: any) => ipcRenderer.invoke('updateRealtor', ...args),
   deleteRealtor: (...args: any) => ipcRenderer.invoke('deleteRealtor', ...args),
-  getRealtor: () => ipcRenderer.invoke('getEstate'),
+  getRealtor: () => ipcRenderer.invoke('getRealtor'),
 
   onUpdatePage: (callback: Function) => ipcRenderer.on('onUpdatePage', (_event: any, value: any) => {
     callback(value)
