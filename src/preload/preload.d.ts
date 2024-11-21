@@ -15,6 +15,12 @@ declare global {
       createDeal: any;
       updateDeal: any;
       deleteDeal: any;
+      createRealtor: any,
+      updateRealtor: any,
+      deleteRealtor: any,
+      getRealtor: any,
+
+      onNotify: any
     }
   }
 

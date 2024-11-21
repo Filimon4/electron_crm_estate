@@ -10,6 +10,9 @@ export class AuthController {
   }
 
   private async login(event: any, data: any) {
+    console.log(data)
+    if ((!data.email && !data.phone)) return
+    if (!data.password || data.password === null || data.password === undefined) return
     return AuthService.login(data.email, data.phone, data.password)
   }
 

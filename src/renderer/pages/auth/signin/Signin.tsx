@@ -13,7 +13,6 @@ const Signin = () => {
   const [password, setPassword] = useState('')
 
   const validButton = useMemo(() => (!email || !password), [email, password])
-  console.log(validButton)
 
   const onSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

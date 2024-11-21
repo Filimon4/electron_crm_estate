@@ -7,6 +7,7 @@ import './shared/lib/queryClient'
 
 import './index.css';
 import './shared/styles/ReactToastify.css';
+import './shared/events/notifiesEvents'
 import Home from './pages/home/Home';
 import Signin from './pages/auth/signin/Signin';
 import Auth from './pages/auth/Auth';
@@ -19,6 +20,7 @@ import Realtors from './pages/dashboard/realtors/Realtors';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
 import { ToastContainer } from 'react-toastify';
+
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)

@@ -2,7 +2,7 @@ import { BrowserWindow } from "electron";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-var   mainWindow: BrowserWindow
+var mainWindow: BrowserWindow
 
 export function createWindow(): void {
   // Create the browser window.
@@ -26,7 +26,7 @@ export function createWindow(): void {
 
 };
 
-export function sendToFront(emit: string, ...args: any) {
-  console.log('sendTo', emit, ...args)
+export function goFront(emit: string, ...args: any) {
+  console.log("toFront: ", emit, args)
   mainWindow.webContents.send(emit, ...args)
 } 

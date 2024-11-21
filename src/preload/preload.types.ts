@@ -24,6 +24,6 @@ export namespace PreloadNamespace {
     deleteRealtor: any,
     getRealtor: any,
 
-    onUpdatePage: any;
+    onNotify: any
   }
 }
