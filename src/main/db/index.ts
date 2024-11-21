@@ -7,10 +7,10 @@ type Repo<Entity> = ObjectType<Entity> | EntitySchema<Entity> | string;
 const DB = new DataSource({
   type: "postgres",
   host: 'localhost',
-  port: 5433,
+  port: 5432,
   username: 'postgres',
   password: 'admin',
-  database: 'crm_estate',
+  database: 'postgres',
   entities: [Client, Builder, Complex, Deal, Developer, Flat, House, User], 
   migrations: [],
   logging: false,

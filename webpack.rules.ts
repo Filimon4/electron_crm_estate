@@ -32,4 +32,9 @@ export const rules: Required<ModuleOptions>['rules'] = [
     test: /\.(png|svg|jpg|jpeg|gif)$/i,
     type: 'asset/resource',
   },
+  {
+    test: /\.css$/i,
+    use: ['style-loader', 'css-loader']
+    // use: ["style-loader", "css-loader", "sass-loader"],
+  }
 ];

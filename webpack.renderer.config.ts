@@ -4,15 +4,8 @@ import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
 import path from 'path';
 
-rules.push({
-  test: /\.s[ac]ss$/i,
-  use: ["style-loader", "css-loader", "sass-loader"],
-  // options: {
-  //   modules: true,
-  // },
-});
-
 export const rendererConfig: Configuration = {
+  mode: 'development',
   module: {
     rules,
   },

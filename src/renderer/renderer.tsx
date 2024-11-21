@@ -5,7 +5,8 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { route_pages } from './shared/route';
 import './shared/lib/queryClient'
 
-import './index.scss';
+import './index.css';
+import './shared/styles/ReactToastify.css';
 import Home from './pages/home/Home';
 import Signin from './pages/auth/signin/Signin';
 import Auth from './pages/auth/Auth';
@@ -17,6 +18,7 @@ import Calendar from './pages/dashboard/calendar/Calendar';
 import Realtors from './pages/dashboard/realtors/Realtors';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
+import { ToastContainer } from 'react-toastify';
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)
@@ -24,6 +26,7 @@ root.render(
   <>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
+        <ToastContainer />
         <HashRouter>
           <Routes>
             <Route path={route_pages.home} element={<Home />} children={
