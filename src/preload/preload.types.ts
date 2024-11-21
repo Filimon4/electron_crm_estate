@@ -18,5 +18,12 @@ export namespace PreloadNamespace {
     createDeal: any;
     updateDeal: any;
     deleteDeal: any;
+
+    createRealtor: any,
+    updateRealtor: any,
+    deleteRealtor: any,
+    getRealtor: any,
+
+    onUpdatePage: any;
   }
 }

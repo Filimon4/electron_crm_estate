@@ -7,8 +7,12 @@ import Pagination from '../../../components/global/Pagination/Pagination'
 import { useAtom } from 'jotai'
 import { readEstate, writeEstate } from '../../../shared/store'
 import { useQuery } from '@tanstack/react-query'
+import EmptyItem from '../../../components/layout/ItemTable/EmptyItem'
 
 const Estate = () => {
+  const [selected, __] = useAtom(readEstate)
+  const [_, setSelected] = useAtom(writeEstate)
+
   const { isLoading, error, data } = useQuery({
     queryKey: ['getEstate'],
     queryFn: async () => {
@@ -17,16 +21,13 @@ const Estate = () => {
     },
   })
 
-  const [selected, __] = useAtom(readEstate)
-  const [_, setSelected] = useAtom(writeEstate)
-
   const selectedEstate = useMemo(() => {
     if (!data) return null
     return data[selected]
   }, [selected])
+  console.log(selectedEstate)
 
   return (
-    <>
       <Table rowArea='col1 col1 col1 col1 col1 col2'>
         <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
           <Heading fontSize={'2xl'}>
@@ -43,12 +44,20 @@ const Estate = () => {
             <Pagination currentPage={0} totalPages={100} onNext={() => console.log("next")} onPrevious={() => console.log("prev")} />
           </Flex>
         </Flex>
-        <ItemInfo area='col2' config={{
-          title: 'Квартира 1',
-          price: 1000000
-        }}/>
+        {selectedEstate ? <>
+          <ItemInfo area='col2' config={{
+            room_amount: selectedEstate.room_amount,
+            flat: selectedEstate.flat,
+            floor: selectedEstate.floor,
+            size: selectedEstate.size,
+            adress: `${selectedEstate.house.street} ${selectedEstate.house.house_number}`,
+            price: selectedEstate.price,
+            description: selectedEstate.description
+          }}/>
+        </> : <>
+          <EmptyItem area={'col2'} placeholder='Выберете объект' />
+        </>}
       </Table>
-    </>
   )
 }
 

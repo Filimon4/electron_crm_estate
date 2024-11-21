@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Center, Flex, Heading } from '@chakra-ui/react'
 import FormInput from '../../../components/global/FormInput/FormInput'
-import LinkHash from '../../../components/routes/LinkHash'
 
 import styles from './Singin.module.scss'
 import { useAtom } from 'jotai'
@@ -25,7 +24,7 @@ const Signin = () => {
     })
     if (user) {
       setUser(user)
-      updatePage(route_pages.home)
+      updatePage('home')
       setEmail('')
       setPassword('')
     }

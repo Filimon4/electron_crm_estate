@@ -33,4 +33,7 @@ export class Flat {
   @Column({type: 'integer'})
   @Min(0)
   price: number;
+
+  @Column({type: 'text'})
+  description: string
 }

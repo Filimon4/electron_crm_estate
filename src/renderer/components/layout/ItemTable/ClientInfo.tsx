@@ -1,31 +1,18 @@
 import React from 'react'
 import { Box, Card, CardBody, CardFooter, CardHeader, Center, Divider, Flex, GridItem, Heading, Stack, StackDivider, Text, Textarea } from '@chakra-ui/react'
 
-const ItemInfo = ({area, config}: {area: string, config: any}) => (
+const ClientInfo = ({area, config}: {area: string, config: any}) => (
   <GridItem
     area={area}
     height={"100%"}
   >
     <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
+    <CardHeader>
+      <Heading>{config.title}</Heading>
+    </CardHeader>
     <CardBody>
       <Flex flexDirection={'column'} height={'100%'}>
         <Stack divider={<StackDivider />} spacing='3'>
-          <Flex justify={'space-between'} >
-            <Heading size='xs' textTransform='uppercase'>
-              Номер кв-ры
-            </Heading>
-            <Text fontSize='sm'>
-              {config.flat}
-            </Text>
-          </Flex>
-          <Flex justify={'space-between'} >
-            <Heading size='xs' textTransform='uppercase'>
-              Этаж
-            </Heading>
-            <Text fontSize='sm'>
-              {config.floor}
-            </Text>
-          </Flex>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
               Адресс
@@ -39,15 +26,23 @@ const ItemInfo = ({area, config}: {area: string, config: any}) => (
               Площадь
             </Heading>
             <Text fontSize='sm'>
-              {config.size}
+              {config.flatsize}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
             <Heading size='xs' textTransform='uppercase'>
-              Комнаты
+              Количество комнат
             </Heading>
             <Text fontSize='sm'>
-              {config.room_amount}
+              {config.roomsAmount}
+            </Text>
+          </Flex>
+          <Flex justify={'space-between'} >
+            <Heading size='xs' textTransform='uppercase'>
+              Количество сплен
+            </Heading>
+            <Text fontSize='sm'>
+              {config.bedroomsAmount}
             </Text>
           </Flex>
         </Stack>
@@ -66,4 +61,4 @@ const ItemInfo = ({area, config}: {area: string, config: any}) => (
   </GridItem>
 )
 
-export default ItemInfo
+export default ClientInfo

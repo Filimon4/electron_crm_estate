@@ -8,13 +8,17 @@ export const route_pages = {
   estate: `/estate`,
   reports: `/reports`,
   calendar: `/calendar`,
+  realtors: `/realtors`
 }
 
 export type TRoutesPages = keyof typeof route_pages
 
-export function updatePage(link: TRoutesPages | string): boolean {
-  if (Object.values(route_pages).indexOf(link) === -1) return false
-  document.defaultView.location.hash = link
+export function updatePage(link: TRoutesPages): boolean {
+  if (Object.keys(route_pages).indexOf(link) === -1) {
+    console.warn('there is no such route')
+    return false
+  }
+  document.defaultView.location.hash = route_pages[link]
   return true
 }
 export function getPage(): TRoutesPages {

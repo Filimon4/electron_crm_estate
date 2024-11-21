@@ -4,6 +4,7 @@ import LinkHash from '../../routes/LinkHash'
 import { useAtom } from 'jotai'
 import { readUser, writeUser } from '../../../shared/store'
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { route_pages, updatePage } from '../../../shared/route'
 
 const UserMenu = () => {
   const [__, setUser] = useAtom(writeUser)
@@ -31,6 +32,13 @@ const UserMenu = () => {
 
 const User = () => {
   const [user, _] = useAtom(readUser)
+
+  console.log(user)
+  if (!user) {
+    updatePage('singin')
+    window.location.reload()
+  }
+
   return (
     <Box paddingBottom={'15px'}>
       {user ? <>

@@ -1,12 +1,3 @@
-import { route_pages } from "../route";
-
-export const EPageTaskBar = {
-  'desk': route_pages.desk,
-  'estate': route_pages.estate,
-  'clients': route_pages.clients,
-  'reports': route_pages.reports,
-  'calendar': route_pages.calendar
-}
 
 export type TRealtorDB = {
   phone: string;
@@ -15,4 +6,10 @@ export type TRealtorDB = {
   sure_name: string;
   last_name: string;
   password: string;
+  role: UserRole;
+}
+
+export enum UserRole {
+  ADMIN = "admin",
+  REALTOR = "realtor",
 }

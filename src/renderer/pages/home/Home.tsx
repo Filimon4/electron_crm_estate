@@ -1,5 +1,4 @@
 import React from 'react'
-import TaskBar from '../../components/menu/TaskBar/TaskBar'
 import { Outlet } from 'react-router-dom'
 import { Flex } from '@chakra-ui/react'
 import Menu from '../../components/menu/Menu'

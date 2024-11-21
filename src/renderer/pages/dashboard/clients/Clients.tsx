@@ -54,7 +54,7 @@ const Clients = () => {
             price: 1000000
           }} />
         : <>
-          <EmptyItem area='col2' />
+          <EmptyItem area='col2' placeholder='Выберете клиента' />
         </>}
       </Table>
     </>

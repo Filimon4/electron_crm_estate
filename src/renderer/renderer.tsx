@@ -14,6 +14,7 @@ import Clients from './pages/dashboard/clients/Clients';
 import Estate from './pages/dashboard/estate/Estate';
 import Reports from './pages/dashboard/reports/Reports';
 import Calendar from './pages/dashboard/calendar/Calendar';
+import Realtors from './pages/dashboard/realtors/Realtors';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
 
@@ -32,6 +33,7 @@ root.render(
                 <Route path={route_pages.estate} element={<Estate />} />
                 <Route path={route_pages.reports} element={<Reports />} />
                 <Route path={route_pages.calendar} element={<Calendar />} />
+                <Route path={route_pages.realtors} element={<Realtors />} />
               </>
             } />
             <Route path={route_pages.auth}  element={<Auth />} children={

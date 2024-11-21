@@ -1,9 +1,12 @@
 import { BrowserWindow } from "electron";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-export const createWindow = (): void => {
+
+var   mainWindow: BrowserWindow
+
+export function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 920,
     width: 1440,
     minHeight: 600,
@@ -20,4 +23,10 @@ export const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   
   mainWindow.webContents.openDevTools();
+
 };
+
+export function sendToFront(emit: string, ...args: any) {
+  console.log('sendTo', emit, ...args)
+  mainWindow.webContents.send(emit, ...args)
+} 

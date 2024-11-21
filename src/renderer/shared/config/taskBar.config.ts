@@ -1,24 +1,30 @@
-import { EPageTaskBar } from "../store/types";
-
 export const taskBarConfig = [
   {
-    type: EPageTaskBar.desk,
+    type: 'desk',
     name: 'Рабочий стол'
   },
   {
-    type: EPageTaskBar.estate,
+    type: 'estate',
     name: 'Объекты'
   },
   {
-    type: EPageTaskBar.clients,
+    type: 'clients',
     name: 'Клиенты'
   },
   {
-    type: EPageTaskBar.reports,
+    type: 'reports',
     name: 'Отчёты'
   },
   {
-    type: EPageTaskBar.calendar,
+    type: 'calendar',
     name: 'Календарь'
   },
+  
+]
+
+export const taskBarAdminConfig = [
+  {
+    type: 'realtors',
+    name: 'Риелторы'
+  }
 ]
