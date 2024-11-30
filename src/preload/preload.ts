@@ -29,8 +29,8 @@ export const frontApi: PreloadNamespace.IFrontApi = {
   getRealtor: () => ipcRenderer.invoke('getRealtor'),
 
   onNotify: (callback: Function) =>
-    ipcRenderer.on('onNotify',  (_event: any, value: any) => {
-      callback(value)
+    ipcRenderer.on('onNotify',  (_event: any, ...args: any) => {
+      callback(args)
     }
   ),
 }

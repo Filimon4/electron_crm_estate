@@ -1,16 +1,45 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
+import { Calendar, DateLocalizer } from 'react-big-calendar'
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
-const Calendar = () => {
+const cultures = ['ru']
+const lang: {
+  [k in string]: any
+} = {
+  ru: {
+    week: 'Неделя',
+    work_week: 'Рабочая неделя',
+    day: 'День',
+    month: 'Месяц',
+    previous: 'Предыдущий',
+    next: 'Следующий',
+    today: 'Сегодня',
+    agenda: 'Дневник',
+    showMore: (total: any) => `+${total} ещё`,
+  },
+}
+
+const MyCalendar = ({ localizer }: {localizer: any}) => {
+  const [culture, setCulture] = useState('ru')
+  const { defaultDate, messages } = useMemo(
+    () => ({
+      defaultDate: new Date(2015, 3, 1),
+      messages: lang[culture],
+    }),
+    [culture]
+  )
+
   return (
     <div>
-      {/* <Calendar
+      <Calendar
+        culture={culture}
         localizer={localizer}
-        events={myEventsList}
+        events={[]}
         startAccessor="start"
         endAccessor="end"
-      /> */}
+      />
     </div>
   )
 }
 
-export default Calendar
+export default MyCalendar

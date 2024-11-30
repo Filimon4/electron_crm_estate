@@ -1,10 +1,10 @@
 import React from 'react'
 import { Box, Card, CardBody, CardFooter, CardHeader, Center, Divider, Flex, GridItem, Heading, Stack, StackDivider, Text, Textarea } from '@chakra-ui/react'
 
-const EmptyItem = ({area, placeholder}: {area: string, placeholder: string}) => (
-  <GridItem
-    area={area}
+const EmptyItem = ({ placeholder}: { placeholder: string}) => (
+  <Flex
     height={"100%"}
+    minWidth={'300px'}
   >
     <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
     <CardHeader>
@@ -15,7 +15,7 @@ const EmptyItem = ({area, placeholder}: {area: string, placeholder: string}) => 
     <CardFooter>
     </CardFooter>
     </Card>
-  </GridItem>
+  </Flex>
 )
 
 export default EmptyItem

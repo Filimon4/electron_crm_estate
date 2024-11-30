@@ -15,7 +15,7 @@ import Desk from './pages/dashboard/desk/Desk';
 import Clients from './pages/dashboard/clients/Clients';
 import Estate from './pages/dashboard/estate/Estate';
 import Reports from './pages/dashboard/reports/Reports';
-import Calendar from './pages/dashboard/calendar/Calendar';
+import MyCalendar from './pages/dashboard/calendar/Calendar';
 import Realtors from './pages/dashboard/realtors/Realtors';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
@@ -28,7 +28,7 @@ root.render(
   <>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <ToastContainer />
+        <ToastContainer limit={5} />
         <HashRouter>
           <Routes>
             <Route path={route_pages.home} element={<Home />} children={
@@ -37,7 +37,7 @@ root.render(
                 <Route path={route_pages.clients} element={<Clients />} />
                 <Route path={route_pages.estate} element={<Estate />} />
                 <Route path={route_pages.reports} element={<Reports />} />
-                <Route path={route_pages.calendar} element={<Calendar />} />
+                <Route path={route_pages.calendar} element={<MyCalendar localizer={undefined} />} />
                 <Route path={route_pages.realtors} element={<Realtors />} />
               </>
             } />

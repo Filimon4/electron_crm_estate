@@ -1,6 +1,7 @@
 import { HashPasswordsNamespace } from "../../modules/Hash"
 import { TUserDTO } from "../../auth/auth.dto"
 import { User as _User, UserRole } from "../entities/User"
+import { sendNotify } from "../../utils/app"
 
 export namespace UsersNamespace {
 
@@ -13,8 +14,12 @@ export namespace UsersNamespace {
       newRealtor.first_name = data.firstName
       newRealtor.sure_name = data.secondName
       newRealtor.last_name = data.lastName
-      return await dbConnection(_User).save(newRealtor)
+      const user = await dbConnection(_User).save(newRealtor)
+      if (!user || user === null || user === undefined) {throw new Error('')}
+      sendNotify('success', 'Пользователь успешно создан')
+      return user
     } catch (error) {
+      sendNotify('error', 'Ошбика при создании пользователя')
       console.log(error)
     }
   }

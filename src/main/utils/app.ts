@@ -27,6 +27,9 @@ export function createWindow(): void {
 };
 
 export function goFront(emit: string, ...args: any) {
-  console.log("toFront: ", emit, args)
   mainWindow.webContents.send(emit, ...args)
-} 
+}
+
+export function sendNotify(type: 'error' | 'info' | 'success', msg: string) {
+  goFront('onNotify', type, msg)
+}
