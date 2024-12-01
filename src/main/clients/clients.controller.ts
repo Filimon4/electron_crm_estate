@@ -15,16 +15,16 @@ export class ClientController {
     return await ClientsService.getAll()
   }
   
-  async createClient(client: TClientDTO) {
-    console.log('createClient backend')
+  async createClient(event: any, client: TClientDTO) {
+    console.log('createClient backend: ', JSON.stringify(client, null, 2))
   }
   
-  async updateClient(client: TClientDTO) {
-    console.log('updateClient backend')
+  async updateClient(event: any, client: TClientDTO) {
+    console.log('updateClient backend: ', JSON.stringify(client, null, 2))
   }
   
-  async deleteClient(id: number) {
-    console.log('deleteClient backend')
+  async deleteClient(event: any, email: string) {
+    console.log('deleteClient backend: ', email)
   }
 
 }

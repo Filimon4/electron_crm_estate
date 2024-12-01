@@ -28,7 +28,11 @@ const Clients = () => {
     if (!data) return null
     return data[client]
   }, [client])
-  console.log(data)
+
+  const onChangeClient = (clientConfig: any) => {
+    if (!clientData) return
+    console.log(clientConfig)
+  }
   
   return (
     <>
@@ -55,20 +59,22 @@ const Clients = () => {
         </Flex>
         {clientData ? <>
           {user.role == UserRole.ADMIN ? <>
-            <ClientInfoAdmin config={{
-              sure_name: clientData.secondName,
-              first_name: clientData.firstName,
-              last_name: clientData.lastName,
-              phone: clientData.phone,
-              email: clientData.email,
-              description: clientData.description ?? '',
-            }}
+            <ClientInfoAdmin
+             onChangeClient={onChangeClient}
+             config={{
+                secondName: clientData.secondName,
+                firstName: clientData.firstName,
+                lastName: clientData.lastName,
+                phone: clientData.phone,
+                email: clientData.email,
+                description: clientData.description ?? '',
+              }}
             />
           </> : <>
             <ClientInfo config={{
-              sure_name: clientData.secondName,
-              first_name: clientData.firstName,
-              last_name: clientData.lastName,
+              secondName: clientData.secondName,
+              firstName: clientData.firstName,
+              lastName: clientData.lastName,
               phone: clientData.phone,
               email: clientData.email,
               description: clientData.description ?? '',

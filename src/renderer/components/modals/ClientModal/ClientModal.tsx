@@ -14,22 +14,29 @@ import {
   Portal,
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
-import SearchableSelect from "../../global/SearchableSelect/SearchableSelect";
 
 const CreateClientModal = ({ isOpen, onClose }: any) => {
   const [clientData, setClientData] = useState({
-    name: "",
+    firstName: "",
+    sureName: "",
+    lastName: "",
     email: "",
     phone: "",
   });
 
+  const validData = () => {
+    if (!clientData.firstName || !clientData.sureName || !clientData.lastName || !clientData.email || !clientData.phone || clientData.phone.length !== 11) return false
+    return true
+  }
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
+    console.log(name, value)
     setClientData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
-    if (!clientData.name || !clientData.email || !clientData.phone) {
+    if (!validData) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
       })
@@ -40,7 +47,9 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
       autoClose: 2000,
     })
 
-    setClientData({ name: "", email: "", phone: "" });
+    //@ts-ignore
+    window.context.createClient(clientData)
+    setClientData({ firstName: "", lastName: "", sureName: "", email: "", phone: "" });
     onClose();
   };
 
@@ -56,8 +65,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Фамилия</FormLabel>
               <Input
                 placeholder="Введите фамилию"
-                name="name"
-                value={clientData.name}
+                name={'sureName'}
+                value={clientData.sureName}
                 onChange={handleChange}
               />
             </FormControl>
@@ -65,8 +74,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Имя</FormLabel>
               <Input
                 placeholder="Введите имя"
-                name="name"
-                value={clientData.name}
+                name={'firstName'}
+                value={clientData.firstName}
                 onChange={handleChange}
               />
             </FormControl>
@@ -74,8 +83,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Отчество</FormLabel>
               <Input
                 placeholder="Введите отчество"
-                name="name"
-                value={clientData.name}
+                name={'lastName'}
+                value={clientData.lastName}
                 onChange={handleChange}
               />
             </FormControl>
@@ -99,13 +108,9 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 onChange={handleChange}
               />
             </FormControl>
-            <FormControl mt={4} isRequired>
-              <FormLabel>Выберите дом</FormLabel>
-              <SearchableSelect/>
-            </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={!validData()} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>
