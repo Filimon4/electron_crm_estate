@@ -5,7 +5,7 @@ import { TClientDTO } from "./clients.dto";
 export class ClientsService {
 
   static async getAll(): Promise<TClientDTO[]> {
-    const clients: _Client[] = await ClientsNamespace.getAll()
+    const clients: _Client[] = await ClientsNamespace.getAllClients()
     const pipedClients: TClientDTO[] = clients.map(c => ({
       email: c.email,
       firstName: c.first_name,

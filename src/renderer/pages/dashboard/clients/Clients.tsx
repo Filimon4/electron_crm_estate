@@ -10,6 +10,7 @@ import ClientInfo from '../../../components/layout/ItemTable/ClientInfo/ClientIn
 import CreateClientModal from '../../../components/modals/ClientModal/ClientModal'
 import { UserRole } from '../../../shared/store/types'
 import ClientInfoAdmin from '../../../components/layout/ItemTable/ClientInfo/ClientInfoAdmin'
+import { notifyConfig } from '../../../shared/events/notifies.config'
 
 const Clients = () => {
   const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
@@ -24,14 +25,33 @@ const Clients = () => {
   const [, setClient] = useAtom(writeClient)
   const [user,] = useAtom(readUser)
 
+  const [update, setUpdatd] = useState(false)
+  const emitRerender = () => {
+    setUpdatd(!update)
+  }
+
   const clientData = useMemo(() => {
     if (!data) return null
     return data[client]
   }, [client])
 
-  const onChangeClient = (clientConfig: any) => {
+  const onUpdateClient = async (key: string, value: string) => {
     if (!clientData) return
-    console.log(clientConfig)
+    if (clientData[key] === undefined) return
+    clientData[key]=value
+    //@ts-ignore
+    const result = await window.context.updateClient(clientData)
+    if (!result) {
+      notifyConfig.error('Пожалуйста заполните все поля', {
+        autoClose: 3000,
+      })
+      data[client][key] = value
+      emitRerender()
+    } else {
+      notifyConfig.success('Пользователь создан', {
+        autoClose: 2000,
+      })
+    } 
   }
   
   return (
@@ -60,7 +80,7 @@ const Clients = () => {
         {clientData ? <>
           {user.role == UserRole.ADMIN ? <>
             <ClientInfoAdmin
-             onChangeClient={onChangeClient}
+             onChangeClient={onUpdateClient}
              config={{
                 secondName: clientData.secondName,
                 firstName: clientData.firstName,

@@ -12,8 +12,10 @@ import {
   ModalBody,
   ModalCloseButton,
   Portal,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
+import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from "../../../shared/utils/form";
 
 const CreateClientModal = ({ isOpen, onClose }: any) => {
   const [clientData, setClientData] = useState({
@@ -24,31 +26,35 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
     phone: "",
   });
 
-  const validData = () => {
-    if (!clientData.firstName || !clientData.sureName || !clientData.lastName || !clientData.email || !clientData.phone || clientData.phone.length !== 11) return false
-    return true
+  const isDataValid = () => {
+    return (!clientData.firstName || !clientData.sureName || !clientData.lastName || !clientData.email || !clientData.phone || clientData.phone.length !== 11 || !isEmailValid(clientData.email))
   }
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    console.log(name, value)
     setClientData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!validData) {
+  const handleSubmit = async () => {
+    if (!isDataValid) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
       })
       return;
     }
 
-    notifyConfig.success('Пользователь создан', {
-      autoClose: 2000,
-    })
-
     //@ts-ignore
-    window.context.createClient(clientData)
+    const client = await window.context.createClient(clientData)
+    if (client) {
+      notifyConfig.success('Пользователь создан', {
+        autoClose: 2000,
+      })
+    } else {
+      notifyConfig.error('Произошла ошибка при создании клиента', {
+        autoClose: 3000,
+      })
+    }
+
     setClientData({ firstName: "", lastName: "", sureName: "", email: "", phone: "" });
     onClose();
   };
@@ -67,7 +73,9 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите фамилию"
                 name={'sureName'}
                 value={clientData.sureName}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
             <FormControl isRequired>
@@ -76,19 +84,23 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите имя"
                 name={'firstName'}
                 value={clientData.firstName}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
-            <FormControl isRequired>
+            <FormControl isRequired >
               <FormLabel>Отчество</FormLabel>
               <Input
                 placeholder="Введите отчество"
                 name={'lastName'}
                 value={clientData.lastName}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
-            <FormControl mt={4} isRequired>
+            <FormControl mt={4} isRequired isInvalid={!isEmailValid(clientData.email)}>
               <FormLabel>Почта</FormLabel>
               <Input
                 type="email"
@@ -97,6 +109,9 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 value={clientData.email}
                 onChange={handleChange}
               />
+              {!isEmailValid(clientData.email) &&
+                <FormErrorMessage>Неверный формат почты</FormErrorMessage>
+              }
             </FormControl>
             <FormControl mt={4} isRequired>
               <FormLabel>Номер телефона</FormLabel>
@@ -105,12 +120,14 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите номер телефона"
                 name="phone"
                 value={clientData.phone}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isNumbersOnly(e.target.value)) && isPhoneValid(e.target.value) && handleChange(e)
+                }}
               />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={!validData()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

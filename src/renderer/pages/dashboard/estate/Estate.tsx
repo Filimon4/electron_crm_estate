@@ -10,12 +10,18 @@ import EmptyItem from '../../../components/layout/ItemTable/EmptyItem'
 import CreateEstateModal from '../../../components/modals/EstateModal/EstateModal'
 import { UserRole } from '../../../shared/store/types'
 import ItemInfoAdmin from '../../../components/layout/ItemTable/ItemInfo/ItemInfoAdmin'
+import { notifyConfig } from '../../../shared/events/notifies.config'
 
 const Estate = () => {
   const { isOpen: isEstateModal, onOpen: openEstateModal, onClose: closeEstatetModal } = useDisclosure();
   const [selected,] = useAtom(readEstate)
   const [,setSelected] = useAtom(writeEstate)
   const [user,] = useAtom(readUser)
+
+  const [update, setUpdatd] = useState(false)
+  const emitRerender = () => {
+    setUpdatd(!update)
+  }
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['getEstate'],
@@ -29,7 +35,25 @@ const Estate = () => {
     if (!data) return null
     return data[selected]
   }, [selected])
-  console.log(selectedEstate)
+
+  const onUpdateEstate = async (key: string, value: string) => {
+    if (!selectedEstate) return
+    if (selectedEstate[key] === undefined) return
+    selectedEstate[key]=value
+    //@ts-ignore
+    const result = await window.context.updateClient(selectedEstate)
+    if (!result) {
+      notifyConfig.error('Пожалуйста заполните все поля', {
+        autoClose: 3000,
+      })
+      data[selected][key] = value
+      emitRerender()
+    } else {
+      notifyConfig.success('Пользователь создан', {
+        autoClose: 2000,
+      })
+    } 
+  }
 
   return (
     <>
@@ -56,15 +80,19 @@ const Estate = () => {
         </Flex>
         {selectedEstate ? <>
           {user.role == UserRole.ADMIN ? <>
-            <ItemInfoAdmin config={{
-              room_amount: selectedEstate.room_amount,
-              flat: selectedEstate.flat,
-              floor: selectedEstate.floor,
-              size: selectedEstate.size,
-              adress: `${selectedEstate.house.street} ${selectedEstate.house.house_number}`,
-              price: selectedEstate.price,
-              description: selectedEstate.description ?? ' '
-            }}/>
+            <ItemInfoAdmin
+              onChangeEstate={onUpdateEstate}
+              config={{
+                id: selectedEstate.id,
+                room_amount: selectedEstate.room_amount,
+                flat: selectedEstate.flat,
+                floor: selectedEstate.floor,
+                size: selectedEstate.size,
+                adress: `${selectedEstate.house.street} ${selectedEstate.house.house_number}`,
+                price: selectedEstate.price,
+                description: selectedEstate.description ?? ' '
+              }}
+            />
           </> : <>
             <ItemInfo config={{
               room_amount: selectedEstate.room_amount,

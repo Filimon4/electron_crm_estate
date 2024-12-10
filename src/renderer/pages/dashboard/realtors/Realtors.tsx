@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Heading, useDisclosure } from '@chakra-ui/react'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import TableView from '../../../components/layout/ItemTable/TableView'
 import { useQuery } from '@tanstack/react-query'
@@ -8,11 +8,17 @@ import { readRealtor, readUser, writeRealtor } from '../../../shared/store'
 import EmptyItem from '../../../components/layout/ItemTable/EmptyItem'
 import CreateRealtorModal from '../../../components/modals/RealtorModal/RealtorModal'
 import RealtorInfoAdmin from '../../../components/layout/ItemTable/RealtorInfo/RealtorInfoAdmin'
+import { notifyConfig } from '../../../shared/events/notifies.config'
 
 const Realtors = () => {
   const { isOpen: isRealtorModal, onOpen: openRealtorModal, onClose: closeRealtorModal } = useDisclosure();
   const [selected, __] = useAtom(readRealtor)
   const [_, setSelected] = useAtom(writeRealtor)
+
+  const [update, setUpdatd] = useState(false)
+  const emitRerender = () => {
+    setUpdatd(!update)
+  }
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['getRealtors'],
@@ -26,7 +32,25 @@ const Realtors = () => {
     if (!data) return null
     return data[selected]
   }, [selected])
-  console.log(data)
+
+  const onUpdateEstate = async (key: string, value: string) => {
+    if (!selectedRealtor) return
+    if (selectedRealtor[key] === undefined) return
+    selectedRealtor[key]=value
+    //@ts-ignore
+    const result = await window.context.updateClient(selectedRealtor)
+    if (!result) {
+      notifyConfig.error('Пожалуйста заполните все поля', {
+        autoClose: 3000,
+      })
+      data[selected][key] = value
+      emitRerender()
+    } else {
+      notifyConfig.success('Пользователь создан', {
+        autoClose: 2000,
+      })
+    } 
+  }
 
   return (
     <>
@@ -52,15 +76,18 @@ const Realtors = () => {
           </Flex>
         </Flex>
         {selectedRealtor ?
-          <RealtorInfoAdmin config={{
-            sure_name: selectedRealtor.secondName,
-            first_name: selectedRealtor.firstName,
-            last_name: selectedRealtor.lastName,
-            phone: selectedRealtor.phone,
-            email: selectedRealtor.email,
-            description: selectedRealtor.description ?? '',
-            password: selectedRealtor.password
-          }} />
+          <RealtorInfoAdmin
+            onChangeEstate={onUpdateEstate}
+            config={{
+              sure_name: selectedRealtor.secondName,
+              first_name: selectedRealtor.firstName,
+              last_name: selectedRealtor.lastName,
+              phone: selectedRealtor.phone,
+              email: selectedRealtor.email,
+              description: selectedRealtor.description ?? '',
+              password: selectedRealtor.password
+            }} 
+          />
           : <>
             <EmptyItem placeholder='Выберете клиента' />
           </>}

@@ -12,12 +12,16 @@ import {
   ModalBody,
   ModalCloseButton,
   Portal,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
+import { isEmailValid, isLettersOnly, isNumbersOnly } from "../../../shared/utils/form";
 
 const CreateRealtorModal = ({ isOpen, onClose }: any) => {
   const [clientData, setClientData] = useState({
-    name: "",
+    firstName: "",
+    sureName: "",
+    lastName: "",
     email: "",
     phone: "",
   });
@@ -27,19 +31,37 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
     setClientData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!clientData.name || !clientData.email || !clientData.phone) {
+  const isDataValid = () => {
+    return (!clientData.firstName || !clientData.email || !clientData.sureName || !clientData.lastName || !clientData.phone || clientData.phone.length !== 11)
+  }
+
+  const handleSubmit = async () => {
+    if (!isDataValid) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
       })
       return;
     }
 
-    notifyConfig.success('Пользователь создан', {
-      autoClose: 2000,
-    })
+    //@ts-ignore
+    const realtor = await window.context.createRealtor(clientData)
+    if (realtor) {
+      notifyConfig.success('Риелтор создан', {
+        autoClose: 2000,
+      })
+    } else {
+      notifyConfig.error('Произошла ошибка при сохдании риелтора', {
+        autoClose: 3000,
+      })
+    }
 
-    setClientData({ name: "", email: "", phone: "" });
+    setClientData({
+      firstName: "",
+      sureName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+    });
     onClose();
   };
 
@@ -48,37 +70,49 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Создание нового клиента</ModalHeader>
+          <ModalHeader>Создание нового риелтора</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl isRequired>
               <FormLabel>Фамилия</FormLabel>
               <Input
+                type='text'
+                pattern="^[a-zA-Z]+$"
                 placeholder="Введите фамилию"
-                name="name"
-                value={clientData.name}
-                onChange={handleChange}
+                name="sureName"
+                value={clientData.sureName}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Имя</FormLabel>
               <Input
+                type='text'
+                pattern="^[a-zA-Z]+$"
                 placeholder="Введите имя"
-                name="name"
-                value={clientData.name}
-                onChange={handleChange}
+                name="firstName"
+                value={clientData.firstName}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Отчество</FormLabel>
               <Input
+                type='text'
+                pattern="^[a-zA-Z]+$"
                 placeholder="Введите отчество"
-                name="name"
-                value={clientData.name}
-                onChange={handleChange}
+                name="lastName"
+                value={clientData.lastName}
+                onChange={(e) => {
+                  (isLettersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
-            <FormControl mt={4} isRequired>
+            <FormControl mt={4} isRequired isInvalid={!isEmailValid(clientData.email)}>
               <FormLabel>Почта</FormLabel>
               <Input
                 type="email"
@@ -87,6 +121,9 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 value={clientData.email}
                 onChange={handleChange}
               />
+              {!isEmailValid(clientData.email) &&
+                <FormErrorMessage>Неверный формат почты</FormErrorMessage>
+              }
             </FormControl>
             <FormControl mt={4} isRequired>
               <FormLabel>Номер телефона</FormLabel>
@@ -95,12 +132,14 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите номер телефона"
                 name="phone"
                 value={clientData.phone}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isNumbersOnly(e.target.value)) && handleChange(e)
+                }}
               />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

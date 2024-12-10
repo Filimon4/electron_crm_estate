@@ -14,9 +14,9 @@ export const frontApi: PreloadNamespace.IFrontApi = {
   deleteClient: (...args: any) => ipcRenderer.invoke('deleteClient', ...args),
   getClients: () => ipcRenderer.invoke('getClients'),
   
-  createEsate: (...args: any) => ipcRenderer.invoke('createEstate', ...args),
-  updateEsate: (...args: any) => ipcRenderer.invoke('updateEstate', ...args),
-  deleteEsate: (...args: any) => ipcRenderer.invoke('deleteEstate', ...args),
+  createEstate: (...args: any) => ipcRenderer.invoke('createEstate', ...args),
+  updateEstate: (...args: any) => ipcRenderer.invoke('updateEstate', ...args),
+  deleteEstate: (...args: any) => ipcRenderer.invoke('deleteEstate', ...args),
   getEstate: () => ipcRenderer.invoke('getEstate'),
   
   createDeal: (...args: any) => ipcRenderer.invoke('createDeal', ...args),

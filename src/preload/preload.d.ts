@@ -9,9 +9,9 @@ declare global {
       createClient: any;
       updateClient: any;
       deleteClient: any;
-      createEsate: any;
-      updateEsate: any;
-      deleteEsate: any;
+      createEstate: any;
+      updateEstate: any;
+      deleteEstate: any;
       createDeal: any;
       updateDeal: any;
       deleteDeal: any;

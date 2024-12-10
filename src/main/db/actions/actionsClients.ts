@@ -4,25 +4,42 @@ import { Client as _Client } from "../entities";
 export namespace ClientsNamespace {
   
   export const createClient = async (clientData: TClientDTO) => {
-    const client = new _Client()
-    client.email = clientData.email
-    client.phone = clientData.phone
-    client.first_name = clientData.firstName
-    client.sure_name = clientData.secondName
-    client.last_name = clientData.lastName
-    await dbConnection(_Client).save(client)
+    const user = await dbConnection(_Client).create(clientData);
+    return await dbConnection(_Client).save(user);
   }
 
-  export const updateClient = async (client: TUpdateClientDTO) => {
+  export const updateClient = async (id: number, updates: Partial<_Client>): Promise<_Client | null> => {
+    const userRepository = await dbConnection(_Client);
+    const user = await userRepository.findOne({ where: { id } });
+    if (!user) {
+      return null;
+    }
+    Object.assign(user, updates);
+    return await userRepository.save(user);
+  };
+  
 
-  }
+  export const deleteClient = async (id: number): Promise<boolean> => {
+    const userRepository = await dbConnection(_Client);
+    const result = await userRepository.delete(id);
+    return result.affected !== 0;
+  };
+  
 
-  export const deleteClient = async (id: number) => {
-    await dbConnection(_Client).delete(id)
-  }
+  export const getAllClients = async (): Promise<_Client[]> => {
+    const userRepository = await dbConnection(_Client);
+    return await userRepository.find();
+  };
 
-  export const getAll = async () => {
-    return dbConnection(_Client).find()
-  }
+  export const getClientById = async (id: number): Promise<_Client | null> => {
+    const userRepository = await dbConnection(_Client);
+    return await userRepository.findOne({ where: { id } });
+  };
+  
+  export const getClientByEmail = async (email: string): Promise<_Client | null> => {
+    const userRepository = await dbConnection(_Client)
+    return await userRepository.findOne({ where: { email } });
+  };
+  
 
 }

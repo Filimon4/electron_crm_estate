@@ -10,9 +10,9 @@ export namespace PreloadNamespace {
     deleteClient: any;
     getClients: any;
 
-    createEsate: any;
-    updateEsate: any;
-    deleteEsate: any;
+    createEstate: any;
+    updateEstate: any;
+    deleteEstate: any;
     getEstate: any;
 
     createDeal: any;

@@ -1,52 +1,73 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Editable, EditableInput, EditablePreview, Flex, GridItem, Heading, Input, Stack, StackDivider, Text, Textarea, useEditableControls } from '@chakra-ui/react'
 import { CiEdit,  } from "react-icons/ci";
 import { IoCheckmarkOutline, IoCloseOutline  } from "react-icons/io5";
+import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from '../../../../shared/utils/form';
 
-const EditableControls = () => {
-  const {
-    isEditing,
-    getSubmitButtonProps,
-    getCancelButtonProps,
-    getEditButtonProps,
-  } = useEditableControls()
+const CardBodyItem = ({
+  title,
+  defaultValue,
+  editValue,
+  onChangeData,
+  inputValidator,
+  submitValidator
+}: {
+  title: string,
+  defaultValue: string,
+  editValue: string,
+  onChangeData: (name: string, value: string) => void,
+  inputValidator: (input: string) => boolean,
+  submitValidator?: (input: string) => boolean
+}) => {
+  const [value, setValue] = useState(defaultValue)
+  const [newValue, setNewValue] = useState(defaultValue)
+  const [isEditing, setEditable] = useState(false)
 
-  return isEditing ? (
-    <Flex justifyContent='space-between' gap="10px">
-      <Button padding={'2px'} {...getSubmitButtonProps()}>
-        <IoCheckmarkOutline />
-      </Button>
-      <Button padding={'2px'} {...getCancelButtonProps()}>
-        <IoCloseOutline />
-      </Button>
-    </Flex>
-  ) : (
-    <Flex justifyContent='space-between' gap="10px">
-      <Button padding={'2px'} size='sm' {...getEditButtonProps()}>
-        <CiEdit />
-      </Button>
-    </Flex>
-  )
-}
+  const submitEdit = () => {
+    if (!submitValidator(newValue)) return
+    setValue(newValue)
+    setEditable(false)
+    onChangeData(editValue, newValue)
+  }
 
-const CardBodyItem = ({title, defaultValue, editValue, onChangeData}: {title: string, defaultValue: string, editValue: string, onChangeData: (name: string, value: string) => void}) => {
+  const cancelEdit = () => {
+    setNewValue(value)
+    setEditable(false)
+  }
+
   return (
-    <Flex justify={'space-between'} direction={'column'} >
+    <Flex justify={'space-between'} direction={'column'}>
       <Heading size='xs' textTransform='uppercase'>
         {title}
       </Heading>
-      <Editable
-        fontSize='sm'
-        textAlign='left'
-        defaultValue={defaultValue}
-        onSubmit={(value: string) => onChangeData(editValue, value)}
-      >
-        <Flex direction={'row'} justifyContent={'space-between'}>
-          <Input as={EditableInput} />
-          <EditablePreview />
-          <EditableControls />
-        </Flex>
-      </Editable>
+      <Flex>
+        {isEditing ? <>
+          <Flex justifyContent='space-between' gap="10px">
+            <Input
+              type="tel"
+              placeholder="Введите номер телефона"
+              name={editValue}
+              value={newValue}
+              onChange={(e) => {
+                (inputValidator(e.target.value)) && setNewValue(e.target.value)
+              }}
+            />
+            <Button padding={'2px'} onClick={() => submitEdit()}>
+              <IoCheckmarkOutline />
+            </Button>
+            <Button padding={'2px'} onClick={() => cancelEdit()}>
+              <IoCloseOutline />
+            </Button>
+          </Flex>
+        </> : <>
+          <Flex justifyContent='space-between' gap="10px">
+            <Text>{value}</Text>
+            <Button padding={'2px'} size='sm' onClick={() => setEditable(true)}>
+              <CiEdit />
+            </Button>
+          </Flex>
+        </>}
+      </Flex>
     </Flex>
   )
 }
@@ -65,11 +86,11 @@ const ClientInfoAdmin = ({onChangeClient, config}: {onChangeClient: (...args: an
       <CardBody>
         <Flex flexDirection={'column'} height={'100%'}>
           <Stack divider={<StackDivider />} spacing='3'>
-            <CardBodyItem onChangeData={onChangeClient} title={'Фамилия'} editValue={'secondName'} defaultValue={config.secondName} />
-            <CardBodyItem onChangeData={onChangeClient} title={'Имя'} editValue={'firstName'} defaultValue={config.firstName} />
-            <CardBodyItem onChangeData={onChangeClient} title={'Отчество'} editValue={'lastName'} defaultValue={config.lastName} />
-            <CardBodyItem onChangeData={onChangeClient} title={'Телефон'} editValue={'phone'} defaultValue={config.phone} />
-            <CardBodyItem onChangeData={onChangeClient} title={'Почта'} editValue={'email'} defaultValue={config.email} />
+            <CardBodyItem inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeClient} title={'Фамилия'} editValue={'secondName'} defaultValue={config.secondName} />
+            <CardBodyItem inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeClient} title={'Имя'} editValue={'firstName'} defaultValue={config.firstName} />
+            <CardBodyItem inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeClient} title={'Отчество'} editValue={'lastName'} defaultValue={config.lastName} />
+            <CardBodyItem inputValidator={(value) => isNumbersOnly(value)} submitValidator={(value) => Boolean(value) && isPhoneValid(value)} onChangeData={onChangeClient} title={'Телефон'} editValue={'phone'} defaultValue={config.phone} />
+            <CardBodyItem inputValidator={(value) => isEmailValid(value)}submitValidator={(value) => Boolean(value)}  onChangeData={onChangeClient} title={'Почта'} editValue={'email'} defaultValue={config.email} />
           </Stack>
           <Textarea value={config.description} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
         </Flex>

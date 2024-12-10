@@ -16,15 +16,15 @@ export class ClientController {
   }
   
   async createClient(event: any, client: TClientDTO) {
-    console.log('createClient backend: ', JSON.stringify(client, null, 2))
+    console.log(client)
   }
   
   async updateClient(event: any, client: TClientDTO) {
-    console.log('updateClient backend: ', JSON.stringify(client, null, 2))
+    console.log(client)
   }
   
   async deleteClient(event: any, email: string) {
-    console.log('deleteClient backend: ', email)
+    console.log(email)
   }
 
 }
