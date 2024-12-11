@@ -1,8 +1,7 @@
-import { Checkbox, GridItem, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react'
-import React from 'react'
+import { Checkbox, GridItem, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import React, { memo } from 'react';
 
-
-const TableView = ({config, selected, setSelected}: {config: any, selected: number, setSelected: React.Dispatch<number>}) => {
+const TableView = memo(({ config, selected, setSelected }: { config: any; selected: number; setSelected: React.Dispatch<number> }) => {
   return (
     <TableContainer>
       <Table size={'sm'}>
@@ -15,23 +14,22 @@ const TableView = ({config, selected, setSelected}: {config: any, selected: numb
           </Tr>
         </Thead>
         <Tbody>
-          
           {config.body.map((v: any, i: number) => (
             <Tr key={i}>
               <Td>
                 <Checkbox
-                  isChecked={selected == i}
+                  isChecked={selected === i}
                   onChange={() => {
-                    if (selected == i) {
-                      setSelected(null)
-                      return
+                    if (selected === i) {
+                      setSelected(null);
+                      return;
                     }
-                    setSelected(i)
+                    setSelected(i);
                   }}
                 />
               </Td>
-              {v.map((j: any, i: number) => (
-                <Td key={i}>{j}</Td>
+              {v.map((j: any, idx: number) => (
+                <Td key={idx}>{j}</Td>
               ))}
             </Tr>
           ))}
@@ -39,15 +37,15 @@ const TableView = ({config, selected, setSelected}: {config: any, selected: numb
         <Tfoot>
           {config.foot.map((v: any, i: number) => (
             <Tr key={i}>
-              {v.map((j: any, i: number) => (
-                <Th key={i}>{j}</Th>
+              {v.map((j: any, idx: number) => (
+                <Th key={idx}>{j}</Th>
               ))}
             </Tr>
           ))}
         </Tfoot>
       </Table>
     </TableContainer>
-  )
-}
+  );
+});
 
-export default TableView
+export default TableView;

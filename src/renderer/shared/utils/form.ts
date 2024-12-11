@@ -6,6 +6,10 @@ export const isLettersOnly = (value: string) => {
   return (/^[а-яА-я]*$/.test(value))
 }
 
+export const isEnglishEmailOnly = (value: string) => {
+  return (/^[a-zA-Z0-9.@]*$/.test(value))
+}
+
 export const isNumbersOnly = (value: string) => {
   return (/^\d*$/.test(value))
 }

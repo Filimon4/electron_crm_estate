@@ -1,5 +1,6 @@
 
 export type TUserDTO = {
+  id?: number;
   phone: string;
   email: string;
   firstName: string;

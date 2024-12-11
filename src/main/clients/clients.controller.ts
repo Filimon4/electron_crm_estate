@@ -1,6 +1,7 @@
 import { ipcMain } from "electron";
 import { TClientDTO } from "./clients.dto";
 import { ClientsService } from "./clients.service";
+import { ClientsNamespace } from "../db/actions/actionsClients";
 
 export class ClientController {
 
@@ -16,15 +17,16 @@ export class ClientController {
   }
   
   async createClient(event: any, client: TClientDTO) {
-    console.log(client)
+    return await ClientsNamespace.createClient(client)
   }
   
   async updateClient(event: any, client: TClientDTO) {
     console.log(client)
+    return await ClientsNamespace.updateClient(client.id, client)
   }
   
-  async deleteClient(event: any, email: string) {
-    console.log(email)
+  async deleteClient(event: any, id: number) {
+    return await ClientsNamespace.deleteClient(id)
   }
 
 }

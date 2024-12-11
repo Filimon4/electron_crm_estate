@@ -1,5 +1,7 @@
 import { ipcMain } from "electron";
 import { RealtorsService } from "./realtors.service";
+import { UsersNamespace } from "../db/actions/actionsUsers";
+import { TUserDTO } from "../auth/auth.dto";
 
 export class RealtorController {
 
@@ -16,16 +18,16 @@ export class RealtorController {
     return  realtors
   }
 
-  async createRealtor(event: any, estate: any) {
-    console.log(estate)
+  async createRealtor(event: any, estate: TUserDTO) {
+    return await UsersNamespace.createUser(estate)
   }
 
-  async updateRealtor(event: any, estate: any) {
-    console.log(estate)
+  async updateRealtor(event: any, estate: TUserDTO) {
+    return await UsersNamespace.updateUser(estate.id, estate)
   }
 
-  async deleteRealtor(event: any, id: any) {
-    console.log(id)
+  async deleteRealtor(event: any, id: number) {
+    return await UsersNamespace.deleteUser(id)
   }
 
 }

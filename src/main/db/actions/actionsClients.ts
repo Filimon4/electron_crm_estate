@@ -4,7 +4,12 @@ import { Client as _Client } from "../entities";
 export namespace ClientsNamespace {
   
   export const createClient = async (clientData: TClientDTO) => {
-    const user = await dbConnection(_Client).create(clientData);
+    const user = await dbConnection(_Client).create();
+    user.first_name = clientData.first_name
+    user.sure_name = clientData.sure_name
+    user.last_name = clientData.last_name
+    user.email = clientData.email
+    user.phone = clientData.phone
     return await dbConnection(_Client).save(user);
   }
 

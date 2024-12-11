@@ -52,8 +52,14 @@ export namespace UsersNamespace {
     }
   }
 
-  export const updateUser = async () => {
-
+  export const updateUser = async (id: number, user: TUserDTO) => {
+    const userRepository = await dbConnection(_User);
+    const foundUser = await userRepository.findOne({ where: { id: id} });
+    if (!foundUser) {
+      return null;
+    }
+    Object.assign(foundUser, user);
+    return await userRepository.save(user);
   }
 
   export const getAllRealtors = async () => {
@@ -67,6 +73,11 @@ export namespace UsersNamespace {
 
   export const getAll = async () => {
     await dbConnection(_User).find()
+  }
+
+  export const deleteUser = async (id: number) => {
+    const result =  await dbConnection(_User).delete(id)
+    return result.affected !== 0
   }
 
 }

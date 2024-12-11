@@ -15,19 +15,19 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
-import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from "../../../shared/utils/form";
+import { isEmailValid, isEnglishEmailOnly, isLettersOnly, isNumbersOnly, isPhoneValid } from "../../../shared/utils/form";
 
-const CreateClientModal = ({ isOpen, onClose }: any) => {
+const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
   const [clientData, setClientData] = useState({
-    firstName: "",
-    sureName: "",
-    lastName: "",
+    first_name: "",
+    sure_name: "",
+    last_name: "",
     email: "",
     phone: "",
   });
 
   const isDataValid = () => {
-    return (!clientData.firstName || !clientData.sureName || !clientData.lastName || !clientData.email || !clientData.phone || clientData.phone.length !== 11 || !isEmailValid(clientData.email))
+    return (!clientData.first_name || !clientData.sure_name || !clientData.last_name || !clientData.email || !clientData.phone || clientData.phone.length !== 11 || !isEmailValid(clientData.email))
   }
 
   const handleChange = (e: any) => {
@@ -49,13 +49,14 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      refetch(client)
     } else {
       notifyConfig.error('Произошла ошибка при создании клиента', {
         autoClose: 3000,
       })
     }
 
-    setClientData({ firstName: "", lastName: "", sureName: "", email: "", phone: "" });
+    setClientData({ first_name: "", last_name: "", sure_name: "", email: "", phone: "" });
     onClose();
   };
 
@@ -71,8 +72,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Фамилия</FormLabel>
               <Input
                 placeholder="Введите фамилию"
-                name={'sureName'}
-                value={clientData.sureName}
+                name={'sure_name'}
+                value={clientData.sure_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -82,8 +83,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Имя</FormLabel>
               <Input
                 placeholder="Введите имя"
-                name={'firstName'}
-                value={clientData.firstName}
+                name={'first_name'}
+                value={clientData.first_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -93,8 +94,8 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
               <FormLabel>Отчество</FormLabel>
               <Input
                 placeholder="Введите отчество"
-                name={'lastName'}
-                value={clientData.lastName}
+                name={'last_name'}
+                value={clientData.last_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -107,7 +108,7 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите почту"
                 name="email"
                 value={clientData.email}
-                onChange={handleChange}
+                onChange={(e) => {(isEnglishEmailOnly(e.target.value)) && handleChange(e)}}
               />
               {!isEmailValid(clientData.email) &&
                 <FormErrorMessage>Неверный формат почты</FormErrorMessage>
@@ -121,7 +122,7 @@ const CreateClientModal = ({ isOpen, onClose }: any) => {
                 name="phone"
                 value={clientData.phone}
                 onChange={(e) => {
-                  (isNumbersOnly(e.target.value)) && isPhoneValid(e.target.value) && handleChange(e)
+                  (isNumbersOnly(e.target.value)) && handleChange(e)
                 }}
               />
             </FormControl>
