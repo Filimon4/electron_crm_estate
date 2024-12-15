@@ -23,7 +23,7 @@ const Estate = () => {
     setUpdatd(!update)
   }
 
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['getEstate'],
     queryFn: async () => {
       //@ts-ignore
@@ -39,20 +39,29 @@ const Estate = () => {
   const onUpdateEstate = async (key: string, value: string) => {
     if (!selectedEstate) return
     if (selectedEstate[key] === undefined) return
-    selectedEstate[key]=value
     //@ts-ignore
     const result = await window.context.updateClient(selectedEstate)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
       })
-      data[selected][key] = value
-      emitRerender()
     } else {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      data[selected] = value
+      emitRerender()
+      refetch()
     } 
+  }
+
+  const onDeleteEstate = async (id: number) => {
+    //@ts-ignore
+    const resultDel = await window.context.deleteEstate(id)
+    if (resultDel) {
+      refetch()
+      setSelected(null)
+    }
   }
 
   return (
@@ -81,6 +90,7 @@ const Estate = () => {
         {selectedEstate ? <>
           {user.role == UserRole.ADMIN ? <>
             <ItemInfoAdmin
+              onDeleteEstate={onDeleteEstate}
               onChangeEstate={onUpdateEstate}
               config={{
                 id: selectedEstate.id,
@@ -108,7 +118,7 @@ const Estate = () => {
           <EmptyItem placeholder='Выберете объект' />
         </>}
       </Flex>
-      <CreateEstateModal onClose={closeEstatetModal} isOpen={isEstateModal} />
+      <CreateEstateModal onClose={closeEstatetModal} isOpen={isEstateModal} refetch={refetch} />
     </>
   )
 }

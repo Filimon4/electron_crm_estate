@@ -25,21 +25,21 @@ const ClientTableData = memo(({ client, setClient, data, openClientModal }: any)
           </Button>
         </Flex>
         <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
-          <TableView 
-            selected={client} 
-            setSelected={setClient} 
+          <TableView
+            selected={client}
+            setSelected={setClient}
             config={{
               headers: ['Фамилия', 'Имя', 'Отчество', 'Телефон', 'Почта'],
               body: data ? data.map((d: any) => [d.sure_name, d.first_name, d.last_name, d.phone, d.email]) : [],
               foot: []
-            }} 
+            }}
           />
         </Box>
-        <Pagination 
-          currentPage={0} 
-          totalPages={100} 
-          onNext={() => console.log("next")} 
-          onPrevious={() => console.log("prev")} 
+        <Pagination
+          currentPage={0}
+          totalPages={100}
+          onNext={() => console.log("next")}
+          onPrevious={() => console.log("prev")}
         />
       </Flex>
     </Flex>
@@ -49,7 +49,7 @@ const ClientTableData = memo(({ client, setClient, data, openClientModal }: any)
 
 const Clients = () => {
   const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
-  let { isLoading, error, data, refetch } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['getClients'],
     queryFn: async () => {
       //@ts-ignore
@@ -73,7 +73,6 @@ const Clients = () => {
   const onUpdateClient = async (key: string, value: string) => {
     if (!clientData) return
     if (clientData[key] === undefined) return
-    clientData[key]=value
     //@ts-ignore
     const result = await window.context.updateClient(clientData)
     if (!result) {
@@ -84,13 +83,10 @@ const Clients = () => {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      clientData[key]=value
       refetch()
       emitRerender()
     } 
-  }
-
-  const onAddNewUser = (user: any) => {
-    refetch()
   }
 
   const onDeleteUser = async (id: number) => {
@@ -121,7 +117,7 @@ const Clients = () => {
           <EmptyItem placeholder='Выберете клиента' />
         </>}
       </Flex>
-      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={onAddNewUser} />
+      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={refetch} />
     </>
   )
 }

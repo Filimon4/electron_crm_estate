@@ -15,15 +15,16 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
-import { isEmailValid, isLettersOnly, isNumbersOnly } from "../../../shared/utils/form";
+import { isEmailValid, isEnglishEmailOnly, isLettersOnly, isNumbersOnly, isPhoneValid } from "../../../shared/utils/form";
 
-const CreateRealtorModal = ({ isOpen, onClose }: any) => {
+const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
   const [clientData, setClientData] = useState({
-    firstName: "",
-    sureName: "",
-    lastName: "",
+    first_name: "",
+    sure_name: "",
+    last_name: "",
     email: "",
     phone: "",
+    password: "",
   });
 
   const handleChange = (e: any) => {
@@ -32,7 +33,7 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
   };
 
   const isDataValid = () => {
-    return (!clientData.firstName || !clientData.email || !clientData.sureName || !clientData.lastName || !clientData.phone || clientData.phone.length !== 11)
+    return (!clientData.first_name || !clientData.email || !clientData.sure_name || !clientData.last_name || !clientData.phone || clientData.phone.length !== 11 || !clientData.password)
   }
 
   const handleSubmit = async () => {
@@ -46,23 +47,17 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
     //@ts-ignore
     const realtor = await window.context.createRealtor(clientData)
     if (realtor) {
-      notifyConfig.success('Риелтор создан', {
-        autoClose: 2000,
-      })
-    } else {
-      notifyConfig.error('Произошла ошибка при сохдании риелтора', {
-        autoClose: 3000,
-      })
+      setClientData({
+        first_name: "",
+        sure_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        password: "",
+      });
+      onClose();
+      refetch();
     }
-
-    setClientData({
-      firstName: "",
-      sureName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-    });
-    onClose();
   };
 
   return (
@@ -79,8 +74,8 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 type='text'
                 pattern="^[a-zA-Z]+$"
                 placeholder="Введите фамилию"
-                name="sureName"
-                value={clientData.sureName}
+                name="sure_name"
+                value={clientData.sure_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -92,8 +87,8 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 type='text'
                 pattern="^[a-zA-Z]+$"
                 placeholder="Введите имя"
-                name="firstName"
-                value={clientData.firstName}
+                name="first_name"
+                value={clientData.first_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -105,8 +100,8 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 type='text'
                 pattern="^[a-zA-Z]+$"
                 placeholder="Введите отчество"
-                name="lastName"
-                value={clientData.lastName}
+                name="last_name"
+                value={clientData.last_name}
                 onChange={(e) => {
                   (isLettersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -119,13 +114,15 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 placeholder="Введите почту"
                 name="email"
                 value={clientData.email}
-                onChange={handleChange}
+                onChange={(e) => {
+                  (isEnglishEmailOnly(e.target.value)) &&handleChange(e)
+                }}
               />
               {!isEmailValid(clientData.email) &&
                 <FormErrorMessage>Неверный формат почты</FormErrorMessage>
               }
             </FormControl>
-            <FormControl mt={4} isRequired>
+            <FormControl mt={4} isRequired isInvalid={!isPhoneValid(clientData.phone)}>
               <FormLabel>Номер телефона</FormLabel>
               <Input
                 type="tel"
@@ -134,6 +131,20 @@ const CreateRealtorModal = ({ isOpen, onClose }: any) => {
                 value={clientData.phone}
                 onChange={(e) => {
                   (isNumbersOnly(e.target.value)) && handleChange(e)
+                }}
+              />
+              {!isPhoneValid(clientData.phone) &&
+                <FormErrorMessage>Неверный формат номера телефона</FormErrorMessage>
+              }
+            </FormControl>
+            <FormControl mt={4} isRequired>
+              <FormLabel>Пароль</FormLabel>
+              <Input
+                placeholder="Введите пароль"
+                name="password"
+                value={clientData.password}
+                onChange={(e) => {
+                  handleChange(e)
                 }}
               />
             </FormControl>

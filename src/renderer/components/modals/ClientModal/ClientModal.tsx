@@ -49,7 +49,7 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
-      refetch(client)
+      refetch()
     } else {
       notifyConfig.error('Произошла ошибка при создании клиента', {
         autoClose: 3000,

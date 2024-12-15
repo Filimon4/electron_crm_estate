@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import { TEstateDTO } from "./estates.dto";
 import { EstateNamespace } from "../db/actions/actionsEstate";
 
+// TODO раставить try catch
 export class EstateController {
 
   constructor () {
@@ -17,14 +18,15 @@ export class EstateController {
   }
   
   async createEstate(event: any, estate: TEstateDTO) {
+    console.log(estate)
     return await EstateNamespace.createFlat({
-      description: '',
-      flat: estate.flat,
-      floor: estate.floor,
-      house: estate.house,
-      price: estate.price,
-      room_amount: estate.room_amount,
-      size: estate.size
+      description: ' ',
+      flat: +estate.flat,
+      floor: +estate.floor,
+      house_id: +estate.house,
+      price: +estate.price,
+      room_amount: +estate.room_amount,
+      size: +estate.size
     })
   }
   
@@ -32,11 +34,11 @@ export class EstateController {
     const flat = await EstateNamespace.getFlatById(estate.id)
     return await EstateNamespace.updateFlat(flat.id, {
       description: estate.description,
-      flat: estate.flat,
-      floor: estate.floor,
-      price: estate.price,
-      room_amount: estate.room_amount,
-      size: estate.size
+      flat: +estate.flat,
+      floor: +estate.floor,
+      price: +estate.price,
+      room_amount: +estate.room_amount,
+      size: +estate.size
     })
   }
   

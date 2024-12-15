@@ -3,9 +3,9 @@ export type TUserDTO = {
   id?: number;
   phone: string;
   email: string;
-  firstName: string;
-  secondName: string;
-  lastName: string;
+  first_name: string;
+  sure_name: string;
+  last_name: string;
   password: string;
 }
 

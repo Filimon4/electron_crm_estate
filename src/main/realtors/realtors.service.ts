@@ -8,9 +8,9 @@ export class RealtorsService {
     const users: _User[] = await UsersNamespace.getAllRealtors()
     const realtors: TRealtorDTO[] = users.map(u => ({
       email: u.email,
-      firstName: u.first_name,
-      lastName: u.last_name,
-      secondName: u.sure_name,
+      first_name: u.first_name,
+      last_name: u.last_name,
+      second_name: u.sure_name,
       password: u.password,
       phone: u.phone
     }))

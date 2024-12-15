@@ -15,11 +15,11 @@ import Desk from './pages/dashboard/desk/Desk';
 import Clients from './pages/dashboard/clients/Clients';
 import Estate from './pages/dashboard/estate/Estate';
 import Reports from './pages/dashboard/reports/Reports';
-import MyCalendar from './pages/dashboard/calendar/Calendar';
 import Realtors from './pages/dashboard/realtors/Realtors';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
 import { ToastContainer } from 'react-toastify';
+import MyCalendar from './pages/dashboard/calendar/Calendar';
 
 
 const dom = document.getElementById("root") as HTMLElement
@@ -37,7 +37,7 @@ root.render(
                 <Route path={route_pages.clients} element={<Clients />} />
                 <Route path={route_pages.estate} element={<Estate />} />
                 <Route path={route_pages.reports} element={<Reports />} />
-                <Route path={route_pages.calendar} element={<MyCalendar localizer={undefined} />} />
+                <Route path={route_pages.calendar} element={<MyCalendar />} />
                 <Route path={route_pages.realtors} element={<Realtors />} />
               </>
             } />

@@ -20,7 +20,7 @@ const Realtors = () => {
     setUpdatd(!update)
   }
 
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['getRealtors'],
     queryFn: async () => {
       //@ts-ignore
@@ -33,23 +33,32 @@ const Realtors = () => {
     return data[selected]
   }, [selected])
 
-  const onUpdateEstate = async (key: string, value: string) => {
+  const onUpdateRealtor = async (key: string, value: string) => {
     if (!selectedRealtor) return
     if (selectedRealtor[key] === undefined) return
-    selectedRealtor[key]=value
     //@ts-ignore
     const result = await window.context.updateClient(selectedRealtor)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
       })
-      data[selected][key] = value
-      emitRerender()
     } else {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      selectedRealtor[key]=value
+      refetch()
+      emitRerender()
     } 
+  }
+
+  const onDeleteUser = async (id: number) => {
+    //@ts-ignore
+    const resultDel = await window.context.deleteClient(id)
+    if (resultDel) {
+      refetch()
+      setSelected(null)
+    }
   }
 
   return (
@@ -68,7 +77,7 @@ const Realtors = () => {
             <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
               <TableView selected={selected} setSelected={setSelected} config={{
                 headers: ['Фамилия', 'Имя', 'Отчество', 'Телефон', 'Почта'],
-                body: data ? data.map((d: any) => [d.secondName, d.firstName, d.lastName, d.phone, d.email]) : [],
+                body: data ? data.map((d: any) => [d.second_name, d.first_name, d.last_name, d.phone, d.email]) : [],
                 foot: []
               }} />
             </Box>
@@ -77,7 +86,7 @@ const Realtors = () => {
         </Flex>
         {selectedRealtor ?
           <RealtorInfoAdmin
-            onChangeEstate={onUpdateEstate}
+            onChangeEstate={onUpdateRealtor}
             config={{
               sure_name: selectedRealtor.secondName,
               first_name: selectedRealtor.firstName,
@@ -92,7 +101,7 @@ const Realtors = () => {
             <EmptyItem placeholder='Выберете клиента' />
           </>}
       </Flex>
-      <CreateRealtorModal onClose={closeRealtorModal} isOpen={isRealtorModal} />
+      <CreateRealtorModal onClose={closeRealtorModal} isOpen={isRealtorModal} refetch={refetch} />
     </>
   )
 }

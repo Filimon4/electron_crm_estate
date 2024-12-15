@@ -2,9 +2,9 @@
 export type TRealtorDTO = {
   phone: string,
   email: string,
-  firstName: string;
-  secondName: string;
-  lastName: string;
+  first_name: string;
+  second_name: string;
+  last_name: string;
   password: string;
 }
 

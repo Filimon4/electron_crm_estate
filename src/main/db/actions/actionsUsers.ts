@@ -2,25 +2,29 @@ import { HashPasswordsNamespace } from "../../modules/Hash"
 import { TUserDTO } from "../../auth/auth.dto"
 import { User as _User, UserRole } from "../entities/User"
 import { sendNotify } from "../../utils/app"
+import { getPostgresErrorMessage } from "../../utils/pqErrors"
 
 export namespace UsersNamespace {
 
   export const createUser = async (data: TUserDTO) => {
     try {
-      const newRealtor = new _User()
+      const newRealtor = await dbConnection(_User).create()
       newRealtor.email = data.email
       newRealtor.phone = data.phone
       newRealtor.password = HashPasswordsNamespace.hashPassword(data.password)
-      newRealtor.first_name = data.firstName
-      newRealtor.sure_name = data.secondName
-      newRealtor.last_name = data.lastName
+      newRealtor.first_name = data.first_name
+      newRealtor.sure_name = data.sure_name
+      newRealtor.last_name = data.last_name
+      newRealtor.role = UserRole.REALTOR
       const user = await dbConnection(_User).save(newRealtor)
       if (!user || user === null || user === undefined) {throw new Error('')}
       sendNotify('success', 'Пользователь успешно создан')
       return user
     } catch (error) {
-      sendNotify('error', 'Ошбика при создании пользователя')
-      console.log(error)
+      //@ts-ignore
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
     }
   }
 

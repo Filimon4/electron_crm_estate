@@ -7,9 +7,9 @@ export class RealtorController {
 
   constructor() {
     ipcMain.handle('getRealtor', this.getRealtor.bind(this))
-    ipcMain.handle('createRealtor', this.getRealtor.bind(this))
-    ipcMain.handle('updateRealtor', this.getRealtor.bind(this))
-    ipcMain.handle('deleteRealtor', this.getRealtor.bind(this))
+    ipcMain.handle('createRealtor', this.createRealtor.bind(this))
+    ipcMain.handle('updateRealtor', this.updateRealtor.bind(this))
+    ipcMain.handle('deleteRealtor', this.deleteRealtor.bind(this))
   }
 
   async getRealtor() {
@@ -19,6 +19,7 @@ export class RealtorController {
   }
 
   async createRealtor(event: any, estate: TUserDTO) {
+    console.log(estate)
     return await UsersNamespace.createUser(estate)
   }
 

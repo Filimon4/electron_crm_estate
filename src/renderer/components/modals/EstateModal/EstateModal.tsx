@@ -16,11 +16,11 @@ import {
 import { notifyConfig } from "../../../shared/events/notifies.config";
 import { isNumbersOnly } from "../../../shared/utils/form";
 
-const CreateEstateModal = ({ isOpen, onClose }: any) => {
+const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
   const [clientData, setClientData] = useState({
     price: "",
-    flat_num: "",
-    rooms: "",
+    flat: "",
+    room_amount: "",
     floor: "",
     size: "",
     house: "",
@@ -32,7 +32,7 @@ const CreateEstateModal = ({ isOpen, onClose }: any) => {
   };
 
   const isDataValid = () => {
-    return (!clientData.price || !clientData.flat_num || !clientData.rooms || !clientData.floor || !clientData.size || !clientData.house)
+    return (!clientData.price || !clientData.flat || !clientData.room_amount || !clientData.floor || !clientData.size || !clientData.house)
   }
 
   const handleSubmit = async () => {
@@ -49,6 +49,7 @@ const CreateEstateModal = ({ isOpen, onClose }: any) => {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      refetch()
     } else {
       notifyConfig.error('Произошла ошибка при создании объекта', {
         autoClose: 3000,
@@ -57,8 +58,8 @@ const CreateEstateModal = ({ isOpen, onClose }: any) => {
 
     setClientData({
       price: "",
-      flat_num: "",
-      rooms: "",
+      flat: "",
+      room_amount: "",
       floor: "",
       size: "",
       house: ""
@@ -91,8 +92,8 @@ const CreateEstateModal = ({ isOpen, onClose }: any) => {
               <Input
                 type='number'
                 placeholder="Введите номер квартиры"
-                name="flat_num"
-                value={clientData.flat_num}
+                name="flat"
+                value={clientData.flat}
                 onChange={(e) => {
                   (isNumbersOnly(e.target.value)) && handleChange(e)
                 }}
@@ -103,8 +104,8 @@ const CreateEstateModal = ({ isOpen, onClose }: any) => {
               <Input
                 type='number'
                 placeholder="Введите кол-во комнат"
-                name="rooms"
-                value={clientData.rooms}
+                name="room_amount"
+                value={clientData.room_amount}
                 onChange={(e) => {
                   (isNumbersOnly(e.target.value)) && handleChange(e)
                 }}
