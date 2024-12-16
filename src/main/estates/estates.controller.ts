@@ -2,7 +2,6 @@ import { ipcMain } from "electron";
 import { TEstateDTO } from "./estates.dto";
 import { EstateNamespace } from "../db/actions/actionsEstate";
 
-// TODO раставить try catch
 export class EstateController {
 
   constructor () {

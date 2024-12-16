@@ -21,7 +21,6 @@ export namespace UsersNamespace {
       sendNotify('success', 'Пользователь успешно создан')
       return user
     } catch (error) {
-      //@ts-ignore
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
@@ -52,18 +51,28 @@ export namespace UsersNamespace {
       }
       return user
     } catch (error) {
-      console.log(error)
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
     }
   }
 
   export const updateUser = async (id: number, user: TUserDTO) => {
-    const userRepository = await dbConnection(_User);
-    const foundUser = await userRepository.findOne({ where: { id: id} });
-    if (!foundUser) {
-      return null;
+    try {
+      const userRepository = await dbConnection(_User);
+      const foundUser = await userRepository.findOne({ where: { id: id} });
+      if (!foundUser) {
+        return null;
+      }
+      Object.assign(foundUser, user);
+      return await userRepository.update(user.id, {
+        ...user
+      });
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
     }
-    Object.assign(foundUser, user);
-    return await userRepository.save(user);
   }
 
   export const getAllRealtors = async () => {
@@ -80,8 +89,13 @@ export namespace UsersNamespace {
   }
 
   export const deleteUser = async (id: number) => {
-    const result =  await dbConnection(_User).delete(id)
-    return result.affected !== 0
+    try {
+      const result =  await dbConnection(_User).delete(id)
+      return result.affected !== 0
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
   }
-
 }

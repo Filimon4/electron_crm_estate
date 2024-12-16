@@ -6,7 +6,7 @@ import Menu from '../../components/menu/Menu'
 const Home = () => {
   return (
     <Flex
-      width={'100vw'}
+      width={'100%'}
       height={'100vh'}
     >
       <Menu />

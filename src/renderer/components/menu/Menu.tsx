@@ -7,8 +7,10 @@ import User from './User/User'
 const Menu = () => {
   return (
     <Flex
+      position={'sticky'}
+      top={'0'}
       direction="column"
-      height="100vh"
+      // height="100vh"
       width="200px"
       backgroundColor="gray.400"
       color="white"

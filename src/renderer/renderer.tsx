@@ -33,7 +33,7 @@ root.render(
           <Routes>
             <Route path={route_pages.home} element={<Home />} children={
               <>
-                <Route path={route_pages.desk} element={<Desk />} />
+                <Route path={route_pages.desk} element={<Desk />} index/>
                 <Route path={route_pages.clients} element={<Clients />} />
                 <Route path={route_pages.estate} element={<Estate />} />
                 <Route path={route_pages.reports} element={<Reports />} />

@@ -12,6 +12,7 @@ import { UserRole } from '../../../shared/store/types'
 import ClientInfoAdmin from '../../../components/layout/ItemTable/ClientInfo/ClientInfoAdmin'
 import { notifyConfig } from '../../../shared/events/notifies.config'
 
+// TODO: добавить пагинацию на страницы
 const ClientTableData = memo(({ client, setClient, data, openClientModal }: any) => {
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
@@ -100,7 +101,7 @@ const Clients = () => {
   
   return (
     <>
-      <Flex width={'100%'}>
+      <Flex width={'100%'} overflow={'scroll'}>
         <ClientTableData client={client} setClient={setClient} data={data} openClientModal={openClientModal}  />
         {clientData ? <>
           {user.role == UserRole.ADMIN ? <>

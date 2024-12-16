@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { TRealtorDB } from "./types";
 import { updatePage } from "../route";
+import { DateSelectArg } from "@fullcalendar/core";
 
 const page = atom('desk')
 export const currentHomePage = atom(
@@ -26,3 +27,7 @@ export const writeClient = atom(null,(get, set, update: number) => set(client, u
 const realtor = atom<number>()
 export const readRealtor = atom((get) => get(realtor), null)
 export const writeRealtor = atom(null, (get, set, update: number) => set(realtor, update))
+
+export const dateContext = atom<{
+  dateInfo: DateSelectArg
+}>()

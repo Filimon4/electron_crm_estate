@@ -3,7 +3,7 @@ export const isEmailValid = (email: string) => {
 }
 
 export const isLettersOnly = (value: string) => {
-  return (/^[а-яА-я]*$/.test(value))
+  return (/^[а-яА-я ]*$/.test(value))
 }
 
 export const isEnglishEmailOnly = (value: string) => {

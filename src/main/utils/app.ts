@@ -9,8 +9,8 @@ export function createWindow(): void {
   mainWindow = new BrowserWindow({
     height: 920,
     width: 1440,
-    minHeight: 600,
-    minWidth: 800,
+    minHeight: 650,
+    minWidth: 850,
     autoHideMenuBar: true,
     center: true,
     title: 'Estate Crm',

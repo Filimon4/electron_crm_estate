@@ -1,14 +1,19 @@
 import { Flex, Text, VStack } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useAtom } from 'jotai'
 import { currentHomePage, readUser } from '../../../shared/store'
 import { taskBarAdminConfig, taskBarConfig } from '../../../shared/config/taskBar.config'
 import { UserRole } from '../../../shared/store/types'
+import { TRoutesPages, updatePage } from '../../../shared/route'
 
 const TaskBar = () => {
   const [page, setPage] = useAtom(currentHomePage)
   const [user, _] = useAtom(readUser)
+
+  useEffect(() => {
+    updatePage(page as TRoutesPages)
+  }, [])
   
   const onChangePage = (bar: any) => {
     setPage(bar.type)

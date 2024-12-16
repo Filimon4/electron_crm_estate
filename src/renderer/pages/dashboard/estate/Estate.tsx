@@ -66,7 +66,7 @@ const Estate = () => {
 
   return (
     <>
-      <Flex width={'100%'} >
+      <Flex width={'100%'} overflow={'scroll'}>
         <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
           <Heading fontSize={'2xl'}>
             База клиентов
