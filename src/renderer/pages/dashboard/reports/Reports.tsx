@@ -22,7 +22,7 @@ const Reports: React.FC = () => {
         </Box>
         <Box w="20%" bg="gray.100" p={4} borderRadius="lg" >
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Риелторы
+            Топ-10 риелторов
           </Text>
           <RealtorCardList />
         </Box>

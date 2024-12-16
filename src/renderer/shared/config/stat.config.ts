@@ -8,7 +8,7 @@ export const statTypes = {
 
 export const statLables = {
   [statTypes.deals]: 'Сделки',
-  [statTypes.income]: 'Доход',
+  [statTypes.income]: 'Оборот сделок',
   [statTypes.aver_income]: 'Средняя цена сделки',
-  [statTypes.objects]: 'Активные объекты',
+  [statTypes.objects]: 'Количество объектов',
 }
