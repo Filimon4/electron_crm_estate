@@ -25,13 +25,19 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
     floor: "",
     size: "",
     house_id: "",
+    house_label: ""
   });
   const [houseInput, setHouseInput] = useState('')
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setClientData((prev) => ({ ...prev, [name]: value }));
+  const handleHouseChange = (e: any) => {
+    const { label, value } = e;
+    setClientData((prev) => ({ ...prev, house_id: value, house_label: label }));
   };
+
+  const handleChange = (e: any) => {
+    const { value, name } = e.target;
+    setClientData((prev) => ({ ...prev, [name]: value }));
+  } 
 
   const isDataValid = () => {
     return (!clientData.price || !clientData.flat || !clientData.room_amount || !clientData.floor || !clientData.size || !clientData.house_id)
@@ -57,7 +63,8 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
         room_amount: "",
         floor: "",
         size: "",
-        house_id: ""
+        house_id: "",
+        house_label: ""
       });
       onClose();
       refetch()
@@ -69,14 +76,22 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
 
   };
 
-  const loadOptions = async (inputValue: string) =>
-    await new Promise((resolve) => {
+  const loadOptions = async (inputValue: string): Promise<any[]> => {
+    if (inputValue.length === 0) return []
+    try {
       //@ts-ignore
-      // const houses = window.invokes.
-      resolve([])
-    });
-
-  console.log(houseInput)
+      const response = await window.invokes.searchHouses(houseInput)
+      // Преобразуем результаты в формат, подходящий для react-select
+      console.log(response)
+      return response.map((house: any) => ({
+        label: `${house.street}, ${house.house_number}`,
+        value: +house.id,
+      }));
+    } catch (error) {
+      console.error('Error fetching houses:', error);
+      return [];
+    }
+  };
 
   return (
     <Portal>
@@ -154,10 +169,10 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
                 defaultOptions
                 value={
                   clientData.house_id
-                    ? { value: clientData.house_id, label: `Дом ${clientData.house_id}` }
+                    ? { value: clientData.house_id, label: `Дом ${clientData.house_label}` }
                     : null
                 }
-                onChange={handleChange}
+                onChange={handleHouseChange}
                 onInputChange={(value) => setHouseInput(value)}
                 placeholder="Выберите дом"
                 noOptionsMessage={() => 'Нет доступных домов'}

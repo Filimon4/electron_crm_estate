@@ -21,6 +21,7 @@ import { queryClient } from './shared/lib/queryClient';
 import { ToastContainer } from 'react-toastify';
 import MyCalendar from './pages/dashboard/calendar/Calendar';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import Deals from './pages/dashboard/deals/Deals';
 
 // TODO: Сделать сделка
 // TODO: Добавить скелетоны.
@@ -44,7 +45,7 @@ root.render(
                 <Route path={route_pages.reports} element={<Reports />} />
                 <Route path={route_pages.calendar} element={<MyCalendar />} />
                 <Route path={route_pages.realtors} element={<Realtors />} />
-                <Route path={route_pages.deals} element={<Realtors />} />
+                <Route path={route_pages.deals} element={<Deals />} />
               </>
             } />
             <Route path={route_pages.auth}  element={<Auth />} children={

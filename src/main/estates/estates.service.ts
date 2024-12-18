@@ -1,3 +1,4 @@
+import { ClientsNamespace } from "../db/actions/actionsClients";
 import { EstateNamespace } from "../db/actions/actionsEstate";
 import { TFlatDTO } from "./estates.dto";
 
@@ -31,6 +32,18 @@ export class EstateService {
 
   static async deleteFlat(id: number) {
     return await EstateNamespace.deleteFlat(id)
+  }
+
+  static async searchHouses(input: string) {
+    return await EstateNamespace.searchHouses(input)
+  }
+
+  static async searchFlats(input: string) {
+    return await EstateNamespace.searchFlats(input)
+  }
+
+  static async searchClients(input: string) {
+    return await ClientsNamespace.searchClient(input)
   }
 
 }

@@ -112,4 +112,20 @@ export namespace ClientsNamespace {
       console.log(errorMessage)
     }
   };
+
+  export const searchClient = async (query: string) => {
+    try {
+      const houseRepository = await dbConnection(_Client);
+      const results = await houseRepository
+        .createQueryBuilder('client')
+        .where(`client.search_vector @@ plainto_tsquery('russian', :query)`, { query: query.replace(/\s/g, ' & ')})
+        .getMany();
+    
+      return results;
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  };
 }

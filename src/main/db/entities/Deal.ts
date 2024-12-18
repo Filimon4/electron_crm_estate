@@ -1,4 +1,4 @@
-import { CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Flat } from "./Flat";
 import { Client } from "./Client";
 import { IsDate } from "class-validator";
@@ -20,6 +20,9 @@ export class Deal {
   @OneToOne(() => Client, (client) => client.id)
   @JoinColumn({name: 'client', referencedColumnName: 'id'})
   client: number;
+
+  @Column({type: 'varchar'})
+  status: string
 
   @CreateDateColumn()
   @IsDate()

@@ -13,11 +13,23 @@ export class EstateController {
     ipcMain.handle('deleteHouse', this.deleteHouse.bind(this))
     ipcMain.handle('getFlatesByPage', this.getFlatesByPage.bind(this))
     ipcMain.handle('getHousesByPage', this.getHousesByPage.bind(this))
-    ipcMain.handle('findHouses', this.findHouses.bind(this))
+    ipcMain.handle('searchHouses', this.searchHouses.bind(this))
+    ipcMain.handle('searchFlats', this.searchFlats.bind(this))
+    ipcMain.handle('searchClients', this.searchClients.bind(this))
   }
 
-  async findHouses(event: any, input: string) {
-    
+  async searchClients(event: any, input: string) {
+    const result = await EstateService.searchClients(input)
+    return result
+  }
+
+  async searchFlats(event: any, input: string) {
+    const result = await EstateService.searchFlats(input)
+    return result
+  }
+
+  async searchHouses(event: any, input: string) {
+    return await EstateService.searchHouses(input)
   }
 
   async createFlat(event: any, data: TFlatDTO) {

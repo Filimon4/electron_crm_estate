@@ -13,6 +13,7 @@ const frotnApiInvokes = {
   updateClient: (...args: any) => ipcRenderer.invoke('updateClient', ...args),
   deleteClient: (...args: any) => ipcRenderer.invoke('deleteClient', ...args),
   getClientsByPage: (...args: any) => ipcRenderer.invoke('getClientsByPage', ...args),
+  searchClients: (...args: any) => ipcRenderer.invoke('searchClients', ...args),
   
   createFlat: (...args: any) => ipcRenderer.invoke('createFlat', ...args),
   createHouse: (...args: any) => ipcRenderer.invoke('createHouse', ...args),
@@ -22,7 +23,8 @@ const frotnApiInvokes = {
   deleteHouse: (...args: any) => ipcRenderer.invoke('deleteHouse', ...args),
   getFlatesByPage: (...args: any) => ipcRenderer.invoke('getFlatesByPage', ...args),
   getHousesByPage: (...args: any) => ipcRenderer.invoke('getHousesByPage', ...args),
-  findHouses: (...args: any) => ipcRenderer.invoke('findHouses', ...args),
+  searchHouses: (...args: any) => ipcRenderer.invoke('searchHouses', ...args),
+  searchFlats: (...args: any) => ipcRenderer.invoke('searchFlats', ...args),
   
   createDeal: (...args: any) => ipcRenderer.invoke('createDeal', ...args),
   updateDeal: (...args: any) => ipcRenderer.invoke('updateDeal', ...args),

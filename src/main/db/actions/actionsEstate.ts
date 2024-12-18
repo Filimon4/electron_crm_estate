@@ -200,4 +200,44 @@ export namespace EstateNamespace {
       console.log(errorMessage)
     }
   };
+
+
+  export const searchHouses = async (query: string) => {
+    try {
+      const houseRepository = await dbConnection(_House);
+      const results = await houseRepository
+        .createQueryBuilder('house')
+        .where('house.search_vector @@ to_tsquery(:query)', {
+          query: query.replace(/\s/g, ' & '),
+        })
+        .getMany();
+    
+      return results;
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  };
+
+  export const searchFlats = async (query: string) => {
+    try {
+      const houseRepository = await dbConnection(_Flat);
+      const results = await houseRepository
+        .createQueryBuilder('flat')
+        .innerJoinAndSelect('house', 'house', 'house.id = flat.house_id')
+        .where(`(flat.search_vector || house.search_vector) @@ plainto_tsquery('russian', :query)`, { query: query.replace(/\s/g, ' & ')})
+        .getMany();
+    
+      return results;
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  };
+
+  
+
+  
 }

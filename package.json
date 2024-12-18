@@ -11,6 +11,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:revert": "npm run typeorm migration:revert -- -d ./typeorm.config.ts",
     "migration:create": "npm run typeorm migration:create ./migrations/create",
     "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
     "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init",
