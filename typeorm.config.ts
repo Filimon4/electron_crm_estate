@@ -8,7 +8,7 @@ export default new DataSource({
    username: 'postgres',
    password: 'admin',
    entities: ['src/main/db/entities/*.ts'],
-   migrations: ['migrations/*.ts'],
+   migrations: ['./migrations/*.ts'],
    migrationsTableName: 'migrations',
    extra: {
     charset: 'utf8mb4',

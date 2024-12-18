@@ -1,12 +1,12 @@
 import { House } from "../db/entities";
 
-export type TEstateDTO = {
-  id?: number;
-  description?: string;
+export type TFlatDTO = {
+  id: number;
+  descriptio: string;
   flat: number;
   room_amount: number;
   floor: number;
   price: number;
-  house: House;
+  house_id: House;
   size: number
 }

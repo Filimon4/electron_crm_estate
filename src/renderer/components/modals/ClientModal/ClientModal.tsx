@@ -16,8 +16,11 @@ import {
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
 import { isEmailValid, isEnglishEmailOnly, isLettersOnly, isNumbersOnly, isPhoneValid } from "../../../shared/utils/form";
+import { useAtom } from "jotai";
+import { readUser } from "../../../shared/store";
 
 const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
+  const [user,] = useAtom(readUser)
   const [clientData, setClientData] = useState({
     first_name: "",
     sure_name: "",
@@ -44,7 +47,7 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
     }
 
     //@ts-ignore
-    const client = await window.invokes.createClient(clientData)
+    const client = await window.invokes.createClient(user.id, clientData)
     if (client) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,

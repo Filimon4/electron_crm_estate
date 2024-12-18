@@ -10,25 +10,29 @@ export namespace PreloadNamespace {
     deleteClient: any;
     getClientsByPage: any;
     countClient: any;
-
+    
     createEstate: any;
     updateEstate: any;
     deleteEstate: any;
-    getEstate: any;
+    getEstateByPage: any;
+    countEstate: any;
 
     createDeal: any;
     updateDeal: any;
     deleteDeal: any;
+    getDealsByPage: any;
+    countDeals: any;
 
-    createRealtor: any,
-    updateRealtor: any,
-    deleteRealtor: any,
-    getRealtor: any,
+    createRealtor: any;
+    updateRealtor: any;
+    deleteRealtor: any;
+    getRealtorsByPage: any;
+    countRealtors: any;
 
-    onNotify: any,
+    onNotify: any;
 
-    createEvent: any,
-    updateEvent: any,
-    deleteEvent: any,
+    createEvent: any;
+    updateEvent: any;
+    deleteEvent: any;
   }
 }

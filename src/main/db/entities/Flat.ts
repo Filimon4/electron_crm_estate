@@ -7,7 +7,7 @@ export class Flat {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'integer', name: 'house_id', nullable: true})
+  @Column({type: 'integer', name: 'house_id', nullable: false})
   house_id: number
 
   @ManyToOne(() => House, (house) => house.id, {eager: true})

@@ -20,11 +20,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/lib/queryClient';
 import { ToastContainer } from 'react-toastify';
 import MyCalendar from './pages/dashboard/calendar/Calendar';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 // TODO: Сделать сделка
 // TODO: Добавить скелетоны.
 // TODO: 1. Сделать селет выборку из бд.
-// TODO: 2. Сделать пагинцию.
+// TODO: По таблицам ограничить поля.
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)
@@ -53,6 +54,7 @@ root.render(
             } />
           </Routes>
         </HashRouter>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   </>

@@ -13,16 +13,14 @@ export class ClientController {
   }
 
   async getClientsByPage(event: any, userId: number, page: number, limit: number) {
-    console.log(userId, page, limit)
     return await ClientsService.getClientsByPage(userId, page, limit)
   }
   
-  async createClient(event: any, client: TClientDTO) {
-    return await ClientsNamespace.createClient(client)
+  async createClient(event: any, userId: number, client: TClientDTO) {
+    return await ClientsNamespace.createClient(userId, client)
   }
   
   async updateClient(event: any, client: TClientDTO) {
-    console.log(client)
     return await ClientsNamespace.updateClient(client.id, client)
   }
   

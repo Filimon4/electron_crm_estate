@@ -6,6 +6,24 @@ import { getPostgresErrorMessage } from "../../utils/pqErrors"
 
 export namespace UsersNamespace {
 
+  export const getRealtorsByPage = async (page: number, limit: number) => {
+    try {
+      return await dbConnection(_User).findAndCount({
+        skip:  ((page - 1) * limit),
+        take: limit,
+        order: { id: "ASC"},
+        where: {
+          role: UserRole.REALTOR
+        }
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+ }
+
+
   export const createUser = async (data: TUserDTO) => {
     try {
       const newRealtor = await dbConnection(_User).create()
@@ -81,19 +99,6 @@ export namespace UsersNamespace {
       sendNotify('error', errorMessage)
       console.log(errorMessage)
     }
-  }
-
-  export const getAllRealtors = async () => {
-    const users = await dbConnection(_User).find({
-      where: {
-        role: UserRole.REALTOR
-      }
-    })
-    return users
-  }
-
-  export const getAll = async () => {
-    await dbConnection(_User).find()
   }
 
   export const deleteUser = async (id: number) => {

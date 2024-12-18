@@ -1,48 +1,46 @@
 import { ipcMain } from "electron";
-import { TEstateDTO } from "./estates.dto";
+import { TFlatDTO } from "./estates.dto";
 import { EstateNamespace } from "../db/actions/actionsEstate";
+import { EstateService } from "./estates.service";
 
 export class EstateController {
-
   constructor () {
-    ipcMain.handle('getEstate', this.getEstates.bind(this))
-    ipcMain.handle('createEstate', this.createEstate.bind(this))
-    ipcMain.handle('updateEstate', this.updateEstate.bind(this))
-    ipcMain.handle('deleteEstate', this.deleteEstate.bind(this))
+    ipcMain.handle('createFlat', this.createFlat.bind(this))
+    ipcMain.handle('createHouse', this.createHouse.bind(this))
+    ipcMain.handle('updateFlat', this.updateFlat.bind(this))
+    ipcMain.handle('updateHouse', this.updateHouse.bind(this))
+    ipcMain.handle('deleteFlat', this.deleteFlat.bind(this))
+    ipcMain.handle('deleteHouse', this.deleteHouse.bind(this))
+    ipcMain.handle('getFlatesByPage', this.getFlatesByPage.bind(this))
+    ipcMain.handle('getHousesByPage', this.getHousesByPage.bind(this))
+    ipcMain.handle('findHouses', this.findHouses.bind(this))
   }
 
-  async getEstates() {
-    const data = await EstateNamespace.getAllFlats()
-    return data
-  }
-  
-  async createEstate(event: any, estate: TEstateDTO) {
-    console.log(estate)
-    return await EstateNamespace.createFlat({
-      description: ' ',
-      flat: +estate.flat,
-      floor: +estate.floor,
-      house_id: +estate.house,
-      price: +estate.price,
-      room_amount: +estate.room_amount,
-      size: +estate.size
-    })
-  }
-  
-  async updateEstate(event: any, estate: TEstateDTO) {
-    const flat = await EstateNamespace.getFlatById(estate.id)
-    return await EstateNamespace.updateFlat(flat.id, {
-      description: estate.description,
-      flat: +estate.flat,
-      floor: +estate.floor,
-      price: +estate.price,
-      room_amount: +estate.room_amount,
-      size: +estate.size
-    })
-  }
-  
-  async deleteEstate(event: any, id: number) {
-    return await EstateNamespace.deleteFlat(id)
+  async findHouses(event: any, input: string) {
+    
   }
 
+  async createFlat(event: any, data: TFlatDTO) {
+    return await EstateService.createFlat(data)
+  }
+  async createHouse(event: any) {
+  }
+  async updateFlat(event: any, data: TFlatDTO) {
+    return await EstateService.updateFlat(data)
+  }
+  async updateHouse(event: any) {
+
+  }
+  async deleteFlat(event: any, id: TFlatDTO['id']) {
+    return await EstateService.deleteFlat(id) 
+  }
+  async deleteHouse(event: any) {
+
+  }
+  async getFlatesByPage(event: any, page: number, limit: number) {
+    return await EstateService.getFlatesByPage(page, limit)
+  }
+  async getHousesByPage(event: any, page: number, limit: number) {
+    return await EstateService.getHousesByPage(page, limit)
+  }
 }

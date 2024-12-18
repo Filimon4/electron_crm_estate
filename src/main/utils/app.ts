@@ -21,6 +21,7 @@ export function createWindow(): void {
     },
   });
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.removeMenu()
   mainWindow.setMenuBarVisibility(false)
   mainWindow.webContents.openDevTools();
 

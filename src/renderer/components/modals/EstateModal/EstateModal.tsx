@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
 import { isNumbersOnly } from "../../../shared/utils/form";
+import AsyncSelect from "react-select/async";
 
 const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
   const [clientData, setClientData] = useState({
@@ -23,8 +24,9 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
     room_amount: "",
     floor: "",
     size: "",
-    house: "",
+    house_id: "",
   });
+  const [houseInput, setHouseInput] = useState('')
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -32,7 +34,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
   };
 
   const isDataValid = () => {
-    return (!clientData.price || !clientData.flat || !clientData.room_amount || !clientData.floor || !clientData.size || !clientData.house)
+    return (!clientData.price || !clientData.flat || !clientData.room_amount || !clientData.floor || !clientData.size || !clientData.house_id)
   }
 
   const handleSubmit = async () => {
@@ -44,11 +46,20 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
     }
 
     //@ts-ignore
-    const estate = await window.invokes.createEstate(clientData)
+    const estate = await window.invokes.createFlat(clientData)
     if (estate) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
+      setClientData({
+        price: "",
+        flat: "",
+        room_amount: "",
+        floor: "",
+        size: "",
+        house_id: ""
+      });
+      onClose();
       refetch()
     } else {
       notifyConfig.error('Произошла ошибка при создании объекта', {
@@ -56,16 +67,16 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
       })
     }
 
-    setClientData({
-      price: "",
-      flat: "",
-      room_amount: "",
-      floor: "",
-      size: "",
-      house: ""
-    });
-    onClose();
   };
+
+  const loadOptions = async (inputValue: string) =>
+    await new Promise((resolve) => {
+      //@ts-ignore
+      // const houses = window.invokes.
+      resolve([])
+    });
+
+  console.log(houseInput)
 
   return (
     <Portal>
@@ -137,12 +148,19 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
             <FormControl mt={4} isRequired>
               <FormLabel>Дом</FormLabel>
-              <Input
-                type='number'
-                placeholder="Введите дом квартиры"
-                name="house"
-                value={clientData.house}
+              <AsyncSelect
+                cacheOptions
+                loadOptions={loadOptions}
+                defaultOptions
+                value={
+                  clientData.house_id
+                    ? { value: clientData.house_id, label: `Дом ${clientData.house_id}` }
+                    : null
+                }
                 onChange={handleChange}
+                onInputChange={(value) => setHouseInput(value)}
+                placeholder="Выберите дом"
+                noOptionsMessage={() => 'Нет доступных домов'}
               />
             </FormControl>
           </ModalBody>

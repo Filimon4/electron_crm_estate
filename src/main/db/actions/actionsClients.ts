@@ -6,7 +6,7 @@ import { sendNotify } from "../../utils/app";
 // TODO: сделать выборку по строкам, для пагинации
 export namespace ClientsNamespace {
   
-  export const createClient = async (clientData: TClientDTO) => {
+  export const createClient = async (userId: number, clientData: TClientDTO) => {
     try {
       const user = await dbConnection(_Client).create();
       user.first_name = clientData.first_name
@@ -14,6 +14,7 @@ export namespace ClientsNamespace {
       user.last_name = clientData.last_name
       user.email = clientData.email
       user.phone = clientData.phone
+      user.realtor_id = userId
       return await dbConnection(_Client).save(user);
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)

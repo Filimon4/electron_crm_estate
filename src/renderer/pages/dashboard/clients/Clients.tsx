@@ -1,6 +1,6 @@
 import { Flex, Heading, Box, Center, Button, useDisclosure } from '@chakra-ui/react'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import TableView from '../../../components/layout/ItemTable/TableView'
@@ -11,7 +11,7 @@ import CreateClientModal from '../../../components/modals/ClientModal/ClientModa
 import { UserRole } from '../../../shared/store/types'
 import ClientInfoAdmin from '../../../components/layout/ItemTable/ClientInfo/ClientInfoAdmin'
 import { notifyConfig } from '../../../shared/events/notifies.config'
-import { QUERY_KEYS } from '../../../shared/lib/queryClient'
+import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient'
 import { TPageClient } from '../../../shared/api/clients.api'
 
 interface IClientTableData {
@@ -29,7 +29,7 @@ const ClientTableData: React.FC<IClientTableData> = memo(({ client, data, openCl
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
-        База объектов
+        База клиентов
       </Heading>
       <Flex height={'70%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
         <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
@@ -61,52 +61,33 @@ const ClientTableData: React.FC<IClientTableData> = memo(({ client, data, openCl
 
 
 const Clients = () => {
+  const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
   const [client,] = useAtom(readClient)
   const [,setClient] = useAtom(writeClient)
   const [user,] = useAtom(readUser)
 
-  const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
-
-  const {
-    fetchNextPage,
-    fetchPreviousPage,
-    hasNextPage,
-    hasPreviousPage,
-    isFetchingNextPage,
-    isFetchingPreviousPage,
-    data,
-    error,
-    isLoading,
-  } = useInfiniteQuery({
+  const { data: clientsPageData, isError, isLoading, isPlaceholderData, refetch } = useQuery({
     //@ts-ignore
-    queryKey: [QUERY_KEYS["getClientsByPage"]],
-    queryFn: async ({ pageParam = 1, ...args }) => {
+    queryKey: [QUERY_KEYS['getClientsByPage'], currentPage],
+    queryFn: async () => {
       //@ts-ignore
-      const pageData: TPageClient = await window.invokes.getClientsByPage(user.id, pageParam, 10)
-      if (pageData.count) {
-        setMaxPage(Math.ceil(pageData.count / 10))
-      }
-      return pageData
+      const result = await window.invokes.getClientsByPage(user.id, currentPage, 10)
+      setMaxPage(Math.ceil(result.count / 10))
+      return result
     },
-    initialPageParam: 1, 
-    getNextPageParam: (lastPage: TPageClient, allPages, lastPageParam, ...args) => {
-      if (lastPage?.clients?.length === 0) {
-        return undefined;
-      }
-      return lastPageParam + 1;
-    },
-    // getPreviousPageParam: (firstPage, allPages, firstPageParam, ...args) => {
-    //   if (firstPageParam <= 0) {
-    //     return undefined;
-    //   }
-    //   return firstPageParam - 1;
-    // },
-    maxPages: maxPage,
-    retryOnMount: true,
-    retryDelay: 10000,
+    placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    setMaxPage(clientsPageData?.count ? Math.ceil(clientsPageData?.count / 10) : 1)
+    setClient(null)
+  }, [])
+  
+  useEffect(() => {
+    setClient(null)
+  }, [currentPage])
   
   const onUpdateClient = async (key: string, value: string) => {
     //@ts-ignore
@@ -121,7 +102,6 @@ const Clients = () => {
       })
     } 
   }
-
   const onDeleteUser = async (id: number) => {
     //@ts-ignore
     const resultDel = await window.invokes.deleteClient(id)
@@ -129,25 +109,39 @@ const Clients = () => {
       setClient(null)
     }
   }
-  
-  const clientData = useMemo(() => data?.pages[(currentPage-1)]?.clients[client] ?? null, [currentPage])
+  const onCreateNewClient = async () => {
+    console.log('create new client')
+    setCurrentPage(prev => maxPage)
+    queryClient.invalidateQueries({
+      //@ts-ignore
+      queryKey: [QUERY_KEYS['getClientsByPage'], maxPage],
+      exact: true,
+      refetchType: 'active'
+    })
+  }
 
-  if (!data) return <></>
+  const clientData = useMemo(() => {
+    if (client !== undefined && client !== null && clientsPageData) {
+      return clientsPageData?.clients[client]
+    }
+    return null
+  }, [client])
+
+
   return (
     <>
       <Flex width={'100%'} overflow={'scroll'}>
-        {data && data?.pages && <>
+        {clientsPageData && currentPage && <>
           <ClientTableData
             currentPage={currentPage} totalPages={maxPage}
-            data={data?.pages[(currentPage-1)]?.clients ?? []}
+            data={clientsPageData.clients ?? []}
             client={client} onNextPage={() => {
-              fetchNextPage()
               setCurrentPage(prev => prev + 1)
             }}
             onPrevPage={() => {
               setCurrentPage(prev => prev - 1)
             }}
-            openClientModal={() => 'openclient modal'}
+            openClientModal={openClientModal}
           />
         </>}
         {clientData ? <>
@@ -165,7 +159,7 @@ const Clients = () => {
           <EmptyItem placeholder='Выберете клиента' />
         </>}
       </Flex>
-      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={() => console.log('refetch')} />
+      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={onCreateNewClient} />
     </>
   )
 }

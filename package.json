@@ -11,9 +11,10 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:create": "npm run typeorm migration:create ./migrations/create",
     "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
     "migration:generate": "npm run typeorm -- -d ./typeorm.config.ts migration:generate ./migrations/init",
-    "migration:auto": "rimraf ./migrations && npm run migration:generate && npm run migration:run"
+    "migration:auto": "npm run migration:generate && npm run migration:run"
   },
   "type": "commonjs",
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron-forge/plugin-webpack": "^7.5.0",
     "@electron/fuses": "^1.8.0",
+    "@tanstack/react-query-devtools": "^5.62.8",
     "@types/node": "^22.7.5",
     "@types/react-big-calendar": "^1.16.0",
     "@types/react-dom": "^18.3.1",
