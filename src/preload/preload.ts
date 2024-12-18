@@ -5,14 +5,14 @@ if (!process.contextIsolated) {
   throw new Error("Context isn't isoleted")
 }
 
-export const frontApi: PreloadNamespace.IFrontApi = {
+const frotnApiInvokes = {
   signin: (...args: any) => ipcRenderer.invoke('login', ...args),
   signup: (...args: any) => ipcRenderer.invoke('signup', ...args),
 
   createClient: (...args: any) => ipcRenderer.invoke('createClient', ...args),
   updateClient: (...args: any) => ipcRenderer.invoke('updateClient', ...args),
   deleteClient: (...args: any) => ipcRenderer.invoke('deleteClient', ...args),
-  getClients: () => ipcRenderer.invoke('getClients'),
+  getClientsByPage: (...args: any) => ipcRenderer.invoke('getClientsByPage', ...args),
   
   createEstate: (...args: any) => ipcRenderer.invoke('createEstate', ...args),
   updateEstate: (...args: any) => ipcRenderer.invoke('updateEstate', ...args),
@@ -28,6 +28,12 @@ export const frontApi: PreloadNamespace.IFrontApi = {
   deleteRealtor: (...args: any) => ipcRenderer.invoke('deleteRealtor', ...args),
   getRealtor: () => ipcRenderer.invoke('getRealtor'),
 
+  createEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
+  updateEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
+  deleteEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
+}
+
+const frontApiOns = {
   onNotify: (callback: Function) =>
     ipcRenderer.on('onNotify',  (_event: any, ...args: any) => {
       callback(args)
@@ -36,8 +42,11 @@ export const frontApi: PreloadNamespace.IFrontApi = {
 }
 
 try {
-  contextBridge.exposeInMainWorld('context', {
-    ...frontApi,
+  contextBridge.exposeInMainWorld('invokes', {
+    ...frotnApiInvokes,
+  })
+  contextBridge.exposeInMainWorld('ons', {
+    ...frontApiOns,
   })
 } catch (error) {
   console.log(error)

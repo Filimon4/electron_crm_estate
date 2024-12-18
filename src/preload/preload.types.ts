@@ -8,7 +8,8 @@ export namespace PreloadNamespace {
     createClient: any;
     updateClient: any;
     deleteClient: any;
-    getClients: any;
+    getClientsByPage: any;
+    countClient: any;
 
     createEstate: any;
     updateEstate: any;
@@ -24,6 +25,10 @@ export namespace PreloadNamespace {
     deleteRealtor: any,
     getRealtor: any,
 
-    onNotify: any
+    onNotify: any,
+
+    createEvent: any,
+    updateEvent: any,
+    deleteEvent: any,
   }
 }

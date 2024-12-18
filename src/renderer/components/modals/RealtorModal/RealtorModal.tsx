@@ -45,7 +45,7 @@ const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
     }
 
     //@ts-ignore
-    const realtor = await window.context.createRealtor(clientData)
+    const realtor = await window.invokes.createRealtor(clientData)
     if (realtor) {
       setClientData({
         first_name: "",

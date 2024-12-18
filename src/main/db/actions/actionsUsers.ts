@@ -27,6 +27,14 @@ export namespace UsersNamespace {
     }
   }
 
+  export const getUserById = async (id: number) => {
+    return await dbConnection(_User).findOne({
+      where: {
+        id: id
+      }
+    })
+  }
+
   export const getUser = async (email?: string, phone?: string) => {
     if (!email && !phone) return null
     try {

@@ -51,11 +51,38 @@ export namespace ClientsNamespace {
     }
   };
   
+  export const getCountClientsByUser = async (userId: number): Promise<number> => {
+    try {
+      return await dbConnection(_Client).countBy({
+        realtor_id: userId
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  }
+
+  export const getUserClientsByPage = async (userId: number, page: number, limit: number) => {
+    try {
+      return await dbConnection(_Client).find({
+        skip:  ((page - 1) * limit),
+        take: limit,
+        order: { id: "ASC"},
+        where: {
+          realtor_id: userId
+        }
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  }
 
   export const getAllClients = async (): Promise<_Client[]> => {
     try {
-      const userRepository = await dbConnection(_Client);
-      return await userRepository.find();
+      return await dbConnection(_Client).find();
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
@@ -63,7 +90,7 @@ export namespace ClientsNamespace {
     }
   };
 
-  export const getClientById = async (id: number): Promise<_Client | null> => {
+  export const getClientsById = async (id: number): Promise<_Client | null> => {
     try {
       const userRepository = await dbConnection(_Client);
       return await userRepository.findOne({ where: { id } });

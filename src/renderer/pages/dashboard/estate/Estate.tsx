@@ -27,7 +27,7 @@ const Estate = () => {
     queryKey: ['getEstate'],
     queryFn: async () => {
       //@ts-ignore
-      return await window.context.getEstate()
+      return await window.invokes.getEstate()
     },
   })
 
@@ -40,7 +40,7 @@ const Estate = () => {
     if (!selectedEstate) return
     if (selectedEstate[key] === undefined) return
     //@ts-ignore
-    const result = await window.context.updateClient(selectedEstate)
+    const result = await window.invokes.updateClient(selectedEstate)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
@@ -57,7 +57,7 @@ const Estate = () => {
 
   const onDeleteEstate = async (id: number) => {
     //@ts-ignore
-    const resultDel = await window.context.deleteEstate(id)
+    const resultDel = await window.invokes.deleteEstate(id)
     if (resultDel) {
       refetch()
       setSelected(null)

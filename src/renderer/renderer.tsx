@@ -21,6 +21,10 @@ import { queryClient } from './shared/lib/queryClient';
 import { ToastContainer } from 'react-toastify';
 import MyCalendar from './pages/dashboard/calendar/Calendar';
 
+// TODO: Сделать сделка
+// TODO: Добавить скелетоны.
+// TODO: 1. Сделать селет выборку из бд.
+// TODO: 2. Сделать пагинцию.
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)
@@ -39,6 +43,7 @@ root.render(
                 <Route path={route_pages.reports} element={<Reports />} />
                 <Route path={route_pages.calendar} element={<MyCalendar />} />
                 <Route path={route_pages.realtors} element={<Realtors />} />
+                <Route path={route_pages.deals} element={<Realtors />} />
               </>
             } />
             <Route path={route_pages.auth}  element={<Auth />} children={

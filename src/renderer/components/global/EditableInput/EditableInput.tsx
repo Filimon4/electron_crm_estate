@@ -45,34 +45,32 @@ const EditableInput = ({
       <Heading size='xs' textTransform='uppercase'>
         {title}
       </Heading>
-      <Flex>
-        {isEditing ? <>
-          <Flex justifyContent='space-between' gap="10px">
-            <Input
-              type="tel"
-              placeholder="Введите номер телефона"
-              name={editValue}
-              value={newValue}
-              onChange={(e) => {
-                (inputValidator(e.target.value)) && setNewValue(e.target.value)
-              }}
-            />
-            <Button padding={'2px'} onClick={() => submitEdit()}>
-              <IoCheckmarkOutline />
-            </Button>
-            <Button padding={'2px'} onClick={() => cancelEdit()}>
-              <IoCloseOutline />
-            </Button>
-          </Flex>
-        </> : <>
-          <Flex justifyContent='space-between' gap="10px">
-            <Text>{value}</Text>
-            <Button padding={'2px'} size='sm' onClick={() => setEditable(true)}>
-              <CiEdit />
-            </Button>
-          </Flex>
-        </>}
-      </Flex>
+      {isEditing ? <>
+        <Flex justifyContent='space-between' gap="10px">
+          <Input
+            type="tel"
+            placeholder="Введите номер телефона"
+            name={editValue}
+            value={newValue}
+            onChange={(e) => {
+              (inputValidator(e.target.value)) && setNewValue(e.target.value)
+            }}
+          />
+          <Button padding={'2px'} onClick={() => submitEdit()}>
+            <IoCheckmarkOutline />
+          </Button>
+          <Button padding={'2px'} onClick={() => cancelEdit()}>
+            <IoCloseOutline />
+          </Button>
+        </Flex>
+      </> : <>
+        <Flex justifyContent='space-between' gap="10px" width={'100%'}>
+          <Text>{value}</Text>
+          <Button padding={'2px'} size='sm' onClick={() => setEditable(true)}>
+            <CiEdit />
+          </Button>
+        </Flex>
+      </>}
     </Flex>
   )
 }

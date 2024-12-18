@@ -46,7 +46,7 @@ const RealtorInfo = ({config, onChangeEstate}: {config: any, onChangeEstate: (ke
           width={'100%'}
           onClick={() => {
             //@ts-ignore
-            window.context.deleteClient(config.email)
+            window.invokes.deleteClient(config.email)
           }}
           colorScheme={'red'}
         >

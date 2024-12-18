@@ -24,7 +24,7 @@ const Realtors = () => {
     queryKey: ['getRealtors'],
     queryFn: async () => {
       //@ts-ignore
-      return await window.context.getRealtor()
+      return await window.invokes.getRealtor()
     },
   })
 
@@ -37,7 +37,7 @@ const Realtors = () => {
     if (!selectedRealtor) return
     if (selectedRealtor[key] === undefined) return
     //@ts-ignore
-    const result = await window.context.updateClient(selectedRealtor)
+    const result = await window.invokes.updateClient(selectedRealtor)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
@@ -54,7 +54,7 @@ const Realtors = () => {
 
   const onDeleteUser = async (id: number) => {
     //@ts-ignore
-    const resultDel = await window.context.deleteClient(id)
+    const resultDel = await window.invokes.deleteClient(id)
     if (resultDel) {
       refetch()
       setSelected(null)
@@ -88,9 +88,9 @@ const Realtors = () => {
           <RealtorInfoAdmin
             onChangeEstate={onUpdateRealtor}
             config={{
-              sure_name: selectedRealtor.secondName,
-              first_name: selectedRealtor.firstName,
-              last_name: selectedRealtor.lastName,
+              sure_name: selectedRealtor.second_name,
+              first_name: selectedRealtor.first_name,
+              last_name: selectedRealtor.last_name,
               phone: selectedRealtor.phone,
               email: selectedRealtor.email,
               description: selectedRealtor.description ?? '',

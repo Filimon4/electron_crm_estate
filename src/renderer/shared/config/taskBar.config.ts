@@ -12,12 +12,12 @@ export const taskBarConfig = [
     name: 'Клиенты'
   },
   {
-    type: 'reports',
-    name: 'Отчёты'
-  },
-  {
     type: 'calendar',
     name: 'Календарь'
+  },
+  {
+    type: 'deals',
+    name: 'Сделки'
   },
   
 ]
@@ -26,5 +26,9 @@ export const taskBarAdminConfig = [
   {
     type: 'realtors',
     name: 'Риелторы'
-  }
+  },
+  {
+    type: 'reports',
+    name: 'Отчёты'
+  },
 ]

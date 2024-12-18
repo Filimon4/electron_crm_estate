@@ -12,7 +12,7 @@ const Pagination = ({ currentPage, totalPages, onPrevious, onNext }: {
     <Flex align="center" justify="space-between" mt={4}>
       <Button
         onClick={onPrevious}
-        disabled={currentPage === 1}
+        disabled={currentPage <= 1}
         variant="outline"
       >
         <FaArrowLeftLong />
@@ -24,7 +24,7 @@ const Pagination = ({ currentPage, totalPages, onPrevious, onNext }: {
       </Box>
       <Button
         onClick={onNext}
-        disabled={currentPage === totalPages}
+        disabled={currentPage >= totalPages}
         variant="outline"
       >
         <FaArrowRightLong />

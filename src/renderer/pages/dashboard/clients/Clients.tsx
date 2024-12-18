@@ -1,6 +1,6 @@
 import { Flex, Heading, Box, Center, Button, useDisclosure } from '@chakra-ui/react'
-import React, { memo, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import TableView from '../../../components/layout/ItemTable/TableView'
@@ -11,9 +11,21 @@ import CreateClientModal from '../../../components/modals/ClientModal/ClientModa
 import { UserRole } from '../../../shared/store/types'
 import ClientInfoAdmin from '../../../components/layout/ItemTable/ClientInfo/ClientInfoAdmin'
 import { notifyConfig } from '../../../shared/events/notifies.config'
+import { QUERY_KEYS } from '../../../shared/lib/queryClient'
+import { TPageClient } from '../../../shared/api/clients.api'
 
-// TODO: добавить пагинацию на страницы
-const ClientTableData = memo(({ client, setClient, data, openClientModal }: any) => {
+interface IClientTableData {
+  client: any
+  data: any[]
+  openClientModal: (...args: any) => void
+  totalPages: number
+  currentPage: number
+  onNextPage: () => void
+  onPrevPage: () => void
+}
+
+const ClientTableData: React.FC<IClientTableData> = memo(({ client, data, openClientModal, totalPages, currentPage, onNextPage, onPrevPage }) => {
+  const [,setClient] = useAtom(writeClient)
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -37,10 +49,10 @@ const ClientTableData = memo(({ client, setClient, data, openClientModal }: any)
           />
         </Box>
         <Pagination
-          currentPage={0}
-          totalPages={100}
-          onNext={() => console.log("next")}
-          onPrevious={() => console.log("prev")}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onNext={onNextPage}
+          onPrevious={onPrevPage}
         />
       </Flex>
     </Flex>
@@ -49,33 +61,56 @@ const ClientTableData = memo(({ client, setClient, data, openClientModal }: any)
 
 
 const Clients = () => {
-  const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ['getClients'],
-    queryFn: async () => {
-      //@ts-ignore
-      return await window.context.getClients()
-    },
-  })
   const [client,] = useAtom(readClient)
-  const [, setClient] = useAtom(writeClient)
+  const [,setClient] = useAtom(writeClient)
   const [user,] = useAtom(readUser)
 
-  const [update, setUpdatd] = useState(false)
-  const emitRerender = () => {
-    setUpdatd(!update)
-  }
+  const { isOpen: isClientModal, onOpen: openClientModal, onClose: closeClientModal } = useDisclosure();
+  const [currentPage, setCurrentPage] = useState(1)
+  const [maxPage, setMaxPage] = useState(1)
 
-  const clientData = useMemo(() => {
-    if (!data) return null
-    return data[client]
-  }, [client])
-
-  const onUpdateClient = async (key: string, value: string) => {
-    if (!clientData) return
-    if (clientData[key] === undefined) return
+  const {
+    fetchNextPage,
+    fetchPreviousPage,
+    hasNextPage,
+    hasPreviousPage,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    data,
+    error,
+    isLoading,
+  } = useInfiniteQuery({
     //@ts-ignore
-    const result = await window.context.updateClient(clientData)
+    queryKey: [QUERY_KEYS["getClientsByPage"]],
+    queryFn: async ({ pageParam = 1, ...args }) => {
+      //@ts-ignore
+      const pageData: TPageClient = await window.invokes.getClientsByPage(user.id, pageParam, 10)
+      if (pageData.count) {
+        setMaxPage(Math.ceil(pageData.count / 10))
+      }
+      return pageData
+    },
+    initialPageParam: 1, 
+    getNextPageParam: (lastPage: TPageClient, allPages, lastPageParam, ...args) => {
+      if (lastPage?.clients?.length === 0) {
+        return undefined;
+      }
+      return lastPageParam + 1;
+    },
+    // getPreviousPageParam: (firstPage, allPages, firstPageParam, ...args) => {
+    //   if (firstPageParam <= 0) {
+    //     return undefined;
+    //   }
+    //   return firstPageParam - 1;
+    // },
+    maxPages: maxPage,
+    retryOnMount: true,
+    retryDelay: 10000,
+  });
+  
+  const onUpdateClient = async (key: string, value: string) => {
+    //@ts-ignore
+    const result = await window.invokes.updateClient(clientData)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
@@ -84,41 +119,53 @@ const Clients = () => {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
-      clientData[key]=value
-      refetch()
-      emitRerender()
     } 
   }
 
   const onDeleteUser = async (id: number) => {
     //@ts-ignore
-    const resultDel = await window.context.deleteClient(id)
+    const resultDel = await window.invokes.deleteClient(id)
     if (resultDel) {
-      refetch()
       setClient(null)
     }
   }
   
+  const clientData = useMemo(() => data?.pages[(currentPage-1)]?.clients[client] ?? null, [currentPage])
+
+  if (!data) return <></>
   return (
     <>
       <Flex width={'100%'} overflow={'scroll'}>
-        <ClientTableData client={client} setClient={setClient} data={data} openClientModal={openClientModal}  />
+        {data && data?.pages && <>
+          <ClientTableData
+            currentPage={currentPage} totalPages={maxPage}
+            data={data?.pages[(currentPage-1)]?.clients ?? []}
+            client={client} onNextPage={() => {
+              fetchNextPage()
+              setCurrentPage(prev => prev + 1)
+            }}
+            onPrevPage={() => {
+              setCurrentPage(prev => prev - 1)
+            }}
+            openClientModal={() => 'openclient modal'}
+          />
+        </>}
         {clientData ? <>
           {user.role == UserRole.ADMIN ? <>
             <ClientInfoAdmin
              onChangeClient={onUpdateClient}
              onDeleteClient={onDeleteUser}
-             config={{...clientData}}
+             config={clientData}
             />
           </> : <>
-            <ClientInfo config={{...clientData}} />
+            <ClientInfo config={clientData} />
           </>}
         </>
         : <>
           <EmptyItem placeholder='Выберете клиента' />
         </>}
       </Flex>
-      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={refetch} />
+      <CreateClientModal onClose={closeClientModal} isOpen={isClientModal} refetch={() => console.log('refetch')} />
     </>
   )
 }

@@ -8,7 +8,8 @@ export const route_pages = {
   estate: `/estate`,
   reports: `/reports`,
   calendar: `/calendar`,
-  realtors: `/realtors`
+  realtors: `/realtors`,
+  deals: `/deals`,
 }
 
 export type TRoutesPages = keyof typeof route_pages

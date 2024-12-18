@@ -6,14 +6,15 @@ import { ClientsNamespace } from "../db/actions/actionsClients";
 export class ClientController {
 
   constructor () {
-    ipcMain.handle('getClients', this.getClients.bind(this))
+    ipcMain.handle('getClientsByPage', this.getClientsByPage.bind(this))
     ipcMain.handle('createClient', this.createClient.bind(this))
     ipcMain.handle('updateClient', this.updateClient.bind(this))
     ipcMain.handle('deleteClient', this.deleteClient.bind(this))
   }
 
-  async getClients() {
-    return await ClientsService.getAll()
+  async getClientsByPage(event: any, userId: number, page: number, limit: number) {
+    console.log(userId, page, limit)
+    return await ClientsService.getClientsByPage(userId, page, limit)
   }
   
   async createClient(event: any, client: TClientDTO) {

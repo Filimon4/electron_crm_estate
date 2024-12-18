@@ -7,7 +7,6 @@ const useOnlyNameModal = () => {
 
   const askOnlyName = async (): Promise<string> => {
     setIsOpen(true);
-    console.log('askOnlyName')
     return await new Promise<string>((resolve) => {
       setResolvePromise((name: string) => resolve(name));
     });

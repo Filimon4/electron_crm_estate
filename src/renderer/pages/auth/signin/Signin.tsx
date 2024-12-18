@@ -17,7 +17,7 @@ const Signin = () => {
   const onSignin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     //@ts-ignore
-    const user = await window.context.signin({
+    const user = await window.invokes.signin({
       email: email,
       password: password
     })

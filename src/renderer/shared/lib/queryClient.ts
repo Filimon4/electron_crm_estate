@@ -1,9 +1,17 @@
 import { QueryClient } from "@tanstack/react-query";
 
+export const QUERY_KEYS = {
+  //@ts-ignore
+  ...Object.keys(window.invokes).reduce((acc, cur) => ({ ...acc, [cur]: `${cur}` }), {}),
+};
+
+const MINUTE = 1000 * 60;
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 120000 
+      staleTime: 120000,
+      gcTime: 10 * MINUTE
     }
   }
 });
@@ -19,3 +27,5 @@ export const queryClient = new QueryClient({
 //     return []
 //   }})
 // })();
+
+

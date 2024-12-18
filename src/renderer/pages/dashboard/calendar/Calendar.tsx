@@ -5,21 +5,21 @@ import {
   EventClickArg,
   EventContentArg,
   formatDate,
+  EventDropArg,
+  EventInput,
 } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import ruLocale from '@fullcalendar/core/locales/ru';
-import { INITIAL_EVENTS, createEventId } from './event_utils';
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { createEventId } from './event_utils';
+import { Flex } from '@chakra-ui/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { dateContext } from '../../../shared/store';
+import { addEvent, dateContext, deleteEvent, readEvent, updateEvent } from '../../../shared/store';
 import OnlyNameModal from '../../../components/modals/InputModal/OnlyNameModal/OnlyNameModal';
 import ConfirmationModal from '../../../components/modals/ConfirmModal/ConfirmModal';
-
-// TODO: добавить настройки, просты
-// TODO: доабвить сохранение эвентов
+import { EventImpl } from '@fullcalendar/core/internal';
 const DemoApp: React.FC = () => {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
@@ -27,6 +27,11 @@ const DemoApp: React.FC = () => {
   const [confimDelete, setConfimDeleteOpen] = useState<EventClickArg>(null)
   const dateData = useAtomValue(dateContext)
   const setDateDate = useSetAtom(dateContext)
+
+  const [events,] = useAtom(readEvent)
+  const [,setAddEvent] = useAtom(addEvent)
+  const [,setRemoveEvent] = useAtom(deleteEvent)
+  const [,setUpdateEvent] = useAtom(updateEvent)
   
   const handleWeekendsToggle = () => {
     setWeekendsVisible(!weekendsVisible);
@@ -46,8 +51,10 @@ const DemoApp: React.FC = () => {
   };
 
   const handleConfigDelete = () => {
+    const {id} = confimDelete.event
     confimDelete.event.remove();
     setConfimDeleteOpen(null)
+    setRemoveEvent(id)
   } 
 
   const handleEvents = (events: EventApi[]) => {
@@ -58,20 +65,28 @@ const DemoApp: React.FC = () => {
     if (dateInfo && title.trim()) {
       const calendarApi = dateInfo.view.calendar;
       
-      calendarApi.addEvent({
+      const event: EventInput = {
         id: createEventId(),
         title: title.trim(),
         start: dateInfo.startStr,
         end: dateInfo.endStr,
         allDay: dateInfo.allDay,
-      });
+      }
+
+      calendarApi.addEvent(event);
       calendarApi.unselect();
+      setAddEvent(event)
+
     }
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
+
+  const handleEventDrop = (drop: EventDropArg) => {
+    setUpdateEvent(drop)
+  }
 
   return (
     <>
@@ -96,11 +111,12 @@ const DemoApp: React.FC = () => {
             selectMirror={true}
             dayMaxEvents={true}
             weekends={weekendsVisible}
-            initialEvents={INITIAL_EVENTS}
             select={handleDateSelect}
+            initialEvents={events}
             eventContent={renderEventContent}
             eventClick={handleEventClick}
             eventsSet={handleEvents}
+            eventDrop={handleEventDrop}
             locale={ruLocale}
             height={'100vh'}
           />

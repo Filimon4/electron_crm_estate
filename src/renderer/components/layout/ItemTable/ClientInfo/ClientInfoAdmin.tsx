@@ -3,7 +3,6 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Stack, S
 import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from '../../../../shared/utils/form';
 import EditableInput from '../../../global/EditableInput/EditableInput'
 
-// TODO: прибить иконку редактора в право
 const ClientInfoAdmin = ({
   onChangeClient,
   config,

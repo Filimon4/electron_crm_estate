@@ -2,7 +2,7 @@
 
 import { notifyConfig } from "./notifies.config"
 
-window.context.onNotify((args) => {
+window.ons.onNotify((args) => {
   console.log(args, notifyConfig['error'])
   if (!notifyConfig[`${args[0]}`]) {
     console.warn("Такой нотификации нету")
