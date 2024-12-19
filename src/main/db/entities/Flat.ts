@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 import { House } from "./House";
 import { Min } from "class-validator";
 
-@Entity()
+@Entity('flat')
 export class Flat {
   @PrimaryGeneratedColumn()
   id: number;

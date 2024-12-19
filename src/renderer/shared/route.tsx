@@ -10,6 +10,8 @@ export const route_pages = {
   calendar: `/calendar`,
   realtors: `/realtors`,
   deals: `/deals`,
+  houses: '/houses',
+  complexes: '/complexes',
 }
 
 export type TRoutesPages = keyof typeof route_pages

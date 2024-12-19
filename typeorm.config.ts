@@ -4,7 +4,7 @@ export default new DataSource({
    type: 'postgres',
    host: 'localhost',
    port: 5433,
-   database: 'crm_estate',
+   database: 'crm_estate2',
    username: 'postgres',
    password: 'admin',
    entities: ['src/main/db/entities/*.ts'],

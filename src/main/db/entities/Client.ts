@@ -2,7 +2,7 @@ import { IsEmail, Length } from "class-validator";
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 
-@Entity()
+@Entity('client')
 export class Client {
   @PrimaryGeneratedColumn()
   id: number;
@@ -32,12 +32,4 @@ export class Client {
 
   @Column({type: 'text', nullable: true})
   description: string
-
-  @Column({type: 'integer', nullable: true})
-  realtor_id: number
-
-  @ManyToOne(() => User, (u) => u.id)
-  @JoinColumn({name: 'realtor_id', referencedColumnName: 'id'})
-  realtor: User
-
 }

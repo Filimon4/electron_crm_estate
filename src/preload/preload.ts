@@ -1,5 +1,4 @@
 import { contextBridge, ipcRenderer } from "electron"
-import { PreloadNamespace } from "./preload.types"
 
 if (!process.contextIsolated) {
   throw new Error("Context isn't isoleted")
@@ -16,16 +15,26 @@ const frotnApiInvokes = {
   searchClients: (...args: any) => ipcRenderer.invoke('searchClients', ...args),
   
   createFlat: (...args: any) => ipcRenderer.invoke('createFlat', ...args),
-  createHouse: (...args: any) => ipcRenderer.invoke('createHouse', ...args),
   updateFlat: (...args: any) => ipcRenderer.invoke('updateFlat', ...args),
-  updateHouse: (...args: any) => ipcRenderer.invoke('updateHouse', ...args),
   deleteFlat: (...args: any) => ipcRenderer.invoke('deleteFlat', ...args),
-  deleteHouse: (...args: any) => ipcRenderer.invoke('deleteHouse', ...args),
   getFlatesByPage: (...args: any) => ipcRenderer.invoke('getFlatesByPage', ...args),
-  getHousesByPage: (...args: any) => ipcRenderer.invoke('getHousesByPage', ...args),
-  searchHouses: (...args: any) => ipcRenderer.invoke('searchHouses', ...args),
   searchFlats: (...args: any) => ipcRenderer.invoke('searchFlats', ...args),
   
+  createHouse: (...args: any) => ipcRenderer.invoke('createHouse', ...args),
+  updateHouse: (...args: any) => ipcRenderer.invoke('updateHouse', ...args),
+  deleteHouse: (...args: any) => ipcRenderer.invoke('deleteHouse', ...args),
+  getHousesByPage: (...args: any) => ipcRenderer.invoke('getHousesByPage', ...args),
+  searchHouses: (...args: any) => ipcRenderer.invoke('searchHouses', ...args),
+  
+  createComplex: (...args: any) => ipcRenderer.invoke('createComplex', ...args),
+  updateComplex: (...args: any) => ipcRenderer.invoke('updateComplex', ...args),
+  deleteCopmlex: (...args: any) => ipcRenderer.invoke('deleteCopmlex', ...args),
+  searchComplex: (...args: any) => {
+    console.log('searchComplex: ', args)
+    return ipcRenderer.invoke('searchComplex', ...args)
+  },
+  getComplexesByPage: (...args: any) => ipcRenderer.invoke('getComplexesByPage', ...args),
+
   createDeal: (...args: any) => ipcRenderer.invoke('createDeal', ...args),
   updateDeal: (...args: any) => ipcRenderer.invoke('updateDeal', ...args),
   deleteDeal: (...args: any) => ipcRenderer.invoke('deleteDeal', ...args),

@@ -2,14 +2,14 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 import { Complex } from "./Complex";
 
 
-@Entity()
+@Entity('house')
 export class House {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => Complex, (complex) => complex.id)
   @JoinColumn({name: 'complex', referencedColumnName: 'id'})
-  colmplex: number;
+  complex: number;
 
   @Column({type: 'varchar'})
   street: string;

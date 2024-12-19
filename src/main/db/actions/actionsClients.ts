@@ -3,7 +3,6 @@ import { Client as _Client } from "../entities";
 import { getPostgresErrorMessage } from "../../utils/pqErrors";
 import { sendNotify } from "../../utils/app";
 
-// TODO: сделать выборку по строкам, для пагинации
 export namespace ClientsNamespace {
   
   export const createClient = async (userId: number, clientData: TClientDTO) => {
@@ -14,7 +13,6 @@ export namespace ClientsNamespace {
       user.last_name = clientData.last_name
       user.email = clientData.email
       user.phone = clientData.phone
-      user.realtor_id = userId
       return await dbConnection(_Client).save(user);
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -54,9 +52,7 @@ export namespace ClientsNamespace {
   
   export const getCountClientsByUser = async (userId: number): Promise<number> => {
     try {
-      return await dbConnection(_Client).countBy({
-        realtor_id: userId
-      })
+      return await dbConnection(_Client).count()
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
@@ -64,15 +60,12 @@ export namespace ClientsNamespace {
     }
   }
 
-  export const getUserClientsByPage = async (userId: number, page: number, limit: number) => {
+  export const getClientsByPage = async (userId: number, page: number, limit: number) => {
     try {
       return await dbConnection(_Client).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
-        where: {
-          realtor_id: userId
-        }
       })
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)

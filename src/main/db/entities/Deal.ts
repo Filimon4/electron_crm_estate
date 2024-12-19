@@ -4,7 +4,7 @@ import { Client } from "./Client";
 import { IsDate } from "class-validator";
 import { User } from "./User";
 
-@Entity()
+@Entity('deal')
 export class Deal {
   @PrimaryGeneratedColumn()
   id: number;

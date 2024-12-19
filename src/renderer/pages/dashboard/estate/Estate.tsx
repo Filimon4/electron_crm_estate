@@ -12,27 +12,9 @@ import { UserRole } from '../../../shared/store/types'
 import ItemInfoAdmin from '../../../components/layout/ItemTable/ItemInfo/ItemInfoAdmin'
 import { notifyConfig } from '../../../shared/events/notifies.config'
 import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient'
+import { ITableData } from '../../../shared/types/table.types'
 
-interface IEsateTableData {
-  estate: any
-  data: any[]
-  openEstateModal: (...args: any) => void
-  totalPages: number
-  currentPage: number
-  onNextPage: () => void
-  onPrevPage: () => void
-}
-
-const EsateTableData: React.FC<IEsateTableData> = memo(({
-  currentPage,
-  data,
-  estate,
-  onNextPage,
-  onPrevPage,
-  openEstateModal,
-  totalPages
-}) => {
-  const [,setEstate] = useAtom(writeEstate)
+const EsateTableData: React.FC<ITableData> = memo(({currentPage,data,onNextPage,onPrevPage,openModal,selected,setSelected,totalPages}) => {
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -40,12 +22,12 @@ const EsateTableData: React.FC<IEsateTableData> = memo(({
       </Heading>
       <Flex height={'70%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
         <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
-          <Button color={'black'} _hover={{bg: 'gray.400'}} variant='outline' onClick={() => openEstateModal()}>
+          <Button color={'black'} _hover={{bg: 'gray.400'}} variant='outline' onClick={() => openModal()}>
             Создать нового объекта
           </Button>
         </Flex>
         <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
-          <TableView selected={estate} setSelected={setEstate} config={{
+          <TableView selected={selected} setSelected={setSelected} config={{
             headers: ['Адресс', 'Номер квартиры', 'Комнаты', 'Этаж', 'Площадь'],
             body: data ? data.map((d: any) => [d.house.street, d.flat, d.room_amount, d.floor, d.size]) : [],
             foot: []
@@ -71,7 +53,7 @@ const Estate = () => {
     queryFn: async () => {
       //@ts-ignore
       const result = await window.invokes.getFlatesByPage(currentPage, 10)
-      setMaxPage(Math.ceil(result.count / 10))
+      setMaxPage(result.count > 0 ? Math.ceil(result.count / 10) : 1)
       return result
     },
     placeholderData: keepPreviousData,
@@ -134,15 +116,18 @@ const Estate = () => {
       <Flex width={'100%'} overflow={'scroll'}>
         { estatesPageData && currentPage && <>
           <EsateTableData
-            currentPage={currentPage} totalPages={maxPage}
+            currentPage={currentPage}
+            totalPages={maxPage}
             data={estatesPageData.flats ?? []}
-            estate={estate} onNextPage={() => {
+            selected={estate}
+            onNextPage={() => {
               setCurrentPage(prev => prev + 1)
             }}
             onPrevPage={() => {
               setCurrentPage(prev => prev - 1)
             }}
-            openEstateModal={openEstateModal}
+            openModal={openEstateModal}
+            setSelected={setEstate}
           />
         </>}
         {clientData ? <>

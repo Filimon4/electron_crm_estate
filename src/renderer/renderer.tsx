@@ -22,10 +22,11 @@ import { ToastContainer } from 'react-toastify';
 import MyCalendar from './pages/dashboard/calendar/Calendar';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Deals from './pages/dashboard/deals/Deals';
+import Houses from './pages/dashboard/houses/Houses';
+import Complexes from './pages/dashboard/complexes/Complexes';
 
-// TODO: Сделать сделка
+// TODO: Сделать сделки
 // TODO: Добавить скелетоны.
-// TODO: 1. Сделать селет выборку из бд.
 // TODO: По таблицам ограничить поля.
 
 const dom = document.getElementById("root") as HTMLElement
@@ -46,6 +47,8 @@ root.render(
                 <Route path={route_pages.calendar} element={<MyCalendar />} />
                 <Route path={route_pages.realtors} element={<Realtors />} />
                 <Route path={route_pages.deals} element={<Deals />} />
+                <Route path={route_pages.houses} element={<Houses />} />
+                <Route path={route_pages.complexes} element={<Complexes />} />
               </>
             } />
             <Route path={route_pages.auth}  element={<Auth />} children={

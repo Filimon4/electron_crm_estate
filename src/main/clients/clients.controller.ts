@@ -10,6 +10,14 @@ export class ClientController {
     ipcMain.handle('createClient', this.createClient.bind(this))
     ipcMain.handle('updateClient', this.updateClient.bind(this))
     ipcMain.handle('deleteClient', this.deleteClient.bind(this))
+    ipcMain.handle('searchClients', this.searchClients.bind(this))
+  }
+
+  async searchClients(event: any, input: string) {
+      console.log(input)
+      const result = await ClientsService.searchClients(input)
+      console.log(result)
+      return result
   }
 
   async getClientsByPage(event: any, userId: number, page: number, limit: number) {

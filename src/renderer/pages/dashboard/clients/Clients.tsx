@@ -12,20 +12,9 @@ import { UserRole } from '../../../shared/store/types'
 import ClientInfoAdmin from '../../../components/layout/ItemTable/ClientInfo/ClientInfoAdmin'
 import { notifyConfig } from '../../../shared/events/notifies.config'
 import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient'
-import { TPageClient } from '../../../shared/api/clients.api'
+import { ITableData } from '../../../shared/types/table.types'
 
-interface IClientTableData {
-  client: any
-  data: any[]
-  openClientModal: (...args: any) => void
-  totalPages: number
-  currentPage: number
-  onNextPage: () => void
-  onPrevPage: () => void
-}
-
-const ClientTableData: React.FC<IClientTableData> = memo(({ client, data, openClientModal, totalPages, currentPage, onNextPage, onPrevPage }) => {
-  const [,setClient] = useAtom(writeClient)
+const ClientTableData: React.FC<ITableData> = memo(({ currentPage,data,onNextPage,onPrevPage,openModal,selected,setSelected,totalPages }) => {
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -33,14 +22,14 @@ const ClientTableData: React.FC<IClientTableData> = memo(({ client, data, openCl
       </Heading>
       <Flex height={'70%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
         <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
-          <Button color={'black'} _hover={{ bg: 'gray.400' }} variant='outline' onClick={() => openClientModal()}>
+          <Button color={'black'} _hover={{ bg: 'gray.400' }} variant='outline' onClick={() => openModal()}>
             Создать нового клиента
           </Button>
         </Flex>
         <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
           <TableView
-            selected={client}
-            setSelected={setClient}
+            selected={selected}
+            setSelected={setSelected}
             config={{
               headers: ['Фамилия', 'Имя', 'Отчество', 'Телефон', 'Почта'],
               body: data ? data.map((d: any) => [d.sure_name, d.first_name, d.last_name, d.phone, d.email]) : [],
@@ -133,15 +122,18 @@ const Clients = () => {
       <Flex width={'100%'} overflow={'scroll'}>
         {clientsPageData && currentPage && <>
           <ClientTableData
-            currentPage={currentPage} totalPages={maxPage}
+            currentPage={currentPage}
+            totalPages={maxPage}
             data={clientsPageData.clients ?? []}
-            client={client} onNextPage={() => {
+            selected={client}
+            onNextPage={() => {
               setCurrentPage(prev => prev + 1)
             }}
             onPrevPage={() => {
               setCurrentPage(prev => prev - 1)
             }}
-            openClientModal={openClientModal}
+            openModal={openClientModal}
+            setSelected={setClient}
           />
         </>}
         {clientData ? <>

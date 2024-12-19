@@ -1,13 +1,13 @@
 import { getPostgresErrorMessage } from "../../utils/pqErrors";
-import { Flat as _Flat, Complex, Flat, House as _House } from "../entities"
+import { Flat as _Flat, Complex as _Complex, House as _House } from "../entities"
 import { sendNotify } from "../../utils/app";
 import { TFlatDTO } from "../../estates/estates.dto";
 
 export namespace EstateNamespace {
-  export const createFlat = async (data: TFlatDTO): Promise<Flat> => {
+  export const createFlat = async (data: TFlatDTO): Promise<_Flat> => {
     try {
       console.log(JSON.stringify(data, null, 2))
-      const flatRepository = await dbConnection(Flat);
+      const flatRepository = await dbConnection(_Flat);
       const flat = flatRepository.create()
       flat.flat = +data.flat
       flat.floor = +data.floor
@@ -25,7 +25,7 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getFlatsByPage = async (page: number, limit: number): Promise<[Flat[], number]> => {
+  export const getFlatsByPage = async (page: number, limit: number): Promise<[_Flat[], number]> => {
     try {
       if (!page || !limit) throw new Error('there is not values')
       return await dbConnection(_Flat).findAndCount({
@@ -41,9 +41,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getFlatById = async (id: number): Promise<Flat | null> => {
+  export const getFlatById = async (id: number): Promise<_Flat | null> => {
     try {
-      const flatRepository = await dbConnection(Flat);
+      const flatRepository = await dbConnection(_Flat);
       return await flatRepository.findOne({ where: { id }, relations: ["house"] });
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -52,9 +52,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const updateFlat = async (id: number, updates: TFlatDTO): Promise<Flat | null> => {
+  export const updateFlat = async (id: number, updates: TFlatDTO): Promise<_Flat | null> => {
     try {
-      const flatRepository = await dbConnection(Flat);
+      const flatRepository = await dbConnection(_Flat);
       const flat = await flatRepository.findOne({ where: { id } });
       if (!flat) return null;
       Object.assign(flat, updates);
@@ -68,7 +68,7 @@ export namespace EstateNamespace {
 
   export const deleteFlat = async (id: number): Promise<boolean> => {
     try {
-      const flatRepository = await dbConnection(Flat);
+      const flatRepository = await dbConnection(_Flat);
       const result = await flatRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
@@ -89,6 +89,20 @@ export namespace EstateNamespace {
       console.log(errorMessage)
     }
   };
+
+  export const getComplexesByPage = async (page: number, limit: number) => {
+    try {
+      return await dbConnection(_Complex).findAndCount({
+        skip:  ((page - 1) * limit),
+        take: limit,
+        order: { id: "ASC"},
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  }
 
   export const getHousesByPage = async (page: number, limit: number): Promise<[_House[], number]> => {
     try {
@@ -141,9 +155,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const createComplex = async (data: Partial<Complex>): Promise<Complex> => {
+  export const createComplex = async (data: Partial<_Complex>): Promise<_Complex> => {
     try {
-      const complexRepository = await dbConnection(Complex);
+      const complexRepository = await dbConnection(_Complex);
       const complex = complexRepository.create(data);
       return await complexRepository.save(complex);
     } catch (error) {
@@ -153,9 +167,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getAllComplexes = async (): Promise<Complex[]> => {
+  export const getAllComplexes = async (): Promise<_Complex[]> => {
     try {
-      const complexRepository = await dbConnection(Complex);
+      const complexRepository = await dbConnection(_Complex);
       return await complexRepository.find({ relations: ["builder"] });
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -164,9 +178,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getComplexById = async (id: number): Promise<Complex | null> => {
+  export const getComplexById = async (id: number): Promise<_Complex | null> => {
     try {
-      const complexRepository = await dbConnection(Complex);
+      const complexRepository = await dbConnection(_Complex);
       return await complexRepository.findOne({ where: { id }, relations: ["builder"] });
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -175,9 +189,9 @@ export namespace EstateNamespace {
     }
   };
 
-  export const updateComplex = async (id: number, updates: Partial<Complex>): Promise<Complex | null> => {
+  export const updateComplex = async (id: number, updates: Partial<_Complex>): Promise<_Complex | null> => {
     try {
-      const complexRepository = await dbConnection(Complex);
+      const complexRepository = await dbConnection(_Complex);
       const complex = await complexRepository.findOne({ where: { id } });
       if (!complex) return null;
       Object.assign(complex, updates);
@@ -191,7 +205,7 @@ export namespace EstateNamespace {
 
   export const deleteComplex = async (id: number): Promise<boolean> => {
     try {
-      const complexRepository = await dbConnection(Complex);
+      const complexRepository = await dbConnection(_Complex);
       const result = await complexRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
@@ -237,7 +251,18 @@ export namespace EstateNamespace {
     }
   };
 
-  
-
-  
+  export const searchComplex = async (query: string) => {
+    try {
+      const houseRepository = await dbConnection(_Complex);
+      const results = await houseRepository
+        .createQueryBuilder('complex')
+        .where(`complex.search_vector @@ plainto_tsquery('russian', :query)`, { query: query.replace(/\s/g, ' & ')})
+        .getMany();
+      return results;
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  };
 }

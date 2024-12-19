@@ -33,6 +33,16 @@ export const dateContext = atom<{
   dateInfo: DateSelectArg
 }>()
 
+const deal = atom<number>()
+export const readDeal = atom((get) => get(deal), null)
+export const writeDeal = atom(null, (get, set, update: number) => set(deal, update))
+
+const complex = atom<number>()
+export const readComplex = atom((get) => get(complex), null)
+export const writeComplex = atom(null, (get, set, update: number) => set(complex, update))
+const house = atom<number>()
+export const readHouse = atom((get) => get(house), null)
+export const writeHouse = atom(null, (get, set, update: number) => set(house, update))
 
 const events = atom<EventInput[]>([])
 export const readEvent = atom((get) => get(events), null)

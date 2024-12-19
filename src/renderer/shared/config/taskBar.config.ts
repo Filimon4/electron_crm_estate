@@ -1,34 +1,51 @@
+import { access } from "fs"
+import { UserRole } from "../store/types"
+
 export const taskBarConfig = [
   {
     type: 'desk',
-    name: 'Рабочий стол'
+    name: 'Рабочий стол',
+    access: UserRole.REALTOR,
   },
   {
     type: 'estate',
-    name: 'Объекты'
+    name: 'Объекты',
+    access: 'all'
+  },
+  {
+    type: 'houses',
+    name: 'Дома',
+    access: UserRole.ADMIN
+  },
+  {
+    type: 'complexes',
+    name: 'Комплексы',
+    access: UserRole.ADMIN
   },
   {
     type: 'clients',
-    name: 'Клиенты'
+    name: 'Клиенты',
+    access: 'all'
+  },
+  {
+    type: 'realtors',
+    name: 'Риелторы',
+    access: UserRole.ADMIN
   },
   {
     type: 'calendar',
-    name: 'Календарь'
+    name: 'Календарь',
+    access: 'all'
   },
   {
     type: 'deals',
-    name: 'Сделки'
-  },
-  
-]
-
-export const taskBarAdminConfig = [
-  {
-    type: 'realtors',
-    name: 'Риелторы'
+    name: 'Сделки',
+    access: 'all'
   },
   {
     type: 'reports',
-    name: 'Отчёты'
+    name: 'Отчёты',
+    access: UserRole.ADMIN
   },
+  
 ]
