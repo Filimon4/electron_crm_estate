@@ -46,8 +46,13 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    console.log('houseData: ', houseData)
     //@ts-ignore
-    const client = await window.invokes.createHouse(houseData)
+    const client = await window.invokes.createHouse({
+      complex: houseData.complex_id,
+      street: houseData.street,
+      house_number: houseData.house_number
+    })
     if (client) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
@@ -123,13 +128,13 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
                 defaultOptions
                 value={
                   houseData.complex_id
-                    ? { value: houseData.complex_id, label: `Квартира ${houseData.complex_label}` }
+                    ? { value: houseData.complex_id, label: `Комплекс ${houseData.complex_label}` }
                     : null
                 }
                 onChange={handleComplexChange}
                 onInputChange={(value) => setHouseInput(value)}
-                placeholder="Выберите квартиру"
-                noOptionsMessage={() => 'Нет доступных квартир'}
+                placeholder="Выберите комплекс"
+                noOptionsMessage={() => 'Нет доступных комплексов'}
               />
             </FormControl>
           </ModalBody>

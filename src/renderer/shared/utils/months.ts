@@ -18,3 +18,7 @@ export const getMonthNameFromDate = (date: Date): string => {
   const month = date.toISOString().split('-')[1]; // Получаем месяц из объекта Date
   return months[month] || 'Неизвестный месяц'; // Возвращаем название месяца или сообщение об ошибке
 };
+
+export const getRussianDateFromatFromDate = (date: Date): string => {
+  return `${date.getDay()}.${date.toISOString().split('-')[1]}.${date.getFullYear()}`
+}

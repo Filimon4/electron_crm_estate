@@ -18,7 +18,6 @@ export namespace EstateNamespace {
       flat.description = ' '
       return await flatRepository.save(flat);
     } catch (error) {
-      console.log(error)
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
@@ -34,7 +33,6 @@ export namespace EstateNamespace {
         order: { id: "ASC"},
       })
     } catch (error) {
-      console.log(error)
       const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
@@ -81,7 +79,10 @@ export namespace EstateNamespace {
   export const createHouse = async (data: Partial<_House>): Promise<_House> => {
     try {
       const houseRepository = await dbConnection(_House);
-      const house = houseRepository.create(data);
+      const house = houseRepository.create()
+      house.complex = data.complex
+      house.house_number = +data.house_number
+      house.street = data.street
       return await houseRepository.save(house);
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -240,9 +241,22 @@ export namespace EstateNamespace {
       const results = await houseRepository
         .createQueryBuilder('flat')
         .innerJoinAndSelect('house', 'house', 'house.id = flat.house_id')
+        .select([
+          'flat.id AS id',
+          'flat.house_id AS house_id',
+          'flat.flat AS flat',
+          'flat.room_amount AS room_amount',
+          'flat.floor AS floor',
+          'flat.size AS size',
+          'flat.price AS price',
+          'house.street AS street',
+          'house.house_number AS house_number',
+          'house.complex AS complex'
+        ])
         .where(`(flat.search_vector || house.search_vector) @@ plainto_tsquery('russian', :query)`, { query: query.replace(/\s/g, ' & ')})
-        .getMany();
-    
+        .getRawMany();
+      
+      console.log('searchFlats: ', JSON.stringify(results, null, 2))
       return results;
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)

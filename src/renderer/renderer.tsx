@@ -25,9 +25,11 @@ import Deals from './pages/dashboard/deals/Deals';
 import Houses from './pages/dashboard/houses/Houses';
 import Complexes from './pages/dashboard/complexes/Complexes';
 
-// TODO: Сделать сделки
+// TODO: добавить дебаунс на поиск
 // TODO: Добавить скелетоны.
 // TODO: По таблицам ограничить поля.
+// TODO: Добавить на клиентов поиск по фио.
+// TODO: В дома добавить названия комплексов
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)

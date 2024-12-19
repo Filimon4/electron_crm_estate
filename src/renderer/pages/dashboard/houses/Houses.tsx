@@ -11,8 +11,9 @@ import EmptyItem from '../../../components/layout/ItemTable/EmptyItem';
 import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient';
 import ComplexInfoAdmin from '../../../components/layout/ItemTable/ComplexInfo/ComplexInfoAdmin';
 import CreateHouseModal from '../../../components/modals/HouseModal/HouseModal';
+import HouseInfoAdmin from '../../../components/layout/ItemTable/HouseInfo/HouseInfoAdmin';
 
-const ComplexesTableData: React.FC<ITableData> = memo(({ selected, data, openModal, totalPages, currentPage, onNextPage, onPrevPage, setSelected }) => {
+const HousesTableData: React.FC<ITableData> = memo(({ selected, data, openModal, totalPages, currentPage, onNextPage, onPrevPage, setSelected }) => {
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -29,8 +30,8 @@ const ComplexesTableData: React.FC<ITableData> = memo(({ selected, data, openMod
             selected={selected}
             setSelected={setSelected}
             config={{
-              headers: ['Название', 'Город', 'Район'],
-              body: data ? data.map((d: any) => [d.name, d.city, d.district]) : [],
+              headers: ['Номер дома', 'Улица'],
+              body: data ? data.map((d: any) => [d.house_number, d.street]) : [],
               foot: []
             }}
           />
@@ -78,7 +79,7 @@ const Complexes = () => {
 
   const onUpdateComplex = async (key: string, value: string) => {
     //@ts-ignore
-    const result = await window.invokes.updateHouse(complexData)
+    const result = await window.invokes.updateHouse(houseData)
     if (!result) {
       notifyConfig.error('Пожалуйста заполните все поля', {
         autoClose: 3000,
@@ -106,21 +107,20 @@ const Complexes = () => {
     })
   }
 
-  const complexData = useMemo(() => {
+  const houseData = useMemo(() => {
     if (house !== undefined && house !== null && copmlexesPageData) {
-      return copmlexesPageData?.complexes[house]
+      return copmlexesPageData?.houses[house]
     }
     return null
   }, [house])
-  
 
   return (
     <>
       <Flex width={'100%'} overflow={'scroll'}>
-        <ComplexesTableData
+        <HousesTableData
           currentPage={currentPage ?? 1}
           totalPages={maxPage}
-          data={copmlexesPageData?.complexes ?? []}
+          data={copmlexesPageData?.houses ?? []}
           selected={house}
           onNextPage={() => {
             setCurrentPage(prev => prev + 1)
@@ -131,11 +131,11 @@ const Complexes = () => {
           openModal={openDealModal}
           setSelected={setHouse}
         />
-        {complexData ? <>
-          <ComplexInfoAdmin
+        {houseData ? <>
+          <HouseInfoAdmin
             onChangeClient={onUpdateComplex}
             onDeleteClient={onDeleteComplex}
-            config={complexData}
+            config={houseData}
           />
         </>
         : <>

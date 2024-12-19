@@ -1,28 +1,34 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { Flat } from "./Flat";
 import { Client } from "./Client";
 import { IsDate } from "class-validator";
 import { User } from "./User";
 
+export enum DealStatus {
+  open = 'open',
+  close = 'close'
+}
+
 @Entity('deal')
+@Unique('UQ_DEAL_FLAT_CLIENT', ['flat', 'client'])
 export class Deal {
   @PrimaryGeneratedColumn()
   id: number;
 
   @OneToOne(() => Flat, (flat) => flat.id)
-  @JoinColumn({name: 'flat', referencedColumnName: 'id'})
+  @JoinColumn({name: 'flat'})
   flat: number;
 
-  @OneToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({name: 'realtor', referencedColumnName: 'id'})
   realtor: number;
 
-  @OneToOne(() => Client, (client) => client.id)
+  @ManyToOne(() => Client, (client) => client.id)
   @JoinColumn({name: 'client', referencedColumnName: 'id'})
   client: number;
 
-  @Column({type: 'varchar'})
-  status: string
+  @Column({type: 'enum', enum: DealStatus, default: DealStatus.open})
+  status: DealStatus
 
   @CreateDateColumn()
   @IsDate()
@@ -31,4 +37,8 @@ export class Deal {
   @UpdateDateColumn()
   @IsDate()
   updated_at: Date;
+
+  @Column({type: 'timestamp', nullable: true})
+  @IsDate()
+  closed_at: Date;
 }

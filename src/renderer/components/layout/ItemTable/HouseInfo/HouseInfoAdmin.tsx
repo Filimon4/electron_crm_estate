@@ -3,7 +3,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Stack, S
 import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from '../../../../shared/utils/form';
 import EditableInput from '../../../global/EditableInput/EditableInput'
 
-const ComplexInfoAdmin = ({
+const HouseInfoAdmin = ({
   onChangeClient,
   config,
   onDeleteClient
@@ -20,22 +20,18 @@ const ComplexInfoAdmin = ({
     >
       <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
       <CardHeader>
-        <Heading>{config.name}</Heading>
+        <Heading>{config.street} {config.house_number}</Heading>
       </CardHeader>
       <CardBody>
         <Flex flexDirection={'column'} height={'100%'}>
           <Stack divider={<StackDivider />} spacing='3'>
             <EditableInput
               inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)}
-              onChangeData={onChangeClient} title={'Название'} editValue={'name'} defaultValue={config.name}
+              onChangeData={onChangeClient} title={'Номер дома'} editValue={'house_number'} defaultValue={config.house_number}
               />
             <EditableInput
               inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)}
-              onChangeData={onChangeClient} title={'Город'} editValue={'city'} defaultValue={config.city}
-            />
-            <EditableInput
-              inputValidator={(value) => isLettersOnly(value)} submitValidator={(value) => Boolean(value)}
-              onChangeData={onChangeClient} title={'Район'} editValue={'district'} defaultValue={config.district}
+              onChangeData={onChangeClient} title={'Улица'} editValue={'street'} defaultValue={config.street}
             />
           </Stack>
           <Textarea value={config.description ?? ''} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
@@ -59,4 +55,4 @@ const ComplexInfoAdmin = ({
   </>
 }
 
-export default ComplexInfoAdmin
+export default HouseInfoAdmin

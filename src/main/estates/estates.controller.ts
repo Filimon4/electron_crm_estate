@@ -42,7 +42,7 @@ export class EstateController {
 
 
   async createHouse(event: any, data: House) {
-    return await EstateService.createHous(data)
+    return await EstateService.createHouse(data)
   }
   async updateHouse(event: any, data: House) {
     return await EstateService.updateHouse(data)    

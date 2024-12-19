@@ -15,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { notifyConfig } from "../../../shared/events/notifies.config";
 import AsyncSelect from "react-select/async";
+import { useAtom } from "jotai";
+import { readUser } from "../../../shared/store";
 
 const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
   const [dealData, setDealData] = useState({
@@ -25,12 +27,13 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
   });
   const [flatInput, setFlatInput] = useState('')
   const [clientInput, setClientInput] = useState('')
+  const [user,] = useAtom(readUser)
 
   const handleFlatChange = (e: any) => {
     const { label, value } = e;
     setDealData((prev) => ({ ...prev, flat_id: value, flat_label: label }))
   };
-
+  
   const handleClientChange = (e: any) => {
     const { label, value } = e;
     console.log(label)
@@ -49,8 +52,12 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    console.log(dealData)
     //@ts-ignore
-    const estate = await window.invokes.createFlat(dealData)
+    const estate = await window.invokes.createDeal(user.id, {
+      client_id: dealData.client_id,
+      flat_id: dealData.flat_id
+    })
     if (estate) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
@@ -88,12 +95,15 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
   };
 
   const loadFlats = async (): Promise<any[]> => {
-    if (clientInput.length === 0) return []
+    if (flatInput.length === 0) return []
     try {
       //@ts-ignore
-      const response = await window.invokes.searchFlats(clientInput)
+      const response = await window.invokes.searchFlats(flatInput)
       console.log(response)
-      return []
+      return response.map((flat: any) => ({
+        label: `ул. ${flat.street} д. ${flat.house_number} кв. ${flat.flat} этаж ${flat.floor}`,
+        value: +flat.id,
+      }));
     } catch (error) {
       return [];
     }

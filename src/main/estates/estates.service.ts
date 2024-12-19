@@ -25,7 +25,7 @@ export class EstateService {
     }
   }
 
-  static async createHous(data: House) {
+  static async createHouse(data: House) {
     return await EstateNamespace.createHouse(data)
   }
   static async updateHouse(data: House) {
@@ -40,6 +40,7 @@ export class EstateService {
   }
   static async getHousesByPage(page: number, limit: number) {
     const [houses, count] = await EstateNamespace.getHousesByPage(page, limit)
+    console.log(houses[0], count)
     return {
       houses: houses,
       count: count

@@ -13,8 +13,10 @@ import CreateDealModal from '../../../components/modals/DealModal/DealModal'
 import DealInfo from '../../../components/layout/ItemTable/DealInfo/DealInfo'
 import DealInfoAdmin from '../../../components/layout/ItemTable/DealInfo/DealInfoAdmin'
 import { ITableData } from '../../../shared/types/table.types'
+import { getRussianDateFromatFromDate } from '../../../shared/utils/months'
 
 const DealsTableData: React.FC<ITableData> = memo(({ selected, data, openModal, totalPages, currentPage, onNextPage, onPrevPage, setSelected }) => {
+  console.log(JSON.stringify(data, null, 2))
   return (
     <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -31,8 +33,8 @@ const DealsTableData: React.FC<ITableData> = memo(({ selected, data, openModal, 
             selected={selected}
             setSelected={setSelected}
             config={{
-              headers: ['Фамилия', 'Имя', 'Отчество', 'Телефон', 'Почта'],
-              body: data ? data.map((d: any) => [d.sure_name, d.first_name, d.last_name, d.phone, d.email]) : [],
+              headers: ['Дат. открытия', 'Статус', 'Телефон кл.', 'Почта кл.', 'Объём сделки'],
+              body: data ? data.map((d: any) => [`${getRussianDateFromatFromDate(new Date(d.created_at))}`, d.status == 'open' ? 'открыта' : 'закрыта', d.client.phone, d.client.email, d.flat.price]) : [],
               foot: []
             }}
           />
@@ -109,7 +111,7 @@ const Deals = () => {
 
   const dealData = useMemo(() => {
     if (deal !== undefined && deal !== null && dealsPageData) {
-      return dealsPageData?.clients[deal]
+      return dealsPageData?.deals[deal]
     }
     return null
   }, [deal])
@@ -122,7 +124,7 @@ const Deals = () => {
           <DealsTableData
             currentPage={currentPage}
             totalPages={maxPage}
-            data={dealsPageData?.clients ?? []}
+            data={dealsPageData?.deals ?? []}
             selected={deal}
             onNextPage={() => {
               setCurrentPage(prev => prev + 1)

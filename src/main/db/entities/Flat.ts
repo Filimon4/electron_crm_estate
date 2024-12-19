@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Check, Column, Entity, Exclusion, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { House } from "./House";
 import { Min } from "class-validator";
 
 @Entity('flat')
+@Unique("UQ_Flat_One", ['house_id', 'flat'])
 export class Flat {
   @PrimaryGeneratedColumn()
   id: number;
@@ -36,4 +37,21 @@ export class Flat {
 
   @Column({type: 'text', nullable: true})
   description: string
+
+  @Column({
+    type: 'tsvector',
+    select: false,
+    generatedType: 'STORED',
+    asExpression: `
+      to_tsvector(
+        'russian',
+        coalesce("flat"::text, '') || ' ' ||
+        coalesce("room_amount"::text, '') || ' ' ||
+        coalesce("size"::text, '') || ' ' ||
+        coalesce("price"::text, '') || ' ' ||
+        coalesce("floor"::text, '')
+      )
+    `,
+  })
+  search_vector: any
 }
