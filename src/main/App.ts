@@ -6,6 +6,7 @@ import { EventsController } from "./events/events.controller";
 import { RealtorController } from "./realtors/realtors.controller";
 import { createWindow } from "./utils/app";
 import { DealsController } from "./deals/deals.controller";
+import { ReoprtsController } from "./reports/reports.controller";
 
 class App {
   constructor() {
@@ -25,6 +26,7 @@ class App {
     new RealtorController()
     new EventsController()
     new DealsController()
+    new ReoprtsController()
     createWindow()
   }
 

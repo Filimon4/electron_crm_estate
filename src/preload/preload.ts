@@ -48,8 +48,18 @@ const frotnApiInvokes = {
   countRealtors: (...args: any) => ipcRenderer.invoke('countRealtors', ...args),
 
   createEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
-  updateEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
-  deleteEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
+  updateEvent: (...args: any) => ipcRenderer.invoke('updateEvent', ...args),
+  deleteEvent: (...args: any) => ipcRenderer.invoke('deleteEvent', ...args),
+  getAllEvents: (...args: any) => ipcRenderer.invoke('getAllEvents', ...args),
+
+  topRealtors: (...args: any) => ipcRenderer.invoke('topRealtors', ...args),
+  incomeMonths: (...args: any) => ipcRenderer.invoke('incomeMonths', ...args),
+  dealAmountMonths: (...args: any) => ipcRenderer.invoke('dealAmountMonths', ...args),
+  avgIncomeMonths: (...args: any) => ipcRenderer.invoke('avgIncomeMonths', ...args),
+  incomeMonthsByUser: (...args: any) => ipcRenderer.invoke('incomeMonthsByUser', ...args),
+  dealAmountMonthsByUser: (...args: any) => ipcRenderer.invoke('dealAmountMonthsByUser', ...args),
+  avgIncomeMonthsByUser: (...args: any) => ipcRenderer.invoke('avgIncomeMonthsByUser', ...args),
+
 }
 
 const frontApiOns = {

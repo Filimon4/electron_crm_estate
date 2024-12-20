@@ -7,6 +7,7 @@ export type TRealtorDB = {
   last_name: string;
   password: string;
   role: UserRole;
+  id: number;
 }
 
 export enum UserRole {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   EventApi,
   DateSelectArg,
@@ -7,32 +7,54 @@ import {
   formatDate,
   EventDropArg,
   EventInput,
+  CalendarApi,
 } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { EventResizeDoneArg } from '@fullcalendar/interaction';
 import ruLocale from '@fullcalendar/core/locales/ru';
 import { createEventId } from './event_utils';
 import { Flex } from '@chakra-ui/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { addEvent, dateContext, deleteEvent, readEvent, updateEvent } from '../../../shared/store';
+import { addEvent, addEventFromDb, dateContext, deleteEvent, readEvent, readUser, updateEvent } from '../../../shared/store';
 import OnlyNameModal from '../../../components/modals/InputModal/OnlyNameModal/OnlyNameModal';
 import ConfirmationModal from '../../../components/modals/ConfirmModal/ConfirmModal';
-import { EventImpl } from '@fullcalendar/core/internal';
-const DemoApp: React.FC = () => {
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../../../shared/lib/queryClient';
+
+const Calendar: React.FC = () => {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confimDelete, setConfimDeleteOpen] = useState<EventClickArg>(null)
   const dateData = useAtomValue(dateContext)
   const setDateDate = useSetAtom(dateContext)
+  const calendarRef = useRef(null)
+  const [user,] = useAtom(readUser)
 
   const [events,] = useAtom(readEvent)
+  const [,setEventsFromDb] = useAtom(addEventFromDb)
   const [,setAddEvent] = useAtom(addEvent)
   const [,setRemoveEvent] = useAtom(deleteEvent)
   const [,setUpdateEvent] = useAtom(updateEvent)
   
+  const { data: eventsData} = 
+  //@ts-ignore
+  useQuery({placeholderData:keepPreviousData,queryKey:[QUERY_KEYS['getAllEvents']],queryFn:async()=>{
+      //@ts-ignore
+      const result = await window.invokes.getAllEvents(user.id)
+      result.forEach((event: any) => {
+        const api = calendarRef.current.getApi()
+        if (!api) return
+        if (api.getEventById(event.id)) return
+        api.addEvent(event);
+        api.unselect();
+        setEventsFromDb(event)
+      })
+      return result
+    }});
+
   const handleWeekendsToggle = () => {
     setWeekendsVisible(!weekendsVisible);
   };
@@ -51,19 +73,18 @@ const DemoApp: React.FC = () => {
   };
 
   const handleConfigDelete = () => {
-    const {id} = confimDelete.event
-    confimDelete.event.remove();
     setConfimDeleteOpen(null)
-    setRemoveEvent(id)
+    setRemoveEvent(confimDelete.event)
   } 
 
   const handleEvents = (events: EventApi[]) => {
     setCurrentEvents(events);
   };
 
-  const handleModalSave = (dateInfo: DateSelectArg, title: string) => {
+  const handleModalSave = async (dateInfo: DateSelectArg, title: string) => {
     if (dateInfo && title.trim()) {
-      const calendarApi = dateInfo.view.calendar;
+      const calendarApi: CalendarApi = calendarRef.current.getApi()
+      if (!calendarApi) return
       
       const event: EventInput = {
         id: createEventId(),
@@ -73,10 +94,10 @@ const DemoApp: React.FC = () => {
         allDay: dateInfo.allDay,
       }
 
+      const result = await setAddEvent(event)
+      if (!result) return
       calendarApi.addEvent(event);
       calendarApi.unselect();
-      setAddEvent(event)
-
     }
   };
 
@@ -85,6 +106,10 @@ const DemoApp: React.FC = () => {
   };
 
   const handleEventDrop = (drop: EventDropArg) => {
+    setUpdateEvent(drop)
+  }
+  
+  const handleEventResize = (drop: EventResizeDoneArg) => {
     setUpdateEvent(drop)
   }
 
@@ -117,8 +142,10 @@ const DemoApp: React.FC = () => {
             eventClick={handleEventClick}
             eventsSet={handleEvents}
             eventDrop={handleEventDrop}
+            eventResize={handleEventResize}
             locale={ruLocale}
             height={'100vh'}
+            ref={calendarRef}
           />
         </div>
       </Flex>
@@ -181,4 +208,4 @@ function renderSidebarEvent(event: EventApi) {
   );
 }
 
-export default DemoApp;
+export default Calendar;

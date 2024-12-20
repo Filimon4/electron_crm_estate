@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { TRealtorDB } from "./types";
 import { updatePage } from "../route";
-import { DateSelectArg, EventDropArg, EventInput } from "@fullcalendar/core";
+import { DateSelectArg, EventChangeArg, EventDropArg, EventInput } from "@fullcalendar/core";
 import { EventImpl } from "@fullcalendar/core/internal";
 
 const page = atom('desk')
@@ -46,32 +46,69 @@ export const writeHouse = atom(null, (get, set, update: number) => set(house, up
 
 const events = atom<EventInput[]>([])
 export const readEvent = atom((get) => get(events), null)
-export const addEvent = atom(null, (get, set, update: EventInput) => {
+export const addEventFromDb = atom(null, (get, set, update: EventInput) => {
   set(events, [...get(events), update])
-  console.log(update, get(events))
-  //@ts-ignore
-  window.invokes.createEvent(update)
 })
-export const deleteEvent = atom(null, (get, set, update: string) => {
-  set(events, get(events).filter(ev => ev.id !== update))
-  //@ts-ignore
-  window.invokes.deleteEvent(update)
+export const addEvent = atom<any, any, Promise<boolean>>(null, async (get, set, update: EventInput) => {
+  try {    
+    const userData = get(user)
+    if (!userData?.id || typeof userData?.id !== 'number') return false  
+      //@ts-ignore
+    const event = await window.invokes.createEvent(userData.id, update)
+    update.id = event.id
+    set(events, [...get(events), update])
+    return true
+  } catch (error) {
+    return false
+  }
 })
-export const updateEvent = atom(null, (get, set, update: EventDropArg) => {
+export const deleteEvent = atom<any, any, Promise<boolean>>(null, async (get, set, update: EventImpl): Promise<boolean> => {
+  try {
+    const userData = get(user) 
+    if (!userData?.id || typeof userData?.id !== 'number') return false
+    //@ts-ignore
+    const result = window.invokes.deleteEvent(userData.id, update.id)
+    if (!result) return false
+    set(events, get(events).filter(ev => ev.id !== update.id))
+    update.remove()
+    return true
+  } catch (error) {
+    return false
+  }
+})
+export const updateEvent = atom<any, any, Promise<boolean>>(null, async (get, set, update: EventChangeArg): Promise<boolean> => {
   const {event} = update
   const existedEvents = [...get(events)]
-  const oldEvent = existedEvents.find(ev => ev.id == event.id)
   const oldEventId = existedEvents.findIndex(ev => ev.id == event.id)
+
   const newEvent: EventInput = {
     allDay: event.allDay,
     id: event.id,
     start: event.start,
     end: event.end,
-    title: oldEvent.title,
+    title: event.title,
   }
-  existedEvents.splice(oldEventId, 1, newEvent)
-  // console.log(existedEvents)
-  set(events, existedEvents)
-  //@ts-ignore
-  window.invokes.updateEvent(newEvent)
+
+  const revert = () => {
+    console.log('revert')
+    update.revert(); return false}
+
+  
+  if (oldEventId === undefined || oldEventId === null) return revert()
+  try {
+    const userData = get(user) 
+    if (!userData?.id && typeof userData?.id !== 'number') return revert()
+    //@ts-ignore
+    const result = await window.invokes.updateEvent(userData.id, newEvent)
+    console.log('updateEvent: ', result, Boolean(result))
+    if (!result) {
+      console.log('reverrt')
+      return revert()
+    }
+    existedEvents.splice(oldEventId, 1, newEvent)
+    set(events, existedEvents)
+    return true
+  } catch (error) {
+    return revert()
+  }
 })

@@ -1,6 +1,6 @@
 import { Flex, Heading, Box, Center, Button, useDisclosure } from '@chakra-ui/react'
 import React, { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import TableView from '../../../components/layout/ItemTable/TableView'

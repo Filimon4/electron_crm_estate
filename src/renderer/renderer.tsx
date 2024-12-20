@@ -30,6 +30,7 @@ import Complexes from './pages/dashboard/complexes/Complexes';
 // TODO: По таблицам ограничить поля.
 // TODO: Добавить на клиентов поиск по фио.
 // TODO: В дома добавить названия комплексов
+// TODO: В сделках брать только те квартиры у которых ещё нет сделки
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)

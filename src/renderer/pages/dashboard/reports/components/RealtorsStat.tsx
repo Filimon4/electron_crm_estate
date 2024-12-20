@@ -28,14 +28,19 @@ export const RealtorCard: React.FC<IRealtorCard> = ({ name, phone, deals, revenu
 );
 
 
-export const RealtorCardList = () => {
-
+export const RealtorCardList = ({data}: {data: any[]}) => {
+  if (!data) return <></>
   return (
-    <RealtorCard
-      name="Иван Иванов"
-      deals={10}
-      revenue={250000}
-      phone='79091304497'
-    />
+    <>
+      {data.map((user, idx) => (
+        <RealtorCard
+          key={idx}
+          name={`${user.first_name} ${user.sure_name[0]}. ${user.last_name[0]}.`}
+          revenue={+user.total_income}
+          deals={+user.total_count}
+          phone={user.phone}
+        />
+      ))}
+    </>
   )
 }

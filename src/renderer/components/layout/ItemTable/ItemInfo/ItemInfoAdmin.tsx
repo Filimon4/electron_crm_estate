@@ -26,7 +26,7 @@ const ItemInfo = ({
           <EditableInput inputValidator={(value) => isNumbersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeEstate} editValue={'size'} title={'Площадь'} defaultValue={config.size} />
           <EditableInput inputValidator={(value) => isNumbersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeEstate} editValue={'room_amount'} title={'Комнаты'} defaultValue={config.room_amount} />
         </Stack>
-        <Textarea value={config.description} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
+        <Textarea value={config.description ?? ' '} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
       </Flex>
     </CardBody>
       <CardFooter>

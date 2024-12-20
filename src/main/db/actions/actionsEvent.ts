@@ -6,19 +6,14 @@ import { sendNotify } from '../../utils/app';
 
 export namespace EventNamespace {
 
-  export const createEvent = async (title: string, start: Date, end: Date, allDay: boolean, userId: number) => {
+  export const createEvent = async (title: string, start: Date, end: Date, allDay: boolean, user_id: number) => {
     try {
-      const user = await dbConnection(User).findOneBy({ id: userId });
-      if (!user) {
-        throw new Error('User not found');
-      }
-
       const event = await dbConnection(Event).create();
       event.title = title;
       event.start = start;
       event.end = end;
       event.allDay = allDay;
-      event.user = user;
+      event.user_id = user_id;
 
       await dbConnection(Event).insert(event);
       return event;
@@ -26,25 +21,30 @@ export namespace EventNamespace {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
-  export const getAllEvents = async () => {
+  export const getAllEvents = async (user_id: number) => {
     try {
-      const events =  await dbConnection(Event).find({ relations: ['user'] });
+      const events =  await dbConnection(Event).find({
+        where: {
+          user_id: user_id
+        }
+      });
       return events;
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
   export const getEventById = async (id: number) => {
     try {
       const event = await dbConnection(Event).findOne({
-        where: { id },
-        relations: ['user'],
+        where: { id }
       });
 
       if (!event) {
@@ -56,14 +56,17 @@ export namespace EventNamespace {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
-  export const updateEvent = async (id: number, title: string, start: Date, end: Date, allDay: boolean) => {
+  export const updateEvent = async (id: number, title: string, start: Date, end: Date, allDay: boolean, user_id: number) => {
     try {
       const event = await dbConnection(Event).findOne({
-        where: { id },
-        relations: ['user'],
+        where: {
+          id: id,
+          user_id: user_id
+        },
       });
 
       if (!event) {
@@ -75,18 +78,24 @@ export namespace EventNamespace {
       event.end = end;
       event.allDay = allDay;
 
-      await dbConnection(Event).save(event);
-      return event;
+      const result = await dbConnection(Event).save(event);
+      return result;
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
-  export const deleteEvent = async (id: number) => {
+  export const deleteEvent = async (id: number, user_id: number) => {
     try {
-      const event = await dbConnection(Event).findOne({ where: { id } });
+      const event = await dbConnection(Event).findOne({
+        where: {
+          id: id,
+          user_id: user_id
+        }
+      });
       if (!event) {
         throw new Error('Event not found');
       }
@@ -97,6 +106,7 @@ export namespace EventNamespace {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -118,6 +128,7 @@ export namespace EventNamespace {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 }
