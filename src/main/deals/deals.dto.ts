@@ -3,7 +3,8 @@ import { DealStatus } from "../db/entities"
 export interface TDealDto {
   user_id: number,
   client_id: number,
-  flat_id: number
+  flat_id: number,
+  status: DealStatus
 }
 
 export interface TDealInfoDto {

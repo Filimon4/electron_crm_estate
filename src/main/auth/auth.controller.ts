@@ -1,11 +1,9 @@
 import { ipcMain } from "electron";
 import { AuthService } from "./auth.service";
-import { goFront } from "../utils/app";
 
 export class AuthController {
 
   constructor() {
-
     ipcMain.handle('login', this.login.bind(this))
     ipcMain.handle('signup', this.signup.bind(this))
   }

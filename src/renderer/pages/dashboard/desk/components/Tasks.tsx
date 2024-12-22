@@ -1,15 +1,8 @@
 import { Card, CardHeader, Text } from "@chakra-ui/react";
+import { EventInput } from "@fullcalendar/core";
 import React from "react";
 
-export interface TaskItem {
-  id: number;
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  allDay: boolean;
-}
-
-export const TaskCard: React.FC<Omit<TaskItem, 'id'>> = ({ title, startDate, endDate, allDay }) => {
+export const TaskCard: React.FC<Omit<EventInput, 'id'>> = ({ title, startDate, endDate, allDay }) => {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }).replace(/^0/, '');
   };

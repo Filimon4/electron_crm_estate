@@ -1,17 +1,19 @@
 import { Avatar, Box, Card, CardBody, CardHeader, Checkbox, Flex, HStack, List, ListItem, Progress, Stat, StatGroup, StatHelpText, StatLabel, StatNumber, Text } from "@chakra-ui/react";
 import React from "react";
 import { Line, Pie } from "recharts";
-import { TaskCard, TaskItem } from "./components/Tasks";
+import { TaskCard } from "./components/Tasks";
 import StatsHeader from "../../../components/layout/stats/StatsHeader";
 import ChartViewer, { DataPoint } from "../../../components/charts/VisualChart/VisualChart";
 import { useAtom } from "jotai";
-import { readUser } from "../../../shared/store";
+import { readTodayEvents, readUser } from "../../../shared/store";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../shared/lib/queryClient";
+import { EventInput } from "@fullcalendar/core";
 
 const Desk: React.FC = () => {
-  const tasks: TaskItem[] = [];
+  const tasks: EventInput[] = [];
   const [user,] = useAtom(readUser)
+  const [todayEvents,] = useAtom(readTodayEvents)
 
   const { data: incomeData } = 
   //@ts-ignore
@@ -41,10 +43,36 @@ const Desk: React.FC = () => {
       return pointData
   }});
 
+  console.log(todayEvents)
+
   return (
     <Flex direction="column" h="100vh" p={4} width={'100%'} overflow={'scroll'} overflowX={'hidden'}>
       <Box bg="gray.100" p={4} borderRadius="lg" mb={4}>
-        <StatsHeader data={null} />
+        {incomeData && avgIncomeData && daelAmountData && <>
+          <StatsHeader data={[
+            {
+              label: 'income',
+              //@ts-ignore
+              value: `${incomeData[0]?.value ?? 'Нет данных'}`,
+              //@ts-ignore
+              text: `${incomeData[1]?.value ? `${(incomeData[0]?.value/incomeData[1]?.value)*100}% от пред. месяца` : 'Нет данных'}`
+            },
+            {
+              label: 'aver_income',
+              //@ts-ignore
+              value: `${avgIncomeData[0]?.value ?? 'Нет данных'}`,
+              //@ts-ignore
+              text: `${avgIncomeData[1]?.value ? `${(avgIncomeData[0]?.value/avgIncomeData[1]?.value)*100}% от пред. месяца` : 'Нет данных'}`
+            },
+            {
+              label: 'deals',
+              //@ts-ignore
+              value: `${daelAmountData[0]?.value ?? 'Нет данных'}`,
+              //@ts-ignore
+              text: `${daelAmountData[1]?.value ? `${(daelAmountData[0]?.value/daelAmountData[1]?.value)*100}% от пред. месяца` : 'Нет данных'}`
+            },
+          ]} />
+        </>}
       </Box>
       <Flex flex="1" gap={4}>
         <Box w="80%" bg="gray.100" p={4} borderRadius="lg">
@@ -60,8 +88,8 @@ const Desk: React.FC = () => {
             Задачи
           </Text>
           <List spacing={3}>
-            {tasks.map((task) => (
-              <TaskCard key={task.id} title={task.title} startDate={task.startDate} endDate={task.endDate} allDay={task.allDay}/>
+            {todayEvents && todayEvents.map((task) => (
+              <TaskCard key={task.id} title={task.title} startDate={task.start} endDate={task.end} allDay={task.allDay}/>
             ))}
           </List>
         </Box>

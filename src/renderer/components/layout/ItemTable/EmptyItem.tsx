@@ -4,7 +4,9 @@ import { Box, Card, CardBody, CardFooter, CardHeader, Center, Divider, Flex, Gri
 const EmptyItem = ({ placeholder}: { placeholder: string}) => (
   <Flex
     height={"100%"}
-    minWidth={'300px'}
+    minWidth={'400px'}
+    maxWidth={'400px'}
+    width={'100%'}
   >
     <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
     <CardHeader>

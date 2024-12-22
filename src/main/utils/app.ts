@@ -1,4 +1,5 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
+import { Client } from "../db/entities";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -17,14 +18,14 @@ export function createWindow(): void {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true,
-      contextIsolation: true
+      contextIsolation: true,
+      nodeIntegration: true,
     },
   });
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   mainWindow.removeMenu()
   mainWindow.setMenuBarVisibility(false)
   mainWindow.webContents.openDevTools();
-
 };
 
 export function goFront(emit: string, ...args: any) {

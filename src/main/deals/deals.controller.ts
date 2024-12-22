@@ -27,6 +27,7 @@ export class DealsController {
 
   async getDealsByPage(event: any, user_id: number, page: number, limit: number) {
     const [deals, count] = await DealsService.getDealsByPage(user_id, page, limit)
+    console.log(JSON.stringify(deals[0], null, 2))
     deals.map(deal => this.parseDealToDto(deal))
     console.log(deals)
     return {

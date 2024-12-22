@@ -3,16 +3,40 @@ import { TUserDTO } from "../../auth/auth.dto"
 import { User as _User, UserRole } from "../entities/User"
 import { sendNotify } from "../../utils/app"
 import { getPostgresErrorMessage } from "../../utils/pqErrors"
+import { TFilterRealtorDTO } from "../../realtors/realtors.dto"
+import { Like } from "typeorm"
 
 export namespace UsersNamespace {
 
-  export const getRealtorsByPage = async (page: number, limit: number) => {
+  export const resetPassword = async (user_id: number, realtor_id: number, password: string) => {
     try {
-      return await dbConnection(_User).findAndCount({
+      console.log(user_id, realtor_id, password)
+      const user = await dbConnection(_User).findOne({
+        where: {id: user_id}
+      })
+      if (user.role !== UserRole.ADMIN) throw new Error('у пользователя нету прав для этого дейсвия')
+      return await dbConnection(_User).update(realtor_id, {
+        password: HashPasswordsNamespace.hashPassword(password)
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
+      sendNotify('error', errorMessage)
+      console.log(errorMessage)
+    }
+  }
+
+  export const getRealtorsByPage = async (page: number, limit: number, filters: TFilterRealtorDTO) => {
+    try {
+      const whereConditions: {[k in any]: any} = {}
+      Object.entries(filters ?? {}).forEach(([k, v]) => {
+        whereConditions[k] = Like(`%${v}%`)
+      });
+      return await dbConnection(_User).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
         where: {
+          ...whereConditions,
           role: UserRole.REALTOR
         }
       })
@@ -77,9 +101,9 @@ export namespace UsersNamespace {
       }
       return user
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
-      sendNotify('error', errorMessage)
-      console.log(errorMessage)
+      // const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      sendNotify('error', error)
+      // console.log(errorMessage)
     }
   }
 

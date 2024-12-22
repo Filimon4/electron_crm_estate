@@ -3,7 +3,7 @@ export const isEmailValid = (email: string) => {
 }
 
 export const isLettersOnly = (value: string) => {
-  return (/^[а-яА-я ]*$/.test(value))
+  return (/^[а-яА-Яё ]*$/.test(value))
 }
 
 export const isEnglishEmailOnly = (value: string) => {
@@ -12,6 +12,10 @@ export const isEnglishEmailOnly = (value: string) => {
 
 export const isNumbersOnly = (value: string) => {
   return (/^\d*$/.test(value))
+}
+
+export const isPasswordOnly = (value: string) => {
+  return (/^[A-Za-z0-9_! ]+$/.test(value) || value.length == 0)
 }
 
 export const isPhoneValid = (value: string) => value.length == 11

@@ -27,6 +27,8 @@ const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
     password: "",
   });
 
+  const [disable, setDisable] = useState(false)
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setClientData((prev) => ({ ...prev, [name]: value }));
@@ -44,6 +46,7 @@ const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    setDisable(true)
     //@ts-ignore
     const realtor = await window.invokes.createRealtor(clientData)
     if (realtor) {
@@ -58,6 +61,7 @@ const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
       onClose();
       refetch();
     }
+    setDisable(false)
   };
 
   return (
@@ -150,7 +154,7 @@ const CreateRealtorModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

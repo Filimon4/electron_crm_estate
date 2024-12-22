@@ -28,6 +28,8 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
     email: "",
     phone: "",
   });
+  const [disable, setDisable] = useState(false)
+  
 
   const isDataValid = () => {
     return (!clientData.first_name || !clientData.sure_name || !clientData.last_name || !clientData.email || !clientData.phone || clientData.phone.length !== 11 || !isEmailValid(clientData.email))
@@ -46,6 +48,7 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    setDisable(true)
     //@ts-ignore
     const client = await window.invokes.createClient(user.id, clientData)
     if (client) {
@@ -53,14 +56,15 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
         autoClose: 2000,
       })
       refetch()
+      setClientData({ first_name: "", last_name: "", sure_name: "", email: "", phone: "" });
+      onClose();
     } else {
       notifyConfig.error('Произошла ошибка при создании клиента', {
         autoClose: 3000,
       })
     }
-
-    setClientData({ first_name: "", last_name: "", sure_name: "", email: "", phone: "" });
-    onClose();
+    setDisable(false)
+    
   };
 
   return (
@@ -128,10 +132,11 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
                   (isNumbersOnly(e.target.value)) && handleChange(e)
                 }}
               />
+              
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

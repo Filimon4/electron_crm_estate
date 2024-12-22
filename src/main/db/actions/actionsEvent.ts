@@ -81,24 +81,22 @@ export namespace EventNamespace {
       const result = await dbConnection(Event).save(event);
       return result;
     } catch (error) {
+      console.log(error)
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
-      console.log(errorMessage)
       return null
     }
   };
 
   export const deleteEvent = async (id: number, user_id: number) => {
     try {
+      console.log(id, user_id)
       const event = await dbConnection(Event).findOne({
         where: {
           id: id,
           user_id: user_id
         }
       });
-      if (!event) {
-        throw new Error('Event not found');
-      }
 
       await dbConnection(Event).remove(event);
       return { message: 'Event deleted successfully' };

@@ -7,7 +7,7 @@ const SimpleFormField = ({heading, text}: {heading: string, text: string}) => {
       <Heading size='xs' textTransform='uppercase'>
         {heading}
       </Heading>
-      <Text fontSize='sm'>
+      <Text fontSize='md'>
         {text}
       </Text>
     </Flex>

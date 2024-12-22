@@ -14,8 +14,13 @@ class App {
   }
   
   async initDB() {
+    createWindow()
+    console.log('init db')
     DB.initialize().then(() => {
+      console.log('DB.initialize then')
       this.onInitDB()
+    }).catch((error) => {
+      console.log(error)
     })
   }
   
@@ -27,7 +32,6 @@ class App {
     new EventsController()
     new DealsController()
     new ReoprtsController()
-    createWindow()
   }
 
 }

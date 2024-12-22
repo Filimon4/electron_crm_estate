@@ -28,6 +28,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
     house_label: ""
   });
   const [houseInput, setHouseInput] = useState('')
+  const [disable, setDisable] = useState(false)
 
   const handleHouseChange = (e: any) => {
     const { label, value } = e;
@@ -51,6 +52,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    setDisable(true)
     //@ts-ignore
     const estate = await window.invokes.createFlat(clientData)
     if (estate) {
@@ -73,6 +75,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
         autoClose: 3000,
       })
     }
+    setDisable(false)
 
   };
 
@@ -84,7 +87,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
       // Преобразуем результаты в формат, подходящий для react-select
       console.log(response)
       return response.map((house: any) => ({
-        label: `${house.street}, ${house.house_number}`,
+        label: `г.${house.complex_city} ул.${house.street} д.${house.house_number}`,
         value: +house.id,
       }));
     } catch (error) {
@@ -180,7 +183,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

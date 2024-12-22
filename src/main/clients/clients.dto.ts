@@ -1,3 +1,4 @@
+import { Client } from "../db/entities";
 
 export type TClientDTO = {
   id: number,
@@ -11,3 +12,5 @@ export type TClientDTO = {
 export type TUpdateClientDTO = Partial<TClientDTO> & {
   id: number
 }
+
+export type TFilterClientDTO = Pick<Client, 'email' | 'first_name' | 'sure_name' | 'last_name' | 'phone'>

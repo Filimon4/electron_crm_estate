@@ -14,7 +14,7 @@ export namespace ReportsNamespace {
           COUNT(d.id) as total_count
       FROM
           deal d
-      left join flat f on d.flat = f.id
+      left join flat f on d.flat = f.id and d.status = 'close'
       left join "user" u on d.realtor = u.id
       group by
         u.first_name,
@@ -43,7 +43,7 @@ export namespace ReportsNamespace {
           COALESCE(SUM(f.price), 0) AS total_income
       FROM
           months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1 and d.status = 'close'
       LEFT JOIN flat f ON d.flat = f.id
       GROUP BY
           m
@@ -66,7 +66,7 @@ export namespace ReportsNamespace {
         COALESCE(SUM(f.price), 0) AS total_income
       from
         months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.status = 'close'
       LEFT JOIN flat f ON d.flat = f.id
       group by
         m
@@ -90,7 +90,7 @@ export namespace ReportsNamespace {
           COUNT(d.id) AS count
       from 
         months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.status = 'close'
       group by
         m
       order by m desc
@@ -113,7 +113,7 @@ export namespace ReportsNamespace {
           COUNT(d.id) AS count
       from 
         months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1 and d.status = 'close'
       group by
         m
       order by m desc
@@ -136,7 +136,7 @@ export namespace ReportsNamespace {
         COALESCE(AVG(f.price), 0) AS total_income
       from
         months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.status = 'close'
       LEFT JOIN flat f ON d.flat = f.id
       group by
         m
@@ -160,7 +160,7 @@ export namespace ReportsNamespace {
         COALESCE(AVG(f.price), 0) AS total_income
       from
         months
-      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1
+      LEFT JOIN deal d ON DATE_TRUNC('month', d.created_at) = m and d.realtor = $1 and d.status = 'close'
       LEFT JOIN flat f ON d.flat = f.id
       group by
         m

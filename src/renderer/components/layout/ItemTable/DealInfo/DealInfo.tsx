@@ -5,7 +5,7 @@ import SimpleFormField from '../../../../components/global/SimpleFormField/Simpl
 const DealInfo = ({config}: {config: any}) => (
   <Flex
     height={"100%"}
-    minWidth={'300px'}
+    minWidth={'400px'}
   >
     <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
     <CardBody>

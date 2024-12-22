@@ -1,3 +1,6 @@
+import { EventInput } from "@fullcalendar/core";
+import { isWithinInterval } from 'date-fns';
+
 export const months: { [key: string]: string } = {
   '01': 'Январь',
   '02': 'Февраль',
@@ -22,3 +25,15 @@ export const getMonthNameFromDate = (date: Date): string => {
 export const getRussianDateFromatFromDate = (date: Date): string => {
   return `${date.getDay()}.${date.toISOString().split('-')[1]}.${date.getFullYear()}`
 }
+
+// Функция для фильтрации событий за сегодня
+export const filterEventsToday = (events: EventInput[]): EventInput[] => {
+  return events.filter(event => {
+    const startDate = event.start as Date | string | number; // Преобразуем start в дату
+    const endDate = event.end as Date | string | number; // Преобразуем end в дату
+    return isWithinInterval(new Date(), {
+      start: startDate,
+      end: endDate,
+    });
+  }).sort((a, b) => Number(a.id) - Number(b.id));
+};

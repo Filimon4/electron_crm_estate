@@ -28,6 +28,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
   const [flatInput, setFlatInput] = useState('')
   const [clientInput, setClientInput] = useState('')
   const [user,] = useAtom(readUser)
+  const [disable, setDisable] = useState(false)
 
   const handleFlatChange = (e: any) => {
     const { label, value } = e;
@@ -36,7 +37,6 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
   
   const handleClientChange = (e: any) => {
     const { label, value } = e;
-    console.log(label)
     setDealData((prev) => ({ ...prev, client_id: value, client_label: label }))
   }
 
@@ -52,7 +52,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
-    console.log(dealData)
+    setDisable(true)
     //@ts-ignore
     const estate = await window.invokes.createDeal(user.id, {
       client_id: dealData.client_id,
@@ -75,7 +75,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
         autoClose: 3000,
       })
     }
-
+    setDisable(false)
   };
 
   const loadClients = async (): Promise<any[]> => {
@@ -121,7 +121,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
 
   return (
     <Portal>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
+      <Modal isOpen={isOpen} onClose={handleClose} isCentered={true}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Создание новой сделки</ModalHeader>
@@ -163,7 +163,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={handleClose}>

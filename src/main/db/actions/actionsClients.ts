@@ -1,7 +1,8 @@
-import { TClientDTO, TUpdateClientDTO } from "../../clients/clients.dto";
+import { TClientDTO, TFilterClientDTO, TUpdateClientDTO } from "../../clients/clients.dto";
 import { Client as _Client } from "../entities";
 import { getPostgresErrorMessage } from "../../utils/pqErrors";
 import { sendNotify } from "../../utils/app";
+import { Like } from "typeorm";
 
 export namespace ClientsNamespace {
   
@@ -60,12 +61,20 @@ export namespace ClientsNamespace {
     }
   }
 
-  export const getClientsByPage = async (userId: number, page: number, limit: number) => {
+  export const getClientsByPage = async (userId: number, page: number, limit: number, filters: TFilterClientDTO) => {
     try {
+      const whereConditions: {[k in any]: any} = {}
+      Object.entries(filters ?? {}).forEach(([k, v]) => {
+        whereConditions[k] = Like(`%${v}%`)
+      });
+      console.log(JSON.stringify(whereConditions, null, 2))
       return await dbConnection(_Client).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
+        where: {
+          ...whereConditions
+        }
       })
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)

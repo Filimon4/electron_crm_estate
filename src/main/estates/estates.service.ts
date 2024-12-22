@@ -2,7 +2,7 @@ import { ClientsNamespace } from "../db/actions/actionsClients";
 import { EstateNamespace } from "../db/actions/actionsEstate";
 import { House } from "../db/entities";
 import { Complex } from "../db/entities/Complex";
-import { TFlatDTO } from "./estates.dto";
+import { TFilterComplexDTO, TFilterFlatDTO, TFilterHouseDTO, TFlatDTO } from "./estates.dto";
 
 export class EstateService {
   static async createComplex(data: Complex) {
@@ -11,17 +11,17 @@ export class EstateService {
   static async updateComplex(data: Complex) {
     return await EstateNamespace.updateComplex(data.id, data)
   }
-  static async deleteCopmlex(id: number) {
+  static async deleteComplex(id: number) {
     return await EstateNamespace.deleteComplex(id)
   }
   static async searchComplex(input: string) {
     return await EstateNamespace.searchComplex(input)
   }
-  static async getComplexesByPage(page: number, limit: number) {
-    const [complexes, count] = await EstateNamespace.getComplexesByPage(page, limit)
+  static async getComplexesByPage(page: number, limit: number, filters: TFilterComplexDTO) {
+    const complexes = await EstateNamespace.getComplexesByPage(page, limit, filters)
     return {
       complexes: complexes,
-      count: count
+      count: complexes.length ?? 0
     }
   }
 
@@ -35,24 +35,22 @@ export class EstateService {
     return await EstateNamespace.deleteHouse(id)
   }
   static async searchHouses(input: string) {
-    console.log(input)
     return await EstateNamespace.searchHouses(input)
   }
-  static async getHousesByPage(page: number, limit: number) {
-    const [houses, count] = await EstateNamespace.getHousesByPage(page, limit)
-    console.log(houses[0], count)
+  static async getHousesByPage(page: number, limit: number, filters: TFilterHouseDTO) {
+    const houses = await EstateNamespace.getHousesByPage(page, limit, filters)
     return {
       houses: houses,
-      count: count
+      count: houses?.length ?? 0
     }
   }
 
 
-  static async getFlatesByPage(page: number, limit: number) {
-    const [flats, count] = await EstateNamespace.getFlatsByPage(page, limit)
+  static async getFlatesByPage(page: number, limit: number, filters: TFilterFlatDTO) {
+    const flats = await EstateNamespace.getFlatsByPage(page, limit, filters)
     return {
       flats: flats,
-      count: count
+      count: flats?.length ?? 0
     }
   }
   static async createFlat(data: TFlatDTO) {

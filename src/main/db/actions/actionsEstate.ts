@@ -1,7 +1,8 @@
 import { getPostgresErrorMessage } from "../../utils/pqErrors";
 import { Flat as _Flat, Complex as _Complex, House as _House } from "../entities"
 import { sendNotify } from "../../utils/app";
-import { TFlatDTO } from "../../estates/estates.dto";
+import { TFilterComplexDTO, TFilterFlatDTO, TFilterHouseDTO, TFlatDTO } from "../../estates/estates.dto";
+import { Between, Like } from "typeorm";
 
 export namespace EstateNamespace {
   export const createFlat = async (data: TFlatDTO): Promise<_Flat> => {
@@ -24,13 +25,24 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getFlatsByPage = async (page: number, limit: number): Promise<[_Flat[], number]> => {
+  export const getFlatsByPage = async (page: number, limit: number, filters: TFilterFlatDTO): Promise<_Flat[]> => {
     try {
       if (!page || !limit) throw new Error('there is not values')
-      return await dbConnection(_Flat).findAndCount({
+      const whereConditions: {[k in any]: any} = {}
+      Object.entries(filters ?? {}).forEach(([k, v]) => {
+        if (typeof v == 'number')
+          whereConditions[k] = +v
+        if (typeof v == 'object' && 'length' in v && v.length == 2)
+          whereConditions[k] = Between(+v[0], +v[1])
+      });
+      console.log(JSON.stringify(filters, null, 2))
+      return await dbConnection(_Flat).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
+        where: {
+          ...whereConditions
+        }
       })
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
@@ -80,7 +92,7 @@ export namespace EstateNamespace {
     try {
       const houseRepository = await dbConnection(_House);
       const house = houseRepository.create()
-      house.complex = data.complex
+      house.complex_id = data.complex_id
       house.house_number = +data.house_number
       house.street = data.street
       return await houseRepository.save(house);
@@ -91,12 +103,19 @@ export namespace EstateNamespace {
     }
   };
 
-  export const getComplexesByPage = async (page: number, limit: number) => {
+  export const getComplexesByPage = async (page: number, limit: number, filters: TFilterComplexDTO) => {
     try {
-      return await dbConnection(_Complex).findAndCount({
+      const whereConditions: {[k in any]: any} = {}
+      Object.entries(filters ?? {}).forEach(([k, v]) => {
+        whereConditions[k] = Like(`%${v}%`)
+      });
+      return await dbConnection(_Complex).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
+        where: {
+          ...whereConditions
+        }
       })
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -105,13 +124,40 @@ export namespace EstateNamespace {
     }
   }
 
-  export const getHousesByPage = async (page: number, limit: number): Promise<[_House[], number]> => {
+  export const getHousesByPage = async (page: number, limit: number, filters: TFilterHouseDTO) => {
     try {
-      return await dbConnection(_House).findAndCount({
+      const whereConditions: {[k in any]: any} = {}
+      Object.entries(filters ?? {}).forEach(([k, v]) => {
+        if (typeof v == 'string')
+          whereConditions[k] = Like(`%${v}%`)
+        if (typeof v == 'number')
+          whereConditions[k] = v
+      });
+      console.log(JSON.stringify(whereConditions, null, 2))
+      const houseData = await dbConnection(_House).find({
         skip:  ((page - 1) * limit),
         take: limit,
         order: { id: "ASC"},
+        relations: {
+          complex: true as unknown as never
+        },
+        where: {
+          ...whereConditions
+        }
       })
+      console.log(JSON.stringify(houseData[0], null, 2))
+      const houses = houseData.map(hous => ({
+        id: hous.id,
+        street: hous.street,
+        house_number: hous.house_number,
+        //@ts-ignore
+        name: hous.complex.name,
+        //@ts-ignore
+        city: hous.complex.city,
+        //@ts-ignore
+        district: hous.complex.district
+      }))
+      return houses
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
       sendNotify('error', errorMessage)
@@ -222,11 +268,20 @@ export namespace EstateNamespace {
       const houseRepository = await dbConnection(_House);
       const results = await houseRepository
         .createQueryBuilder('house')
+        .select([
+          'house.id as id',
+          'house.street as street',
+          'house.house_number as house_number',
+          'complex.name as complex_name',
+          'complex.city as complex_city',
+          'complex.district as complex_district',
+        ])
+        .innerJoinAndSelect('complex', 'complex', 'complex.id = house.complex')
         .where('house.search_vector @@ to_tsquery(:query)', {
           query: query.replace(/\s/g, ' & '),
         })
-        .getMany();
-    
+        .getRawMany();
+        
       return results;
     } catch (error) {
       const errorMessage = getPostgresErrorMessage(error.driverError.code)
@@ -240,7 +295,6 @@ export namespace EstateNamespace {
       const houseRepository = await dbConnection(_Flat);
       const results = await houseRepository
         .createQueryBuilder('flat')
-        .innerJoinAndSelect('house', 'house', 'house.id = flat.house_id')
         .select([
           'flat.id AS id',
           'flat.house_id AS house_id',
@@ -253,7 +307,9 @@ export namespace EstateNamespace {
           'house.house_number AS house_number',
           'house.complex AS complex'
         ])
-        .where(`(flat.search_vector || house.search_vector) @@ plainto_tsquery('russian', :query)`, { query: query.replace(/\s/g, ' & ')})
+        .innerJoinAndSelect('house', 'house', 'house.id = flat.house_id')
+        .leftJoinAndSelect('deal', 'd', 'd.flat = flat.id')
+        .where("d.id is null and (flat.search_vector || house.search_vector) @@ plainto_tsquery('russian', :query)", { query: query.replace(/\s/g, ' & ')})
         .getRawMany();
       
       console.log('searchFlats: ', JSON.stringify(results, null, 2))

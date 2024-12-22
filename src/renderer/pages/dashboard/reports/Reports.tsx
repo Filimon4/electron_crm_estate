@@ -48,7 +48,7 @@ const Reports: React.FC = () => {
   return (
     <Flex direction="column" h="100vh" p={4} width={'100%'} overflow={'scroll'} overflowX={'hidden'}>
       <Box bg="gray.100" p={4} borderRadius="lg" mb={4}>
-        {incomeData && <>
+        {incomeData && avgIncomeData && daelAmountData && <>
           <StatsHeader data={[
             {
               label: 'income',

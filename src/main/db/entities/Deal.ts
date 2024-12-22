@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
+import { IsDate } from "class-validator";
 import { Flat } from "./Flat";
 import { Client } from "./Client";
-import { IsDate } from "class-validator";
 import { User } from "./User";
 
 export enum DealStatus {

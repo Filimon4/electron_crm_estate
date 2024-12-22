@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 
 export default new DataSource({
    type: 'postgres',
-   host: 'localhost',
-   port: 5433,
-   database: 'crm_estate2',
-   username: 'postgres',
-   password: 'admin',
+   host: '5.183.188.132',
+   port: 5432,
+   database: '2024_psql_efim',
+   username: '2024_psql_e_usr',
+   password: 'yEKFC10LK8AouxLb',
    entities: ['src/main/db/entities/*.ts'],
    migrations: ['./migrations/*.ts'],
    migrationsTableName: 'migrations',

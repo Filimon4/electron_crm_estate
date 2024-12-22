@@ -1,10 +1,11 @@
 import React from 'react'
 import { Box, Card, CardBody, CardFooter, CardHeader, Center, Divider, Flex, GridItem, Heading, Stack, StackDivider, Text, Textarea } from '@chakra-ui/react'
+import { tableMaxField } from '../../../../shared/utils/utils'
 
 const ClientInfo = ({config}: {config: any}) => (
   <Flex
     height={"100%"}
-    minWidth={'300px'}
+    minWidth={'400px'}
   >
     <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
     <CardHeader>
@@ -18,7 +19,7 @@ const ClientInfo = ({config}: {config: any}) => (
               Фамилия
             </Heading>
             <Text fontSize='sm'>
-              {config.sure_name}
+              {tableMaxField(config.sure_name)}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
@@ -26,7 +27,7 @@ const ClientInfo = ({config}: {config: any}) => (
               Имя
             </Heading>
             <Text fontSize='sm'>
-              {config.first_name}
+              {tableMaxField(config.first_name)}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
@@ -34,7 +35,7 @@ const ClientInfo = ({config}: {config: any}) => (
               Отчество
             </Heading>
             <Text fontSize='sm'>
-              {config.last_name}
+              {tableMaxField(config.last_name)}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
@@ -42,7 +43,7 @@ const ClientInfo = ({config}: {config: any}) => (
               Телефон
             </Heading>
             <Text fontSize='sm'>
-              {config.phone}
+              {tableMaxField(config.phone)}
             </Text>
           </Flex>
           <Flex justify={'space-between'} >
@@ -50,7 +51,7 @@ const ClientInfo = ({config}: {config: any}) => (
               Почта
             </Heading>
             <Text fontSize='sm'>
-              {config.email}
+              {tableMaxField(config.email)}
             </Text>
           </Flex>
         </Stack>

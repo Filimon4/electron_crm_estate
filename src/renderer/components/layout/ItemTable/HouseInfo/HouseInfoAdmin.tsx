@@ -6,17 +6,19 @@ import EditableInput from '../../../global/EditableInput/EditableInput'
 const HouseInfoAdmin = ({
   onChangeClient,
   config,
-  onDeleteClient
+  onDeleteClient,
+  disableDelete
 }: {
   onChangeClient: (...args: any) => void,
   config: any,
-  onDeleteClient: (id: number) => void
+  onDeleteClient: (id: number) => void,
+  disableDelete: boolean
 }) => {
 
   return <>
     <Flex
       height={"100%"}
-      minWidth={'300px'}
+      minWidth={'400px'}
     >
       <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
       <CardHeader>
@@ -45,6 +47,7 @@ const HouseInfoAdmin = ({
               onDeleteClient(config.id)
             }}
             colorScheme={'red'}
+            disabled={disableDelete}
           >
             Удалить
           </Button>

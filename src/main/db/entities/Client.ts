@@ -1,6 +1,5 @@
 import { IsEmail, Length } from "class-validator";
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./User";
 
 @Entity('client')
 export class Client {
@@ -32,4 +31,21 @@ export class Client {
 
   @Column({type: 'text', nullable: true})
   description: string
+
+  @Column({
+    type: 'tsvector',
+    select: false,
+    generatedType: 'STORED',
+    asExpression: `
+      to_tsvector(
+        'russian',
+        coalesce("phone", '') || ' ' ||
+        coalesce("email", '') || ' ' ||
+        coalesce("sure_name", '') || ' ' ||
+        coalesce("last_name", '') || ' ' ||
+        coalesce("first_name", '')
+      )
+    `,
+  })
+  search_vector: any
 }

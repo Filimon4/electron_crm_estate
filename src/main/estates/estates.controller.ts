@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { TFlatDTO } from "./estates.dto";
+import { TFilterComplexDTO, TFilterFlatDTO, TFilterHouseDTO, TFlatDTO } from "./estates.dto";
 import { EstateService } from "./estates.service";
 import { Complex, House } from "../db/entities";
 
@@ -19,7 +19,7 @@ export class EstateController {
     
     ipcMain.handle('createComplex', this.createComplex.bind(this))
     ipcMain.handle('updateComplex', this.updateComplex.bind(this))
-    ipcMain.handle('deleteCopmlex', this.deleteCopmlex.bind(this))
+    ipcMain.handle('deleteComplex', this.deleteComplex.bind(this))
     ipcMain.handle('searchComplex', this.searchComplex.bind(this))
     ipcMain.handle('getComplexesByPage', this.getComplexesByPage.bind(this))
   }
@@ -30,14 +30,14 @@ export class EstateController {
   async updateComplex(event: any, data: Complex) {
     return await EstateService.updateComplex(data)
   }
-  async deleteCopmlex(event: any, id: number) {
-    return await EstateService.deleteCopmlex(id)
+  async deleteComplex(event: any, id: number) {
+    return await EstateService.deleteComplex(id)
   }
   async searchComplex(event: any, input: string) {
     return await EstateService.searchComplex(input)
   }
-  async getComplexesByPage(eventL: any, page: number, limit: number) {
-    return await EstateService.getComplexesByPage(page, limit)
+  async getComplexesByPage(eventL: any, page: number, limit: number, filters: TFilterComplexDTO) {
+    return await EstateService.getComplexesByPage(page, limit, filters)
   }
 
 
@@ -53,10 +53,9 @@ export class EstateController {
   async searchHouses(event: any, input: string) {
     return await EstateService.searchHouses(input)
   }
-  async getHousesByPage(event: any, page: number, limit: number) {
-    return await EstateService.getHousesByPage(page, limit)
+  async getHousesByPage(event: any, page: number, limit: number, filters: TFilterHouseDTO) {
+    return await EstateService.getHousesByPage(page, limit, filters)
   }
-
 
   async searchFlats(event: any, input: string) {
     const result = await EstateService.searchFlats(input)
@@ -72,8 +71,8 @@ export class EstateController {
   async deleteFlat(event: any, id: TFlatDTO['id']) {
     return await EstateService.deleteFlat(id) 
   }
-  async getFlatesByPage(event: any, page: number, limit: number) {
-    return await EstateService.getFlatesByPage(page, limit)
+  async getFlatesByPage(event: any, page: number, limit: number, filters: TFilterFlatDTO) {
+    return await EstateService.getFlatesByPage(page, limit, filters)
   }
   
 }

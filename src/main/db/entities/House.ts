@@ -7,9 +7,12 @@ export class House {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Complex, (complex) => complex.id, {nullable: false})
-  @JoinColumn({name: 'complex', referencedColumnName: 'id'})
-  complex: number;
+  @Column({type: 'integer', nullable: false})
+  complex_id: number
+
+  @ManyToOne(() => Complex, (complex) => complex.id, {eager: true})
+  @JoinColumn({name: 'complex_id', referencedColumnName: 'id'})
+  complex: Complex;
 
   @Column({type: 'varchar'})
   street: string;
@@ -17,4 +20,17 @@ export class House {
   @Column({type: 'integer'})
   house_number: number;
 
+  @Column({
+    type: 'tsvector',
+    select: false,
+    generatedType: 'STORED',
+    asExpression: `
+      to_tsvector(
+        'russian',
+        coalesce("street", '') || ' ' ||
+        coalesce("house_number"::text, '')
+      )
+    `,
+  })
+  search_vector: any
 }

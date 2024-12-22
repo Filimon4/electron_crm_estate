@@ -28,7 +28,7 @@ const frotnApiInvokes = {
   
   createComplex: (...args: any) => ipcRenderer.invoke('createComplex', ...args),
   updateComplex: (...args: any) => ipcRenderer.invoke('updateComplex', ...args),
-  deleteCopmlex: (...args: any) => ipcRenderer.invoke('deleteCopmlex', ...args),
+  deleteComplex: (...args: any) => ipcRenderer.invoke('deleteComplex', ...args),
   searchComplex: (...args: any) => {
     console.log('searchComplex: ', args)
     return ipcRenderer.invoke('searchComplex', ...args)
@@ -46,6 +46,7 @@ const frotnApiInvokes = {
   deleteRealtor: (...args: any) => ipcRenderer.invoke('deleteRealtor', ...args),
   getRealtorsByPage: (...args: any) => ipcRenderer.invoke('getRealtorsByPage', ...args),
   countRealtors: (...args: any) => ipcRenderer.invoke('countRealtors', ...args),
+  resetPassword: (...args: any) => ipcRenderer.invoke('resetPassword', ...args),
 
   createEvent: (...args: any) => ipcRenderer.invoke('createEvent', ...args),
   updateEvent: (...args: any) => ipcRenderer.invoke('updateEvent', ...args),
@@ -59,6 +60,8 @@ const frotnApiInvokes = {
   incomeMonthsByUser: (...args: any) => ipcRenderer.invoke('incomeMonthsByUser', ...args),
   dealAmountMonthsByUser: (...args: any) => ipcRenderer.invoke('dealAmountMonthsByUser', ...args),
   avgIncomeMonthsByUser: (...args: any) => ipcRenderer.invoke('avgIncomeMonthsByUser', ...args),
+
+  testConnect: (...args: any) => ipcRenderer.invoke('testConnect', ...args),
 
 }
 

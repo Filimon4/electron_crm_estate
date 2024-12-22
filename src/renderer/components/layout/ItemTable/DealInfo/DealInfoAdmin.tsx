@@ -5,19 +5,23 @@ import EditableInput from '../../../global/EditableInput/EditableInput'
 import SimpleFormField from '../../../../components/global/SimpleFormField/SimpleFormField';
 
 const DealInfoAdmin = ({
-  onChangeClient,
+  onChangeDeal,
   config,
-  onDeleteClient
+  onDeleteDeal,
+  disableDelete,
+  disableChange
 }: {
-  onChangeClient: (...args: any) => void,
+  onChangeDeal: (...args: any) => void,
   config: any,
-  onDeleteClient: (id: number) => void
+  onDeleteDeal: (id: number) => void,
+  disableDelete: boolean,
+  disableChange: boolean
 }) => {
 
   return <>
     <Flex
       height={"100%"}
-      minWidth={'300px'}
+      minWidth={'400px'}
     >
       <Card maxW='sm' height={"100%"} width={"100%"} maxWidth={"100%"}>
       <CardHeader>
@@ -37,16 +41,37 @@ const DealInfoAdmin = ({
         </Flex>
       </CardBody>
       <CardFooter>
-        <Flex width={'100%'}>
-          <Button
-            width={'100%'}
-            onClick={() => {
-              onDeleteClient(config.id)
-            }}
-            colorScheme={'red'}
-          >
-            Удалить
-          </Button>
+        <Flex direction={'column'} width={'100%'} gap='2px'>  
+          <Flex width={'100%'}>
+            <Button
+              width={'100%'}
+              onClick={() => {
+                if (config.status == 'open') {
+                  //@ts-ignore
+                  onChangeDeal('status', 'close')
+                } else {
+                  //@ts-ignore
+                  onChangeDeal('status', 'open')
+                }
+              }}
+              colorScheme={'orange'}
+              disabled={disableChange}
+            >
+              {config.status == 'open' ? 'Закрыть сделку' : 'Открыть сделку'}
+            </Button>
+          </Flex>
+          <Flex width={'100%'}>
+            <Button
+              width={'100%'}
+              onClick={() => {
+                onDeleteDeal(config.id)
+              }}
+              colorScheme={'red'}
+              disabled={disableDelete}
+            >
+              Удалить
+            </Button>
+          </Flex>
         </Flex>
       </CardFooter>
       </Card>

@@ -25,6 +25,7 @@ const CreateComplexModal = ({ isOpen, onClose, refetch }: any) => {
     district: '',
     city: ''
   });
+  const [disable, setDisable] = useState(false)
 
   const isDataValid = () => {
     return (!complexData.name || !complexData.district || !complexData.city)
@@ -43,6 +44,7 @@ const CreateComplexModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
+    setDisable(true)
     //@ts-ignore
     const client = await window.invokes.createComplex(complexData)
     if (client) {
@@ -57,6 +59,7 @@ const CreateComplexModal = ({ isOpen, onClose, refetch }: any) => {
         autoClose: 3000,
       })
     }
+    setDisable(false)
   };
 
   return (
@@ -102,7 +105,7 @@ const CreateComplexModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

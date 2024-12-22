@@ -28,6 +28,7 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
     complex_label: '',
   });
   const [houseInput, setHouseInput] = useState('')
+  const [disable, setDisable] = useState(false)
 
   const isDataValid = () => {
     return (!houseData.street || !houseData.house_number || !houseData.complex_id)
@@ -46,14 +47,14 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
       return;
     }
 
-    console.log('houseData: ', houseData)
+    setDisable(true)
     //@ts-ignore
-    const client = await window.invokes.createHouse({
-      complex: houseData.complex_id,
+    const house = await window.invokes.createHouse({
+      complex_id: houseData.complex_id,
       street: houseData.street,
       house_number: houseData.house_number
     })
-    if (client) {
+    if (house) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
@@ -65,6 +66,7 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
         autoClose: 3000,
       })
     }
+    setDisable(false)
 
   };
 
@@ -139,7 +141,7 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button isDisabled={isDataValid()} colorScheme="blue" mr={3} onClick={handleSubmit}>
+            <Button isDisabled={isDataValid() || disable} colorScheme="blue" mr={3} onClick={handleSubmit}>
               Создать
             </Button>
             <Button variant="ghost" onClick={onClose}>

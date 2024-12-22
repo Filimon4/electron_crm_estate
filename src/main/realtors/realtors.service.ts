@@ -1,15 +1,20 @@
 import { TUserDTO } from "../auth/auth.dto";
 import { UsersNamespace } from "../db/actions/actionsUsers";
 import { User as _User } from "../db/entities";
-import { TRealtorDTO } from "./realtors.dto";
+import { TFilterRealtorDTO, TRealtorDTO } from "./realtors.dto";
 
 export class RealtorsService {
 
-  static async getRealtorsByPage(page: number, limit: number) {
-    const [realtors, count] = await UsersNamespace.getRealtorsByPage(page, limit)
+  static async resetPassword(user_id: number, realtor_id: number, password: string) {
+    return await UsersNamespace.resetPassword(user_id, realtor_id, password)
+  }
+
+  static async getRealtorsByPage(page: number, limit: number, filters: TFilterRealtorDTO) {
+    console.log(JSON.stringify(filters, null, 2))
+    const realtors = await UsersNamespace.getRealtorsByPage(page, limit, filters)
     return {
       realtors: realtors,
-      count: count
+      count: realtors.length ?? 0
     }
   }
 

@@ -18,34 +18,36 @@ import { getRussianDateFromatFromDate } from '../../../shared/utils/months'
 const DealsTableData: React.FC<ITableData> = memo(({ selected, data, openModal, totalPages, currentPage, onNextPage, onPrevPage, setSelected }) => {
   console.log(JSON.stringify(data, null, 2))
   return (
-    <Flex flexDirection={'column'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
+    <Flex flexDirection={'column'} maxW={'85rem'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
         База сделок
       </Heading>
       <Flex height={'70%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
-        <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
-          <Button color={'black'} _hover={{ bg: 'gray.400' }} variant='outline' onClick={() => openModal()}>
-            Создать новую сделку
-          </Button>
-        </Flex>
-        <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
-          <TableView
-            selected={selected}
-            setSelected={setSelected}
-            config={{
-              headers: ['Дат. открытия', 'Статус', 'Телефон кл.', 'Почта кл.', 'Объём сделки'],
-              body: data ? data.map((d: any) => [`${getRussianDateFromatFromDate(new Date(d.created_at))}`, d.status == 'open' ? 'открыта' : 'закрыта', d.client.phone, d.client.email, d.flat.price]) : [],
-              foot: []
-            }}
+        {currentPage && <>
+          <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
+            <Button color={'black'} _hover={{ bg: 'gray.400' }} variant='outline' onClick={() => openModal()}>
+              Создать новую сделку
+            </Button>
+          </Flex>
+          <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
+            <TableView
+              selected={selected}
+              setSelected={setSelected}
+              config={{
+                headers: ['Дат. открытия', 'Статус', 'Телефон кл.', 'Почта кл.', 'Объём сделки'],
+                body: data ? data.map((d: any) => [`${getRussianDateFromatFromDate(new Date(d.created_at))}`, d.status == 'open' ? 'открыта' : 'закрыта', d.client.phone, d.client.email, d.flat.price]) : [],
+                foot: []
+              }}
+            />
+          </Box>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNext={onNextPage}
+            onPrevious={onPrevPage}
           />
-        </Box>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onNext={onNextPage}
-          onPrevious={onPrevPage}
-        />
-      </Flex>
+        </>}
+        </Flex>
     </Flex>
   );
 });
@@ -58,9 +60,13 @@ const Deals = () => {
   
   const [currentPage, setCurrentPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
+  const [disableDelete, setDisableDelete] = useState(false)
+  const [disableChange, setDisableChange] = useState(false)
   const { data: dealsPageData, isError, isLoading, isPlaceholderData, refetch } = useQuery({
     //@ts-ignore
-    queryKey: [QUERY_KEYS['getDealsByPage'], currentPage],
+    queryKey: [QUERY_KEYS['getDealsByPage'], {
+      currentPage: currentPage
+    }],
     queryFn: async () => {
       //@ts-ignore
       const result = await window.invokes.getDealsByPage(user.id, currentPage, 10)
@@ -79,28 +85,53 @@ const Deals = () => {
     setDeal(null)
   }, [currentPage])
 
-  const onUpdateClient = async (key: string, value: string) => {
+  const dealData = useMemo(() => {
+    if (deal !== undefined && deal !== null && dealsPageData) {
+      return dealsPageData?.deals[deal]
+    }
+    return null
+  }, [deal, dealsPageData])
+
+  const onUpdateDeal = async (key: string, value: string) => {
+    setDisableChange(true)
+    const newDealData = structuredClone(dealData)
+    newDealData[key] = value
     //@ts-ignore
-    const result = await window.invokes.updateDeal(dealData)
-    if (!result) {
-      notifyConfig.error('Пожалуйста заполните все поля', {
-        autoClose: 3000,
-      })
-    } else {
+    const result = await window.invokes.updateDeal(newDealData)
+    if (result) {
       notifyConfig.success('Пользователь создан', {
         autoClose: 2000,
       })
-    } 
+      refetch()
+      queryClient.invalidateQueries({
+        //@ts-ignore
+        predicate: (query) => query.queryKey[0] === QUERY_KEYS['avgIncomeMonths'] || query.queryKey[0] === QUERY_KEYS['incomeMonths'] || query.queryKey[0] === QUERY_KEYS['dealAmountMonths']
+      })
+    } else {
+      notifyConfig.error('Пожалуйста заполните все поля', {
+        autoClose: 3000,
+      })
+    }
+    setDisableChange(false)
   }
-  const onDeleteUser = async (id: number) => {
+  const onDeleteDeal = async (id: number) => {
+    setDisableDelete(true)
     //@ts-ignore
     const resultDel = await window.invokes.deleteDeal(id)
     if (resultDel) {
       setDeal(null)
+      refetch()
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          //@ts-ignore
+          query.queryKey[0] === QUERY_KEYS['getDealsByPage'] && query.queryKey[1]?.currentPage > currentPage,
+      })
     }
+    setDisableDelete(false)
   }
   const onCreateNewClient = async () => {
     setCurrentPage(prev => maxPage)
+    refetch()
     queryClient.invalidateQueries({
       //@ts-ignore
       queryKey: [QUERY_KEYS['getDealsByPage'], maxPage],
@@ -109,39 +140,31 @@ const Deals = () => {
     })
   }
 
-  const dealData = useMemo(() => {
-    if (deal !== undefined && deal !== null && dealsPageData) {
-      return dealsPageData?.deals[deal]
-    }
-    return null
-  }, [deal])
-  
-
   return (
     <>
-      <Flex width={'100%'} overflow={'scroll'}>
-        {currentPage && <>
-          <DealsTableData
-            currentPage={currentPage}
-            totalPages={maxPage}
-            data={dealsPageData?.deals ?? []}
-            selected={deal}
-            onNextPage={() => {
-              setCurrentPage(prev => prev + 1)
-            }}
-            onPrevPage={() => {
-              setCurrentPage(prev => prev - 1)
-            }}
-            openModal={openDealModal}
-            setSelected={setDeal}
-          />
-        </>}
+      <Flex width={'100%'} overflowY={'hidden'} overflowX={'hidden'}>
+        <DealsTableData
+          currentPage={currentPage}
+          totalPages={maxPage}
+          data={dealsPageData?.deals ?? []}
+          selected={deal}
+          onNextPage={() => {
+            setCurrentPage(prev => prev + 1)
+          }}
+          onPrevPage={() => {
+            setCurrentPage(prev => prev - 1)
+          }}
+          openModal={openDealModal}
+          setSelected={setDeal}
+        />
         {dealData ? <>
           {user.role == UserRole.ADMIN ? <>
             <DealInfoAdmin
-             onChangeClient={onUpdateClient}
-             onDeleteClient={onDeleteUser}
+             onChangeDeal={onUpdateDeal}
+             onDeleteDeal={onDeleteDeal}
              config={dealData}
+             disableDelete={disableDelete}
+             disableChange={disableChange}
             />
           </> : <>
             <DealInfo config={dealData} />

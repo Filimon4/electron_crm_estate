@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { TClientDTO } from "./clients.dto";
+import { TClientDTO, TFilterClientDTO } from "./clients.dto";
 import { ClientsService } from "./clients.service";
 import { ClientsNamespace } from "../db/actions/actionsClients";
 
@@ -14,14 +14,12 @@ export class ClientController {
   }
 
   async searchClients(event: any, input: string) {
-      console.log(input)
       const result = await ClientsService.searchClients(input)
-      console.log(result)
       return result
   }
 
-  async getClientsByPage(event: any, userId: number, page: number, limit: number) {
-    return await ClientsService.getClientsByPage(userId, page, limit)
+  async getClientsByPage(event: any, userId: number, page: number, limit: number, filters: TFilterClientDTO) {
+    return await ClientsService.getClientsByPage(userId, page, limit, filters)
   }
   
   async createClient(event: any, userId: number, client: TClientDTO) {

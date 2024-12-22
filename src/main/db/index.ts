@@ -5,13 +5,20 @@ import { Client, Complex, Deal, Event, Flat, House, User } from "./entities";
 type Repo<Entity> = ObjectType<Entity> | EntitySchema<Entity> | string;
 
 const DB = new DataSource({
-  type: "postgres",
-  host: 'localhost',
-  port: 5433,
-  username: 'postgres',
-  password: 'admin',
-  database: 'crm_estate2',
-  entities: [Client, Complex, Deal, Flat, House, User, Event], 
+  type: 'postgres',
+  host: '5.183.188.132',
+  port: 5432,
+  database: '2024_psql_efim',
+  username: '2024_psql_e_usr',
+  password: 'yEKFC10LK8AouxLb',
+  entities: [
+    Client,
+    Deal,
+    Complex,
+    Flat,
+    House,
+    User, Event
+  ], 
   migrations: [],
   logging: false,
   synchronize: false

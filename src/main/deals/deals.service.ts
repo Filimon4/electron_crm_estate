@@ -29,11 +29,19 @@ export class DealsService {
 
     if (!deal) throw new Error('Deal not found');
 
-    // Обновляем данные сделки
-    deal.realtor = data.user_id;
-    deal.updated_at = new Date();
+    if (deal.status !== data.status) {
+      deal.status = data.status
+      if (deal.status == DealStatus.close) {
+        deal.closed_at = new Date()
+      } else {
+        deal.closed_at = null
+      }
+    }
 
-    return await dealRepository.save(deal);
+    return await dealRepository.update(deal.id, {
+      status: deal.status,
+      closed_at: deal.closed_at
+    });
   }
 
   static async deleteDeal(id: number) {
