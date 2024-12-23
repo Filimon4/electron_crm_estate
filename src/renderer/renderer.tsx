@@ -30,7 +30,6 @@ import Complexes from './pages/dashboard/complexes/Complexes';
 
 // TODO: Прописать всё ошибка (сообщение)
 // TODO: Добавить preload
-// TODO: Сбилдить приложение
 
 const dom = document.getElementById("root") as HTMLElement
 const root = createRoot(dom)
