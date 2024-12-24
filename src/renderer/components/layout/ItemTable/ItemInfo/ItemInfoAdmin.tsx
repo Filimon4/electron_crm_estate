@@ -3,6 +3,7 @@ import { Button, Card, CardBody, CardFooter, Divider, Flex, Stack, StackDivider,
 import { isNumbersOnly } from '../../../../shared/utils/form'
 import EditableInput from '../../../global/EditableInput/EditableInput'
 import SimpleFormField from '../../../../components/global/SimpleFormField/SimpleFormField'
+import EditableTextArea from '../../../../components/global/EditableTextArea/EditableTextArea'
 
 const ItemInfo = ({
   config,
@@ -29,7 +30,12 @@ const ItemInfo = ({
           <EditableInput inputValidator={(value) => isNumbersOnly(value)} submitValidator={(value) => Boolean(value)} onChangeData={onChangeEstate} editValue={'room_amount'} title={'Комнаты'} defaultValue={config.room_amount} />
           <SimpleFormField heading={'Адресс'} text={config.adress} />
         </Stack>
-        <Textarea value={config.description ?? ' '} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
+        <EditableTextArea 
+            submitValidator={() => true}
+            editValue='description'
+            onChangeData={onChangeEstate}
+            defaultValue={config.description ?? ''}
+          />
       </Flex>
     </CardBody>
       <CardFooter>

@@ -37,8 +37,8 @@ const ClientInfoAdmin = ({
           </Stack>
           <EditableTextArea 
             submitValidator={() => true}
-            editValue=''
-            onChangeData={(name, value) => console.log('onChangeData: ', name, value)}
+            editValue='description'
+            onChangeData={onChangeClient}
             defaultValue={config.description ?? ''}
           />
         </Flex>
