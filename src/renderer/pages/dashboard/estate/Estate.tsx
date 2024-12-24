@@ -208,7 +208,7 @@ const Estate = () => {
     //@ts-ignore
     const result = await window.invokes.updateFlat(newEstateData)
     if (result) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Объект обновлён', {
         autoClose: 2000,
       })
       refetch()

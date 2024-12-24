@@ -56,7 +56,7 @@ const CreateEstateModal = ({ isOpen, onClose, refetch }: any) => {
     //@ts-ignore
     const estate = await window.invokes.createFlat(clientData)
     if (estate) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Объект создан', {
         autoClose: 2000,
       })
       setClientData({

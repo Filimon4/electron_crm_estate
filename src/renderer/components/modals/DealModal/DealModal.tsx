@@ -59,7 +59,7 @@ const CreateDealModal = ({ isOpen, onClose, refetch }: any) => {
       flat_id: dealData.flat_id
     })
     if (estate) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Сделка создана', {
         autoClose: 2000,
       })
       setDealData({

@@ -154,7 +154,7 @@ const Complexes = () => {
     //@ts-ignore
     const result = await window.invokes.updateComplex(newComplexData)
     if (result) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Комплекс обновлён', {
         autoClose: 2000,
       })
       refetch()

@@ -52,7 +52,7 @@ const CreateClientModal = ({ isOpen, onClose, refetch }: any) => {
     //@ts-ignore
     const client = await window.invokes.createClient(user.id, clientData)
     if (client) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Клиент создан', {
         autoClose: 2000,
       })
       refetch()

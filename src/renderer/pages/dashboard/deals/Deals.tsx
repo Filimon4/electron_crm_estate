@@ -178,7 +178,7 @@ const Deals = () => {
     //@ts-ignore
     const result = await window.invokes.updateDeal(newDealData)
     if (result) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Сделка обновлена', {
         autoClose: 2000,
       })
       refetch()

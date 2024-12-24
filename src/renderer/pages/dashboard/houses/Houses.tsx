@@ -159,7 +159,7 @@ const Complexes = () => {
     //@ts-ignore
     const result = await window.invokes.updateHouse(newHouseData)
     if (result) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Комплекс обновлён', {
         autoClose: 2000,
       })
       refetch()

@@ -55,7 +55,7 @@ const CreateHouseModal = ({ isOpen, onClose, refetch }: any) => {
       house_number: houseData.house_number
     })
     if (house) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Дом создан', {
         autoClose: 2000,
       })
       setHouseData({ street: '', house_number: '', complex_id: '', complex_label: '' });

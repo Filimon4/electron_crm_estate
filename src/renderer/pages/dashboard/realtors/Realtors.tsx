@@ -174,7 +174,7 @@ const Realtors = () => {
         autoClose: 3000,
       })
     } else {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Риелтор обновлён', {
         autoClose: 2000,
       })
     } 

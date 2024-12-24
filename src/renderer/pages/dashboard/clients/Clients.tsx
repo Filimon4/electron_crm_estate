@@ -170,7 +170,7 @@ const Clients = () => {
     //@ts-ignore
     const result = await window.invokes.updateClient(newClientData)
     if (result) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Клиент обновлён', {
         autoClose: 2000,
       })
       refetch()

@@ -48,7 +48,7 @@ const CreateComplexModal = ({ isOpen, onClose, refetch }: any) => {
     //@ts-ignore
     const client = await window.invokes.createComplex(complexData)
     if (client) {
-      notifyConfig.success('Пользователь создан', {
+      notifyConfig.success('Комплекс создан', {
         autoClose: 2000,
       })
       setComplexData({ name: '', district: '', city: '' });
