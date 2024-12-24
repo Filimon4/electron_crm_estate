@@ -1,5 +1,6 @@
+import { Between, Like } from "typeorm";
 import { Client, Deal, DealStatus, User } from "../db/entities";
-import { TDealDto } from "./deals.dto";
+import { TDealDto, TFiltersDealDto } from "./deals.dto";
 
 
 export class DealsService {
@@ -53,11 +54,16 @@ export class DealsService {
     return await dealRepository.remove(deal);
   }
 
-  static async getDealsByPage(userId: number, page: number, limit: number) {
+  static async getDealsByPage(userId: number, page: number, limit: number, filters: TFiltersDealDto) {
     const dealRepository = await dbConnection(Deal);
-
-    return await dealRepository.findAndCount({
-      where: { realtor: userId },
+    const whereConditions: {[k in any]: any} = {}
+    Object.entries(filters ?? {}).forEach(([k, v]) => {
+      if (typeof v == 'string' && k == 'status')
+        whereConditions[k] = v == 'open' ? DealStatus.open : DealStatus.close
+      if (typeof v == 'object' && 'length' in v && v.length == 2)
+        whereConditions[`flat.${k}`] = Between(+v[0], +v[1])
+    });
+    return await dealRepository.find({
       skip: (page - 1) * limit,
       take: limit,
       relations: {
@@ -66,7 +72,11 @@ export class DealsService {
           //@ts-ignore
           house: true as unknown as never 
         },
-      }
+      },
+      where: {
+        ...whereConditions,
+        realtor: userId
+      },
     });
   }
 

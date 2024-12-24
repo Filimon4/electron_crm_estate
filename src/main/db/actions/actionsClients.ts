@@ -16,9 +16,10 @@ export namespace ClientsNamespace {
       user.phone = clientData.phone
       return await dbConnection(_Client).save(user);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -32,9 +33,10 @@ export namespace ClientsNamespace {
       Object.assign(user, updates);
       return await userRepository.save(user);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
   
@@ -45,9 +47,10 @@ export namespace ClientsNamespace {
       const result = await userRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
   
@@ -55,9 +58,10 @@ export namespace ClientsNamespace {
     try {
       return await dbConnection(_Client).count()
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -77,9 +81,10 @@ export namespace ClientsNamespace {
         }
       })
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -87,9 +92,10 @@ export namespace ClientsNamespace {
     try {
       return await dbConnection(_Client).find();
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -98,9 +104,10 @@ export namespace ClientsNamespace {
       const userRepository = await dbConnection(_Client);
       return await userRepository.findOne({ where: { id } });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
   
@@ -109,9 +116,10 @@ export namespace ClientsNamespace {
       const userRepository = await dbConnection(_Client)
       return await userRepository.findOne({ where: { email } });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -125,9 +133,10 @@ export namespace ClientsNamespace {
     
       return results;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 }

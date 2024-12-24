@@ -15,7 +15,7 @@ import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient'
 import { ITableData } from '../../../shared/types/table.types'
 import { CustomInlineFormInput, CustomInlineFromSelector } from '../../../components/global/FormInput/FormInput'
 import { FaFilter, FaFilterCircleXmark } from 'react-icons/fa6'
-import { isLettersOnly, isNumbersOnly } from '../../../shared/utils/form'
+import { isNumbersOnly } from '../../../shared/utils/form'
 
 const sizeOptions = [
   { id: 0, label: 'Все', value: [null, null]},
@@ -112,6 +112,8 @@ export const ComplexesFilterData = memo(() => {
 
 
 const EsateTableData: React.FC<ITableData> = memo(({currentPage,data,onNextPage,onPrevPage,openModal,selected,setSelected,totalPages}) => {
+  const [user,] = useAtom(readUser)
+
   return (
     <Flex flexDirection={'column'} maxW={'85rem'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -119,11 +121,13 @@ const EsateTableData: React.FC<ITableData> = memo(({currentPage,data,onNextPage,
       </Heading>
       <Flex height={'70%'} justify={'space-between'} flexDirection={'column'} mb={'5px'}>
         { data && currentPage && <>
-          <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
-            <Button color={'black'} _hover={{bg: 'gray.400'}} variant='outline' onClick={() => openModal()}>
-              Создать нового объекта
-            </Button>
-          </Flex>
+          {user.role == UserRole.ADMIN && <>
+            <Flex width={'100%'} justifyContent={'end'} alignItems={'center'} paddingBottom={'20px'}>
+              <Button color={'black'} _hover={{bg: 'gray.400'}} variant='outline' onClick={() => openModal()}>
+                Создать нового объекта
+              </Button>
+            </Flex>
+          </>}
           <ComplexesFilterData />
           <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
             <TableView selected={selected} setSelected={setSelected} config={{

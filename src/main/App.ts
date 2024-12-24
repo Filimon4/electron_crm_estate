@@ -14,14 +14,9 @@ class App {
   }
   
   async initDB() {
+    DB.initialize()
+    this.onInitDB()
     createWindow()
-    console.log('init db')
-    DB.initialize().then(() => {
-      console.log('DB.initialize then')
-      this.onInitDB()
-    }).catch((error) => {
-      console.log(error)
-    })
   }
   
   async onInitDB() {

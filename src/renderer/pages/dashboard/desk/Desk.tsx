@@ -8,10 +8,8 @@ import { useAtom } from "jotai";
 import { readTodayEvents, readUser } from "../../../shared/store";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "../../../shared/lib/queryClient";
-import { EventInput } from "@fullcalendar/core";
 
 const Desk: React.FC = () => {
-  const tasks: EventInput[] = [];
   const [user,] = useAtom(readUser)
   const [todayEvents,] = useAtom(readTodayEvents)
 
@@ -42,8 +40,6 @@ const Desk: React.FC = () => {
       const pointData: DataPoint[] = result.map((res: any) => ({date: String(res.month),value: +res.total_income})) 
       return pointData
   }});
-
-  console.log(todayEvents)
 
   return (
     <Flex direction="column" h="100vh" p={4} width={'100%'} overflow={'scroll'} overflowX={'hidden'}>

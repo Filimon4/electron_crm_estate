@@ -3,6 +3,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Stack, S
 import { isEmailValid, isLettersOnly, isNumbersOnly, isPhoneValid } from '../../../../shared/utils/form';
 import EditableInput from '../../../global/EditableInput/EditableInput'
 import { tableMaxField } from '../../../../shared/utils/utils';
+import EditableTextArea from '../../../../components/global/EditableTextArea/EditableTextArea';
 
 const ClientInfoAdmin = ({
   onChangeClient,
@@ -34,7 +35,12 @@ const ClientInfoAdmin = ({
             <EditableInput inputValidator={(value) => isNumbersOnly(value)} submitValidator={(value) => Boolean(value) && isPhoneValid(value)} onChangeData={onChangeClient} title={'Телефон'} editValue={'phone'} defaultValue={config.phone} />
             <EditableInput inputValidator={(value) => isEmailValid(value)}submitValidator={(value) => Boolean(value)}  onChangeData={onChangeClient} title={'Почта'} editValue={'email'} defaultValue={config.email} />
           </Stack>
-          <Textarea value={config.description ?? ''} mt={'10px'} border={"1px"} borderColor={'black'} height={'100%'} isReadOnly style={{resize: 'none'}} />
+          <EditableTextArea 
+            submitValidator={() => true}
+            editValue=''
+            onChangeData={(name, value) => console.log('onChangeData: ', name, value)}
+            defaultValue={config.description ?? ''}
+          />
         </Flex>
       </CardBody>
       <CardFooter>

@@ -6,7 +6,8 @@ import {
   VStack,
   Select,
   HStack,
-  Input
+  Input,
+  useStyleConfig
 } from '@chakra-ui/react';
 import {
   LineChart,

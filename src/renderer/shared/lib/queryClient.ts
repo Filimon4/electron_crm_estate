@@ -10,7 +10,7 @@ const MINUTE = 1000 * 60;
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 120000,
+      staleTime: 40000,
       gcTime: 10 * MINUTE
     }
   }
@@ -27,5 +27,3 @@ export const queryClient = new QueryClient({
 //     return []
 //   }})
 // })();
-
-

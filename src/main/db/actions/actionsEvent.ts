@@ -18,7 +18,7 @@ export namespace EventNamespace {
       await dbConnection(Event).insert(event);
       return event;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
       return null
@@ -34,7 +34,7 @@ export namespace EventNamespace {
       });
       return events;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
       return null
@@ -53,7 +53,7 @@ export namespace EventNamespace {
 
       return event;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
       return null
@@ -82,7 +82,7 @@ export namespace EventNamespace {
       return result;
     } catch (error) {
       console.log(error)
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       return null
     }
@@ -101,7 +101,7 @@ export namespace EventNamespace {
       await dbConnection(Event).remove(event);
       return { message: 'Event deleted successfully' };
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
       return null
@@ -123,7 +123,7 @@ export namespace EventNamespace {
   
       return events;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
       return null

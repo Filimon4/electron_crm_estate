@@ -26,3 +26,8 @@ export interface TDealInfoDto {
     }
   }
 }
+
+export interface TFiltersDealDto {
+  status: DealStatus,
+  prcie: [number, number]
+}

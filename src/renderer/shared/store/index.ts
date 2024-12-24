@@ -5,7 +5,7 @@ import { DateSelectArg, EventChangeArg, EventDropArg, EventInput } from "@fullca
 import { EventImpl } from "@fullcalendar/core/internal";
 import { filterEventsToday } from "../utils/months";
 
-const page = atom('desk')
+const page = atom('estate')
 export const currentHomePage = atom(
   (get) => get(page),
   (get, set, update: any) => {
@@ -38,8 +38,8 @@ const filtersClient = atom<{
   sure_name: string,
   last_name: string
 }>()
-export const readFilterClient = atom((get) => get(filtersEstate),null)
-export const writeFilterClient = atom(null,(get, set, update) => set(filtersEstate, update))
+export const readFilterClient = atom((get) => get(filtersClient),null)
+export const writeFilterClient = atom(null,(get, set, update) => set(filtersClient, update))
 export const readClient = atom((get) => get(client),null)
 export const writeClient = atom(null,(get, set, update: number) => set(client, update))
 
@@ -61,6 +61,12 @@ export const dateContext = atom<{
 }>()
 
 const deal = atom<number>()
+const filtersDeal = atom<{
+  status: boolean,
+  price: [number, number]
+}>()
+export const readFilterDeal = atom((get) => get(filtersDeal),null)
+export const writeFilterDeal = atom(null,(get, set, update) => set(filtersDeal, update))
 export const readDeal = atom((get) => get(deal), null)
 export const writeDeal = atom(null, (get, set, update: number) => set(deal, update))
 

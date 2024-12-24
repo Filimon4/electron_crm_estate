@@ -22,6 +22,7 @@ export namespace UsersNamespace {
       const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -41,9 +42,10 @@ export namespace UsersNamespace {
         }
       })
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
  }
 
@@ -63,18 +65,26 @@ export namespace UsersNamespace {
       sendNotify('success', 'Пользователь успешно создан')
       return user
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
   export const getUserById = async (id: number) => {
-    return await dbConnection(_User).findOne({
-      where: {
-        id: id
-      }
-    })
+    try {
+      return await dbConnection(_User).findOne({
+        where: {
+          id: id
+        }
+      })
+    } catch (error) {
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
+      sendNotify('error', error)
+      console.log(errorMessage)
+      return null
+    }
   }
 
   export const getUser = async (email?: string, phone?: string) => {
@@ -101,9 +111,10 @@ export namespace UsersNamespace {
       }
       return user
     } catch (error) {
-      // const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', error)
-      // console.log(errorMessage)
+      console.log(errorMessage)
+      return null
     }
   }
 
@@ -119,9 +130,10 @@ export namespace UsersNamespace {
         ...user
       });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -130,9 +142,10 @@ export namespace UsersNamespace {
       const result =  await dbConnection(_User).delete(id)
       return result.affected !== 0
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 }

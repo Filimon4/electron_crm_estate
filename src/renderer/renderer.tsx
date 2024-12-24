@@ -25,9 +25,6 @@ import Deals from './pages/dashboard/deals/Deals';
 import Houses from './pages/dashboard/houses/Houses';
 import Complexes from './pages/dashboard/complexes/Complexes';
 
-// TODO: Сделать фильтрацию
-// TODO: На поле ввода вынести в компоненты для всего проекта
-
 // TODO: Прописать всё ошибка (сообщение)
 // TODO: Добавить preload
 
@@ -60,7 +57,6 @@ root.render(
             } />
           </Routes>
         </HashRouter>
-        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   </>

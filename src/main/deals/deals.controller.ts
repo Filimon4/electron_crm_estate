@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { TDealDto, TDealInfoDto } from "./deals.dto";
+import { TDealDto, TDealInfoDto, TFiltersDealDto } from "./deals.dto";
 import { DealsService } from "./deals.service";
 
 
@@ -25,14 +25,13 @@ export class DealsController {
     return await DealsService.deleteDeal(id)
   }
 
-  async getDealsByPage(event: any, user_id: number, page: number, limit: number) {
-    const [deals, count] = await DealsService.getDealsByPage(user_id, page, limit)
-    console.log(JSON.stringify(deals[0], null, 2))
+  async getDealsByPage(event: any, user_id: number, page: number, limit: number, filters: TFiltersDealDto) {
+    const deals = await DealsService.getDealsByPage(user_id, page, limit, filters)
     deals.map(deal => this.parseDealToDto(deal))
-    console.log(deals)
+    console.log(JSON.stringify(deals[0], null, 2))
     return {
       deals: deals,
-      count: count
+      count: deals.length
     }
   }
 

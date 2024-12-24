@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, useDisclosure } from '@chakra-ui/react'
 import { useAtom } from 'jotai'
 import React, { memo, useEffect, useMemo, useState } from 'react'
 import Pagination from '../../../components/global/Pagination/Pagination'
 import TableView from '../../../components/layout/ItemTable/TableView'
-import { readDeal, readUser, writeClient, writeDeal } from '../../../shared/store'
+import { readDeal, readFilterDeal, readUser, writeDeal, writeFilterDeal } from '../../../shared/store'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS, queryClient } from '../../../shared/lib/queryClient'
 import { notifyConfig } from '../../../shared/events/notifies.config'
@@ -14,9 +14,75 @@ import DealInfo from '../../../components/layout/ItemTable/DealInfo/DealInfo'
 import DealInfoAdmin from '../../../components/layout/ItemTable/DealInfo/DealInfoAdmin'
 import { ITableData } from '../../../shared/types/table.types'
 import { getRussianDateFromatFromDate } from '../../../shared/utils/months'
+import { CustomInlineFormInput, CustomInlineFromSelector } from '../../../components/global/FormInput/FormInput'
+import { FaFilter, FaFilterCircleXmark } from 'react-icons/fa6'
+
+const priceOptions = [
+  { id: 0, label: 'Все', value: [null, null]},
+  { id: 1, label: '0 - 2мил.', value: [0, 2000000] },
+  { id: 2, label: '2мил. - 5мил.', value: [2000000, 5000000] },
+  { id: 3, label: '5мил. - 10мил.', value: [5000000, 10000000] },
+  { id: 4, label: '10мил. - 30мил.', value: [10000000, 30000000] },
+  { id: 5, label: '30мил.+', value: [30000000, 1000000000] },
+];
+const statsOptions = [
+  { id: 0, label: 'Все', value: null},
+  { id: 1, label: 'Открытые', value: 'open'},
+  { id: 2, label: 'Закрытые', value: 'close'},
+];
+
+export const DealsFilterData = memo(() => {
+  const [filters, setFilters] = useState({
+    status_id: 0,
+    price_id: 0
+  });
+  const [,writeFilters] = useAtom(writeFilterDeal)
+
+  const applyFilters = () => {
+    const validFilters: {[k in any]: any} = {}
+    if (+filters.status_id !== 0)
+      validFilters['status'] = statsOptions[+filters.status_id].value
+    if (+filters.price_id !== 0)
+      validFilters['price'] = priceOptions[+filters.price_id].value
+    writeFilters({
+      ...validFilters
+    })
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      status_id: 0,
+      price_id: 0
+    })
+    writeFilters({
+      status: null,
+      price: [null, null]
+    })
+  }
+
+  return (
+    <>
+      <Flex>
+        <CustomInlineFromSelector
+          value={+filters.price_id} options={priceOptions} id='price_id' name='Объём'
+          setValue={(price_id: number) => setFilters({...filters, price_id: price_id})}
+        />
+        <CustomInlineFromSelector
+          value={+filters.status_id} options={statsOptions} id='status_id' name='Статус'
+          setValue={(status_id: number) => setFilters({...filters, status_id: status_id})}
+        />
+        <Button size={'sm'} alignSelf={'center'} minW={'30px'} minH={'30px'} onClick={applyFilters}>
+          <FaFilter />
+        </Button>
+        <Button size={'sm'} alignSelf={'center'} minW={'30px'} minH={'30px'} onClick={clearFilters}>
+          <FaFilterCircleXmark />
+        </Button>
+      </Flex>
+    </>
+  )
+})
 
 const DealsTableData: React.FC<ITableData> = memo(({ selected, data, openModal, totalPages, currentPage, onNextPage, onPrevPage, setSelected }) => {
-  console.log(JSON.stringify(data, null, 2))
   return (
     <Flex flexDirection={'column'} maxW={'85rem'} height={'100vh'} width={'100%'} gridArea={'col1'} justify={'space-between'}>
       <Heading fontSize={'2xl'}>
@@ -29,6 +95,7 @@ const DealsTableData: React.FC<ITableData> = memo(({ selected, data, openModal, 
               Создать новую сделку
             </Button>
           </Flex>
+          <DealsFilterData />
           <Box overflowY={'scroll'} overflowX={'hidden'} height={'100%'}>
             <TableView
               selected={selected}
@@ -57,24 +124,36 @@ const Deals = () => {
   const [deal,] = useAtom(readDeal)
   const [,setDeal] = useAtom(writeDeal)
   const [user,] = useAtom(readUser)
+  const [dealFilters,] = useAtom(readFilterDeal)
   
   const [currentPage, setCurrentPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
   const [disableDelete, setDisableDelete] = useState(false)
   const [disableChange, setDisableChange] = useState(false)
-  const { data: dealsPageData, isError, isLoading, isPlaceholderData, refetch } = useQuery({
+  const { data: dealsPageData, refetch } = useQuery({
     //@ts-ignore
     queryKey: [QUERY_KEYS['getDealsByPage'], {
       currentPage: currentPage
     }],
     queryFn: async () => {
       //@ts-ignore
-      const result = await window.invokes.getDealsByPage(user.id, currentPage, 10)
+      const result = await window.invokes.getDealsByPage(user.id, currentPage, 10, dealFilters)
       setMaxPage(result.count > 0 ? Math.ceil(result.count / 10) : 1)
       return result
     },
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    setDeal(null)
+    setCurrentPage(1)
+    refetch()
+    queryClient.invalidateQueries({
+      predicate: (query) =>
+        //@ts-ignore
+        query.queryKey[0] === QUERY_KEYS['getDealsByPage'] && query.queryKey[1]?.currentPage > 1,
+    })
+  }, [dealFilters])
 
   useEffect(() => {
     setMaxPage(dealsPageData?.count ? Math.ceil(dealsPageData?.count / 10) : 1)

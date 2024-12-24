@@ -1,6 +1,6 @@
 {
-  "name": "electron_f",
-  "productName": "electron_f",
+  "name": "crm_estate",
+  "productName": "crm_estate",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",

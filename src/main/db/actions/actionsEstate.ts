@@ -19,9 +19,10 @@ export namespace EstateNamespace {
       flat.description = ' '
       return await flatRepository.save(flat);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -48,6 +49,7 @@ export namespace EstateNamespace {
       const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -56,7 +58,7 @@ export namespace EstateNamespace {
       const flatRepository = await dbConnection(_Flat);
       return await flatRepository.findOne({ where: { id }, relations: ["house"] });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
     }
@@ -70,9 +72,10 @@ export namespace EstateNamespace {
       Object.assign(flat, updates);
       return await flatRepository.save(flat);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -82,9 +85,10 @@ export namespace EstateNamespace {
       const result = await flatRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -97,9 +101,10 @@ export namespace EstateNamespace {
       house.street = data.street
       return await houseRepository.save(house);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -118,9 +123,10 @@ export namespace EstateNamespace {
         }
       })
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   }
 
@@ -159,9 +165,10 @@ export namespace EstateNamespace {
       }))
       return houses
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -170,7 +177,7 @@ export namespace EstateNamespace {
       const houseRepository = await dbConnection(_House);
       return await houseRepository.findOne({ where: { id }, relations: ["colmplex"] });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
     }
@@ -184,9 +191,10 @@ export namespace EstateNamespace {
       Object.assign(house, updates);
       return await houseRepository.save(house);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -196,7 +204,7 @@ export namespace EstateNamespace {
       const result = await houseRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
     }
@@ -208,9 +216,10 @@ export namespace EstateNamespace {
       const complex = complexRepository.create(data);
       return await complexRepository.save(complex);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -219,7 +228,7 @@ export namespace EstateNamespace {
       const complexRepository = await dbConnection(_Complex);
       return await complexRepository.find({ relations: ["builder"] });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
     }
@@ -230,9 +239,10 @@ export namespace EstateNamespace {
       const complexRepository = await dbConnection(_Complex);
       return await complexRepository.findOne({ where: { id }, relations: ["builder"] });
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -244,9 +254,10 @@ export namespace EstateNamespace {
       Object.assign(complex, updates);
       return await complexRepository.save(complex);
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -256,9 +267,10 @@ export namespace EstateNamespace {
       const result = await complexRepository.delete(id);
       return result.affected !== 0;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -284,9 +296,10 @@ export namespace EstateNamespace {
         
       return results;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -315,9 +328,10 @@ export namespace EstateNamespace {
       console.log('searchFlats: ', JSON.stringify(results, null, 2))
       return results;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 
@@ -330,9 +344,10 @@ export namespace EstateNamespace {
         .getMany();
       return results;
     } catch (error) {
-      const errorMessage = getPostgresErrorMessage(error.driverError.code)
+      const errorMessage = getPostgresErrorMessage(error?.driverError?.code)
       sendNotify('error', errorMessage)
       console.log(errorMessage)
+      return null
     }
   };
 }

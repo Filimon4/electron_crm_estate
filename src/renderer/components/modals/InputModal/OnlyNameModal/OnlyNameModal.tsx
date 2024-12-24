@@ -39,13 +39,13 @@ const OnlyNameModal = ({ isOpen, onClose, onSave}: { isOpen: boolean; onClose: (
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Введите имя</ModalHeader>
+          <ModalHeader>Введите название</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl isRequired>
               <FormLabel>Название</FormLabel>
               <Input
-                placeholder="Введите имя"
+                placeholder="Введите название"
                 value={name}
                 onChange={handleChange}
                 autoFocus={true}
